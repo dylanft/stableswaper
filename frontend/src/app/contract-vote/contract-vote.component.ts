@@ -20,7 +20,7 @@ export class ContractVoteComponent implements OnInit {
 
   public userSession = userSession;
 
-  vote(pick: string) {
+  swap(pick: string) {
     openContractCall({
       network: new StacksTestnet(),
       anchorMode: AnchorMode.Any,

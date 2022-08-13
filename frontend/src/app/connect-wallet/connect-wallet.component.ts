@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { showConnect } from '@stacks/connect';
+import { noneCV } from '@stacks/transactions';
 import { userSession } from 'src/stacksUserSession';
 
 @Component({
@@ -12,6 +13,7 @@ export class ConnectWalletComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  showNetworkAddresses: boolean = false;
   public userSession = userSession;
 
   authenticate() {

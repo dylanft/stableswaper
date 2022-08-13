@@ -7,7 +7,7 @@
 *frontend/.angular
 frontend/npm_modules/
 *frontend/.vscode
-
+*DS_Store
 
 # User-specific files
 *.rsuser
