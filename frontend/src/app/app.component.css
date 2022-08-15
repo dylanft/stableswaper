@@ -41,6 +41,16 @@
     margin: 0 16px;
   }
 
+  .toolbar a:link {
+    color: cornsilk;
+    padding: 5px;
+  }
+
+  .toolbar a:visited {
+    color: cornsilk;
+    padding: 5px;
+  }
+
   .content {
     display: flex;
     margin: 82px auto 32px;
@@ -48,8 +58,8 @@
     max-width: 960px;
     flex-direction: column;
     align-items: center;
-    background: url("../assets/brand/bitflow-bg.jpg");
     background-size: 100%;
+    min-height: 600px;
   }
 
   svg.material-icons {

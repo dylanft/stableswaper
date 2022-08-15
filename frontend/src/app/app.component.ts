@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'stacks-angular';
+  content: string = "home";
+
+  setContent(c: string) {
+    this.content = c;
+  }
 }

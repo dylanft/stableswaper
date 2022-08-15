@@ -10,16 +10,17 @@
 
 <!-- Toolbar -->
 <div class="toolbar" role="banner">
-  <!-- <img
-    width="40"
-    src="../assets/brand/bitflow-icon-main.png"
-    /> -->
   <img 
     width="25%"
     src="../assets/brand/bitflow-logo-light.png">
   
   <span>Stable Swap Pools on Bitcoin</span>
   <div class="spacer"></div>
+  <span id="links">
+    <a href="javascript:void(0);" (click)="setContent('home')">Home</a>
+    <a href="javascript:void(0);" (click)="setContent('swap')">Swap</a>
+    <a href="javascript:void(0);" (click)="setContent('earn')">Earn</a>
+  </span>
   <app-connect-wallet></app-connect-wallet>
 </div>
 
@@ -27,58 +28,63 @@
 
   <!-- Stacks -->
   <div align="center">
-  <!-- <app-connect-wallet></app-connect-wallet> -->
-  <app-contract-vote></app-contract-vote>
+    <img *ngIf="content=='home'" src="../assets/brand/homepage_dummy.png" width="100%">
+    <app-contract-vote *ngIf="content=='swap'"></app-contract-vote>
+
+
   </div>
 
   <br>
   <br>
 
   <!-- Stacks Links -->
-  <h2>Stacks Help</h2>
-  <p>Here are the most important links to get started building applications on Stacks:</p>
+  <div style="width:100%;background-color:#254841; text-align: center; min-height:250px">
+    <div style="color:white;">
+      <h2>Stacks Help</h2>
+      <p>Here are the most important links to get started building applications on Stacks:</p>
+    </div>
+    <div class="card-container">
+      <a class="card" target="_blank" rel="noopener" href="https://docs.hiro.so/">
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
+        </svg>
+        <span>Getting Started</span>
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+        </svg> </a>
 
-  <div class="card-container">
-    <a class="card" target="_blank" rel="noopener" href="https://docs.hiro.so/">
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-      </svg>
-      <span>Getting Started</span>
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-      </svg> </a>
+      <a class="card" target="_blank" rel="noopener" href="https://stacks.js.org/">
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
+        </svg>
+        <span class="link">Stacks.js Reference</span>
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+        </svg>
+      </a>
 
-    <a class="card" target="_blank" rel="noopener" href="https://stacks.js.org/">
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
-      </svg>
-      <span>Stacks.js Reference</span>
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-      </svg>
-    </a>
-
-    <a class="card" target="_blank" rel="noopener" href="https://github.com/hirosystems/stacks.js/">
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
-        viewBox="0 0 24 24" width="24px" fill="#000000">
-        <g>
-          <rect fill="none" height="24" width="24" />
-        </g>
-        <g>
+      <a class="card" target="_blank" rel="noopener" href="https://github.com/hirosystems/stacks.js/">
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
+          viewBox="0 0 24 24" width="24px" fill="#000000">
           <g>
-            <path
-              d="M14.73,13.31C15.52,12.24,16,10.93,16,9.5C16,5.91,13.09,3,9.5,3S3,5.91,3,9.5C3,13.09,5.91,16,9.5,16 c1.43,0,2.74-0.48,3.81-1.27L19.59,21L21,19.59L14.73,13.31z M9.5,14C7.01,14,5,11.99,5,9.5S7.01,5,9.5,5S14,7.01,14,9.5 S11.99,14,9.5,14z" />
-            <polygon
-              points="10.29,8.44 9.5,6 8.71,8.44 6.25,8.44 8.26,10.03 7.49,12.5 9.5,10.97 11.51,12.5 10.74,10.03 12.75,8.44" />
+            <rect fill="none" height="24" width="24" />
           </g>
-        </g>
-      </svg>
-      <span>Stacks.js Repo</span>
-      <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-      </svg>
-    </a>
+          <g>
+            <g>
+              <path
+                d="M14.73,13.31C15.52,12.24,16,10.93,16,9.5C16,5.91,13.09,3,9.5,3S3,5.91,3,9.5C3,13.09,5.91,16,9.5,16 c1.43,0,2.74-0.48,3.81-1.27L19.59,21L21,19.59L14.73,13.31z M9.5,14C7.01,14,5,11.99,5,9.5S7.01,5,9.5,5S14,7.01,14,9.5 S11.99,14,9.5,14z" />
+              <polygon
+                points="10.29,8.44 9.5,6 8.71,8.44 6.25,8.44 8.26,10.03 7.49,12.5 9.5,10.97 11.51,12.5 10.74,10.03 12.75,8.44" />
+            </g>
+          </g>
+        </svg>
+        <span>Stacks.js Repo</span>
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+        </svg>
+      </a>
 
+    </div>
   </div>
 
   <!-- Resources -->
@@ -106,7 +112,7 @@
   </div> -->
 
   <!-- Next Steps -->
-  <h2>Next Steps</h2>
+  <!-- <h2>Next Steps</h2>
   <p>What do you want to do next with your app?</p>
 
   <input type="hidden" #selection>
@@ -141,17 +147,17 @@
       <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
       <span>Build for Production</span>
     </button>
-  </div>
+  </div> -->
 
   <!-- Terminal -->
-  <div class="terminal" [ngSwitch]="selection.value">
+  <!-- <div class="terminal" [ngSwitch]="selection.value">
       <pre *ngSwitchDefault>ng generate component xyz</pre>
       <pre *ngSwitchCase="'material'">ng add @angular/material</pre>
       <pre *ngSwitchCase="'pwa'">ng add @angular/pwa</pre>
       <pre *ngSwitchCase="'dependency'">ng add _____</pre>
       <pre *ngSwitchCase="'test'">ng test</pre>
       <pre *ngSwitchCase="'build'">ng build</pre>
-  </div>
+  </div> -->
 
 </div>
 
