@@ -27,9 +27,11 @@
 
   <!-- Stacks -->
   <div align="center">
-    <img *ngIf="content=='home'" src="../assets/brand/homepage_dummy.png" width="100%">
-    <app-contract-vote *ngIf="content=='swap'"></app-contract-vote>
 
+    <img *ngIf="content=='home'" src="../assets/brand/homepage_dummy.png" width="100%">
+    <app-contract-vote *ngIf="content=='swap'">
+    </app-contract-vote>
+    
 
   </div>
 

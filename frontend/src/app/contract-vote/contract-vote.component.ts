@@ -18,6 +18,13 @@ export class ContractVoteComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  tokenList: any[] = ['USDA', 'xUSD'];
+  tokenA: string = '';
+  tokenB: string = '';
+  tokenA_amt: string = "0";
+
+
+
   public userSession = userSession;
 
   swap(pick: string) {
@@ -43,5 +50,24 @@ export class ContractVoteComponent implements OnInit {
         console.log('onCancel:', 'Transaction was canceled');
       },
     });
+  }
+
+  selectToken(event: any, tokenAorB: string) {
+    // console.log("event: ", event)
+    // console.log("event.value: ", event.value)
+    if (tokenAorB == "A") {
+      this.tokenA = event.value;
+      console.log("tokenA: ", this.tokenA);
+    }
+    else if (tokenAorB == "B") {
+      this.tokenB = event.value;
+      console.log("tokenB: ", this.tokenB);
+    }
+  }
+
+  printTokenAmount(val: string) {
+    //TODO: update this function to grab price of this # of stablecoins in real dollars based on AMM
+    //TODO: display output below the amount entered in the text field
+    console.log(val)
   }
 }
