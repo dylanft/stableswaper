@@ -16,6 +16,7 @@ button {
   min-width: 400px;
   border: 5px solid #254841;
   border-radius: 10px;
+  color: white;
 
 }
 
@@ -31,6 +32,7 @@ button {
 #arrow-row {
   font-weight: bold;
   font-size: 30px;
+  color: #254841;
 }
 
 .token-box {
