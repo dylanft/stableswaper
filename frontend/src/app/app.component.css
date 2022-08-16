@@ -44,6 +44,7 @@
   .toolbar a:link {
     color: cornsilk;
     padding: 5px;
+    padding-right: 10px;
   }
 
   .toolbar a:visited {

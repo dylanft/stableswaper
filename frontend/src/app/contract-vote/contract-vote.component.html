@@ -1,6 +1,15 @@
 
 <div *ngIf="userSession.isUserSignedIn()">
-  <h3>Swap Apples and Oranges</h3>
+  <!-- <h3>Swap Apples and Oranges</h3>
   <button (click)="swap('🍊')"> Swap for 🍊 </button>
-  <button (click)="swap('🍎')"> Swap for 🍎 </button>
+  <button (click)="swap('🍎')"> Swap for 🍎 </button> -->
+  <div id="swap-box-main" class="card-container">
+    <div id="swap-box-header">SWAP</div>
+    <div id="token-A-box" class="token-box">token A box</div>
+    <div id="arrow-row">&#x2193;</div>
+    <div id="token-B-box" class="token-box">token B box</div>
+    <div class="card" id="swap-box-footer">
+      <button (click)="swap('🍎')">Confirm</button>
+    </div>
+  </div>
 </div>
