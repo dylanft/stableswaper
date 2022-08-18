@@ -29,9 +29,9 @@
   <div align="center">
 
     <img *ngIf="content=='home'" src="../assets/brand/homepage_dummy.png" width="100%">
-    <app-contract-vote *ngIf="content=='swap'">
-    </app-contract-vote>
-    
+    <token-swap *ngIf="content=='swap'"></token-swap>
+    <!-- <app-connect-wallet *ngIf="content=='earn'"></app-connect-wallet> -->
+    <earn *ngIf="content=='earn'"></earn>
 
   </div>
 
@@ -45,7 +45,7 @@
       <p>Here are the most important links to get started building applications on Stacks:</p>
     </div>
     <div class="card-container">
-      <a class="card" target="_blank" rel="noopener" href="https://docs.hiro.so/">
+      <a class="card" target="_blank" rel="noopener" href="https://docs.hiro.so/" style="max-width:85%">
         <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
           <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
         </svg>
@@ -54,7 +54,7 @@
           <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
         </svg> </a>
 
-      <a class="card" target="_blank" rel="noopener" href="https://stacks.js.org/">
+      <a class="card" target="_blank" rel="noopener" href="https://stacks.js.org/" style="max-width:85%">
         <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
           <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
         </svg>
@@ -64,7 +64,7 @@
         </svg>
       </a>
 
-      <a class="card" target="_blank" rel="noopener" href="https://github.com/hirosystems/stacks.js/">
+      <a class="card" target="_blank" rel="noopener" href="https://github.com/hirosystems/stacks.js/" style="max-width:85%">
         <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
           viewBox="0 0 24 24" width="24px" fill="#000000">
           <g>

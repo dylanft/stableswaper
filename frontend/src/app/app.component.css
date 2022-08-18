@@ -140,14 +140,15 @@
   a,
   a:visited,
   a:hover {
-    color: #1976d2;
+    color: #254841;
     text-decoration: none;
   }
 
   a:hover {
-    color: #125699;
+    color: #254841;
   }
 
+  
   .terminal {
     position: relative;
     width: 80%;

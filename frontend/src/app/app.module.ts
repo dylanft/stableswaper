@@ -12,12 +12,16 @@ import { AppComponent } from './app.component';
 import { ConnectWalletComponent } from './connect-wallet/connect-wallet.component';
 import { ContractVoteComponent } from './contract-vote/contract-vote.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EarnComponent } from './earn/earn.component';
+import { SwapComponent } from './swap/swap.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConnectWalletComponent,
-    ContractVoteComponent
+    ContractVoteComponent,
+    EarnComponent,
+    SwapComponent
   ],
   imports: [
     BrowserModule,
