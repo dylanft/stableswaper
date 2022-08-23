@@ -56,7 +56,7 @@
                 <td style="max-width: 40%;">
                   <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
                     <mat-label>Amount</mat-label>
-                    <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenA_Amount (keyup)="printTokenAmount(tokenA_Amount.value)" [(ngModel)]="tokenA_amt" >
+                    <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenA_Amount (keyup)="updateTokenAmount(tokenA_Amount.value, 'A')" [(ngModel)]="tokenA_amt" >
                     <span matPrefix>$&nbsp;</span>
                     <!-- <span matSuffix>.00</span> -->
                   </mat-form-field>
@@ -98,7 +98,7 @@
                 <td style="max-width: 40%;">
                   <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
                     <mat-label>Amount</mat-label>
-                    <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_B (keyup)="printTokenAmount(tokenAmount_B.value)"  [(ngModel)]="tokenB_amt">
+                    <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_B (keyup)="updateTokenAmount(tokenAmount_B.value, 'B')"  [(ngModel)]="tokenB_amt">
                     <span matPrefix>$&nbsp;</span>
                     <!-- <span matSuffix>.00</span> -->
                   </mat-form-field>
@@ -122,7 +122,46 @@
           </div>
       </div>
       <div *ngIf="poolChoice=='remove'">
-        remove liquidity
+        <div id="token-A-box" class="token-box">
+            <table style="display:table; width:100%">
+              <tr align="center">
+                <td align="left" style="float:left;">
+                  <!-- token dropdown -->
+                  <div id="token-dropdown">
+                    <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
+                    <mat-form-field appearance="fill" style="max-width:85%; background-color: cornsilk; border-radius: 10px;">
+                      <mat-label>Select LP Token</mat-label>
+                      <mat-select (selectionChange)="selectToken($event, 'LP')">
+                        <mat-option *ngFor="let token of lpTokenList" [value]="token">{{token}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+      
+                  </div>
+                </td>
+                <td style="max-width: 40%;">
+                  <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+                    <mat-label>Amount</mat-label>
+                    <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP')" [(ngModel)]="lpToken_amt_user" >
+                    <span matPrefix>$&nbsp;</span>
+                    <!-- <span matSuffix>.00</span> -->
+                  </mat-form-field>
+                </td>
+              </tr>
+              <tr>
+                <td style="float:left; font-size: x-small;">
+                  <!-- balance display -->            
+                  &nbsp; balance: #
+                </td>
+                <!-- dollar equivalent -->
+                <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
+                  dollar equivalent
+                </td> -->
+              </tr>
+            </table>
+          </div>
+        <div class="card" id="swap-box-footer">
+            <button (click)="swap('🍎')">Confirm</button>
+        </div>
       </div>
 
     </div>

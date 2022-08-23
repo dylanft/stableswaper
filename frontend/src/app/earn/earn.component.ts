@@ -20,12 +20,19 @@ export class EarnComponent implements OnInit {
   }
   public userSession = userSession;
   tokenList: any[] = ['USDA', 'xUSD'];
+  lpTokenList: any[] = ['USDA-xUSD-LP']
+  poolChoice: string = 'add';
+
+
   tokenA: string = '';
   tokenB: string = '';
   tokenA_amt: number = 0;
   tokenB_amt: number = 0;
-  addOrRemove: string = 'add';
-  poolChoice: string = 'add';
+
+
+  lpToken: string = '';
+  lpToken_amt_user: number = 0;
+  lpToken_amt_total: number = 0;
 
   swap(pick: string) {
     openContractCall({
@@ -52,25 +59,35 @@ export class EarnComponent implements OnInit {
     });
   }
 
-  selectToken(event: any, tokenAorB: string) {
+  selectToken(event: any, tokenType: string) {
     // console.log("event: ", event)
     // console.log("event.value: ", event.value)
-    if (tokenAorB == "A") {
+    if (tokenType == "A") {
       this.tokenA = event.value;
       console.log("tokenA: ", this.tokenA);
     }
-    else if (tokenAorB == "B") {
+    else if (tokenType == "B") {
       this.tokenB = event.value;
       console.log("tokenB: ", this.tokenB);
     }
+    else if (tokenType == "LP") {
+      this.lpToken = event.value;
+      console.log("LP Token: ", this.lpToken);
+    }
   }
 
-  printTokenAmount(val: string) {
+  updateTokenAmount(val: string, tokenType: string) {
     //TODO: update this function to grab price of this # of stablecoins in real dollars based on AMM
     //TODO: display output below the amount entered in the text field
     console.log(val)
-    this.tokenA_amt = parseInt(val);
-    this.tokenB_amt = this.tokenA_amt;
+    if (tokenType == "LP") {
+      this.lpToken_amt_user = parseInt(val);
+    }
+    else {
+      this.tokenA_amt = parseInt(val);
+      this.tokenB_amt = this.tokenA_amt;
+    }
+    
   }
 
   toggle(poolOption: string) {
