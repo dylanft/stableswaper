@@ -7,6 +7,25 @@ import {
   stringUtf8CV,
 } from '@stacks/transactions';
 import { userSession } from 'src/stacksUserSession';
+
+export interface CycleDatapoint{
+  position: number;
+  startBlock: string;
+  totalLPtokens: number;
+  userLPtokens: number;
+  userRewards: number;
+  userCTA: string;
+}
+
+const CYCLES_DATA: CycleDatapoint[] = [
+  {position: 1, startBlock: '1000', totalLPtokens: 123456, userLPtokens: 123.456, userRewards: 1.23, userCTA: 'claimed'},
+  {position: 2, startBlock: '1100', totalLPtokens: 123456, userLPtokens: 123.456, userRewards: 1.23, userCTA: 'claim'},
+  {position: 3, startBlock: '1200', totalLPtokens: 123456, userLPtokens: 123.456, userRewards: 1.23, userCTA: 'claim'},
+  {position: 4, startBlock: '1300', totalLPtokens: 123456, userLPtokens: 123.456, userRewards: 0.615, userCTA: 'in-progress'},
+  {position: 5, startBlock: '1400', totalLPtokens: 123456, userLPtokens: 123.456, userRewards: 0, userCTA: 'upcoming'},
+  {position: 6, startBlock: '1500', totalLPtokens: 123332, userLPtokens: 0, userRewards: 0, userCTA: 'N/A'},
+];
+
 @Component({
   selector: 'earn',
   templateUrl: './earn.component.html',
@@ -22,6 +41,8 @@ export class EarnComponent implements OnInit {
   tokenList: any[] = ['USDA', 'xUSD'];
   lpTokenList: any[] = ['USDA-xUSD-LP']
   poolChoice: string = 'add';
+  cycleView: string = 'upcoming';
+  cycleClaimNumber: number = 1;
 
 
   tokenA: string = '';
@@ -35,6 +56,9 @@ export class EarnComponent implements OnInit {
   lpToken_amt_total: number = 0;
 
   numCycles: number = 50;
+
+  displayedColumns: string[] = ['position', 'startBlock', 'totalLPtokens', 'userLPtokens', 'userRewards', 'userCTA']
+  dataSource = [...CYCLES_DATA];
 
   swap(pick: string) {
     openContractCall({
@@ -85,6 +109,9 @@ export class EarnComponent implements OnInit {
     if (tokenType == "LP") {
       this.lpToken_amt_user = parseInt(val);
     }
+    else if (tokenType=='Cycle') {
+      this.cycleClaimNumber = parseInt(val)
+    }
     else {
       this.tokenA_amt = parseInt(val);
       this.tokenB_amt = this.tokenA_amt;
@@ -95,6 +122,11 @@ export class EarnComponent implements OnInit {
   toggle(poolOption: string) {
     this.poolChoice = poolOption;
     console.log(this.poolChoice)
+  }
+
+  cvToggle(cycleViewOption: string) {
+    this.cycleView = cycleViewOption;
+    console.log(this.cycleView)
   }
 
   printNumCycles() {
