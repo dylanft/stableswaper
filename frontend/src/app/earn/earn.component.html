@@ -10,8 +10,8 @@
             </table>
         </div>
         <div class="info-box-line">Active Tokens:
-            <table id="idle-info">
-                <tr>
+            <table id="active-info">
+                <tr style="text-align:center;">
                     <td># LP Tokens</td>
                     <td>$ Amount:</td>
                     <!-- <td>Unclaimed Rewards:</td> -->
@@ -19,15 +19,17 @@
             </table>
         </div>
         <div class="info-box-line">Total Pool Info:
-            <table id="idle-info">
-                <tr>
+            <table id="pool-info">
+                <tr style="text-align:center;">
                     <td>Total TVL: $</td>
                     <td>7d Trading Volume:</td>
+                    <td>Trading Fees: 0.04%</td>      
                 </tr>
             </table>            
         </div>
     </div>
 
+    <!-- start of pool box-->
     <div id="pool-box-main" class="card-container">
       <div id="pool-box-header">POOL</div>
       <div id="add-remove-toggle">
@@ -163,9 +165,71 @@
             <button (click)="swap('🍎')">Confirm</button>
         </div>
       </div>
-
     </div>
+    <!-- end of pool box-->
+
+    <!-- start of earn box-->
+    <div id="pool-box-main" class="card-container">
+        <div id="pool-box-header">EARN</div>
+        <!-- <div id="add-remove-toggle">
+          <mat-button-toggle-group name="poolChoice">
+              <mat-button-toggle value="add" (click)="toggle('add')">Add to Pool</mat-button-toggle>
+              <mat-button-toggle value="remove" (click)="toggle('remove')">Remove Liquidity</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div> -->
+
+        <div id="token-A-box" class="token-box">
+            <table style="display:table; width:100%">
+                <tr align="center">
+                    <td align="left" style="float:left;">
+                    <!-- token dropdown -->
+                    <div id="token-dropdown">
+                        <mat-form-field appearance="fill" style="max-width:85%; background-color: cornsilk; border-radius: 10px;">
+                        <mat-label>Select LP Token</mat-label>
+                        <mat-select (selectionChange)="selectToken($event, 'LP')">
+                            <mat-option *ngFor="let token of lpTokenList" [value]="token">{{token}}</mat-option>
+                        </mat-select>
+                        </mat-form-field>
+        
+                    </div>
+                    </td>
+                    <td style="max-width: 40%;">
+                    <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+                        <mat-label>Amount of LP Tokens</mat-label>
+                        <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP')" [(ngModel)]="lpToken_amt_user">
+                        <!-- <span matSuffix>.00</span> -->
+                    </mat-form-field>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="float:left; font-size: x-small;">
+                    <!-- balance display -->            
+                    &nbsp; balance: #
+                    </td>
+                    <!-- dollar equivalent -->
+                    <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
+                    dollar equivalent
+                    </td> -->
+                </tr>
+            </table>
+        </div>
+        <div id="slider-row">
+
+            <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+                <mat-label>Number of Cycles (1 Cycle ~ 1 Day)</mat-label>
+                <input matInput type="number" min="1" class="input-right-align" placeholder="" #nCycles (keyup)="printNumCycles()" [(ngModel)]="numCycles" >
+                <!-- <span matSuffix>.00</span> -->
+            </mat-form-field>
+            <mat-slider min="1" max="100" step="1" value="50" [(ngModel)]="numCycles" (ngModelChange)="printNumCycles()"></mat-slider>
+
+        </div>
+        <div class="card" id="swap-box-footer">
+            <button (click)="swap('🍎')">Confirm</button>
+        </div>
+      </div>
+    <!-- end of earn box-->
 </div>
+
 <div *ngIf="!userSession.isUserSignedIn()">
     <app-connect-wallet></app-connect-wallet>
 </div>

@@ -25,11 +25,12 @@ div {
     border: 10px solid #254841;
     border-radius: 10px;
     color: white;
+    padding: 5px;
   }
 
   .info-box-line {
     margin: 0;
-    padding: 10px;
+    padding: 5px;
     background-color: #254841;
     color: cornsilk;
     font-weight: bold;
@@ -90,9 +91,9 @@ div {
     margin:0px;
   }
 
-  #idle-info {
+  #idle-info, #active-info, #pool-info {
     color: white;
-
+    font-size: 10px;
   }
 
   /* tr {
@@ -114,5 +115,43 @@ div {
   }
 
   mat-button-toggle {
-    color: #254841
+    color: #254841;
+    background-color: cornsilk;
+    border: 1pt solid #254841;
+  }
+
+
+
+
+  ::ng-deep .mat-slider.mat-slider-horizontal .mat-slider-wrapper {
+    top: 18px;
+  }
+  ::ng-deep .mat-slider.mat-slider-horizontal .mat-slider-track-wrapper {
+    height: 12px;
+    border-radius: 10px
+  }
+  ::ng-deep .mat-slider.mat-slider-horizontal .mat-slider-track-background,
+  ::ng-deep .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
+    height: 100%;
+  }
+  ::ng-deep .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
+    background-color: #254841;
+  }
+  ::ng-deep .mat-accent .mat-slider-thumb {
+    height: 30px;
+    width: 30px;
+    background-color: white !important;
+    border: solid 2px gray;
+    bottom: -20px;
+    right: -20px;
+  }
+  ::ng-deep .mat-slider-thumb {
+    background-color: white !important;
+  }
+  ::ng-deep .mat-slider-min-value:not(.mat-slider-thumb-label-showing) .mat-slider-thumb {
+    background-color: white;
+  }
+
+  #slider-row {
+    text-align: center;
   }

@@ -34,6 +34,8 @@ export class EarnComponent implements OnInit {
   lpToken_amt_user: number = 0;
   lpToken_amt_total: number = 0;
 
+  numCycles: number = 50;
+
   swap(pick: string) {
     openContractCall({
       network: new StacksTestnet(),
@@ -93,5 +95,9 @@ export class EarnComponent implements OnInit {
   toggle(poolOption: string) {
     this.poolChoice = poolOption;
     console.log(this.poolChoice)
+  }
+
+  printNumCycles() {
+    console.log(this.numCycles)
   }
 }
