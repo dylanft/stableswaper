@@ -142,9 +142,8 @@
                 </td>
                 <td style="max-width: 40%;">
                   <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
-                    <mat-label>Amount</mat-label>
-                    <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP')" [(ngModel)]="lpToken_amt_user" >
-                    <span matPrefix>$&nbsp;</span>
+                    <mat-label>Amount of LP Tokens</mat-label>
+                    <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP-pool')" [(ngModel)]="lpToken_amt_user_pool" >
                     <!-- <span matSuffix>.00</span> -->
                   </mat-form-field>
                 </td>
@@ -169,15 +168,8 @@
     <!-- end of pool box-->
 
     <!-- start of earn box-->
-    <div id="pool-box-main" class="card-container">
-        <div id="pool-box-header">EARN</div>
-        <!-- <div id="add-remove-toggle">
-          <mat-button-toggle-group name="poolChoice">
-              <mat-button-toggle value="add" (click)="toggle('add')">Add to Pool</mat-button-toggle>
-              <mat-button-toggle value="remove" (click)="toggle('remove')">Remove Liquidity</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div> -->
-
+    <div id="earn-box-main" class="card-container">
+        <div id="earn-box-header">EARN</div>
         <div id="token-A-box" class="token-box">
             <table style="display:table; width:100%">
                 <tr align="center">
@@ -196,7 +188,7 @@
                     <td style="max-width: 40%;">
                     <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
                         <mat-label>Amount of LP Tokens</mat-label>
-                        <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP')" [(ngModel)]="lpToken_amt_user">
+                        <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP-earn')" [(ngModel)]="lpToken_amt_user_earn">
                         <!-- <span matSuffix>.00</span> -->
                     </mat-form-field>
                     </td>
@@ -230,17 +222,17 @@
     <!-- end of earn box-->
 
     <!-- start of cycle box -->
-    <div id="pool-box-main" class="card-container">
-        <div id="pool-box-header">CYCLE REWARDS</div>
+    <div id="cycle-box-main" class="card-container">
+        <div id="cycle-box-header">CYCLE REWARDS</div>
         <div id="add-remove-toggle">
             <mat-button-toggle-group name="cycleView">
                 <!--TODO: change cycle view to data and claim rewards-->
-                <mat-button-toggle value="upcoming" (click)="cvToggle('upcoming')">Cycle Data</mat-button-toggle>
-                <mat-button-toggle value="completed" (click)="cvToggle('completed')">Claim Rewards</mat-button-toggle>
+                <mat-button-toggle value="upcoming" (click)="cvToggle('cycle')">Cycle Data</mat-button-toggle>
+                <mat-button-toggle value="completed" (click)="cvToggle('claim')">Claim Rewards</mat-button-toggle>
             </mat-button-toggle-group>
           </div>
           <!--TODO: show/hide previous cycles based on toggle-->
-          <div *ngIf="cycleView=='upcoming'" id="upcoming-cycles" class="cycle-table">
+          <div *ngIf="cycleView=='cycle'" id="upcoming-cycles" class="cycle-table">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 <!-- Position Column -->
                 <ng-container matColumnDef="position">
@@ -283,7 +275,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>                
             </table>
           </div>
-          <div *ngIf="cycleView=='completed'" id ='completed-cycles'>
+          <div *ngIf="cycleView=='claim'" id ='completed-cycles'>
             <div id="token-A-box" class="token-box">
                 <table style="display:table; width:100%">
                   <tr align="center">

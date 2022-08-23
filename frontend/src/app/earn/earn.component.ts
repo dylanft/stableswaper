@@ -41,7 +41,7 @@ export class EarnComponent implements OnInit {
   tokenList: any[] = ['USDA', 'xUSD'];
   lpTokenList: any[] = ['USDA-xUSD-LP']
   poolChoice: string = 'add';
-  cycleView: string = 'upcoming';
+  cycleView: string = 'cycle';
   cycleClaimNumber: number = 1;
 
 
@@ -53,6 +53,8 @@ export class EarnComponent implements OnInit {
 
   lpToken: string = '';
   lpToken_amt_user: number = 0;
+  lpToken_amt_user_earn: number = 0;
+  lpToken_amt_user_pool: number = 0;
   lpToken_amt_total: number = 0;
 
   numCycles: number = 50;
@@ -106,8 +108,11 @@ export class EarnComponent implements OnInit {
     //TODO: update this function to grab price of this # of stablecoins in real dollars based on AMM
     //TODO: display output below the amount entered in the text field
     console.log(val)
-    if (tokenType == "LP") {
-      this.lpToken_amt_user = parseInt(val);
+    if (tokenType == "LP-pool") {
+      this.lpToken_amt_user_pool = parseInt(val);
+    }
+    else if (tokenType == "LP-earn") {
+      this.lpToken_amt_user_earn = parseInt(val);
     }
     else if (tokenType=='Cycle') {
       this.cycleClaimNumber = parseInt(val)

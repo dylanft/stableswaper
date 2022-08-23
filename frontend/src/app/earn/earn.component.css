@@ -11,7 +11,7 @@ div {
     margin: 4px;
   }
   
-  #swap-box-main, #pool-box-main {
+  #swap-box-main, #pool-box-main, #earn-box-main, #cycle-box-main {
     /* min-height: 400px; */
     min-width: 400px;
     border: 10px solid #254841;
@@ -36,7 +36,7 @@ div {
     font-weight: bold;
   }
   
-  #swap-box-header, #pool-box-header {
+  #swap-box-header, #pool-box-header, #earn-box-header, #cycle-box-header {
     margin: 0;
     padding: 10px;
     background-color: #254841;
