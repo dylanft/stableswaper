@@ -17,6 +17,7 @@ import { ContractVoteComponent } from './contract-vote/contract-vote.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EarnComponent } from './earn/earn.component';
 import { SwapComponent } from './swap/swap.component';
+import { FaucetComponent } from './faucet/faucet.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { SwapComponent } from './swap/swap.component';
     ConnectWalletComponent,
     ContractVoteComponent,
     EarnComponent,
-    SwapComponent
+    SwapComponent,
+    FaucetComponent
   ],
   imports: [
     BrowserModule,

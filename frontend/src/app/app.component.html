@@ -17,9 +17,10 @@
   
   <div class="spacer"></div>
   <span id="links">
-    <a href="javascript:void(0);" (click)="setContent('home')">Home</a>
+    <!-- <a href="javascript:void(0);" (click)="setContent('home')">Home</a> -->
     <a href="javascript:void(0);" (click)="setContent('swap')">Swap</a>
     <a href="javascript:void(0);" (click)="setContent('earn')">Earn</a>
+    <a href="javascript:void(0);" (click)="setContent('faucet')">Faucet</a>
   </span>
   <app-connect-wallet></app-connect-wallet>
 </div>
@@ -33,6 +34,8 @@
     <token-swap *ngIf="content=='swap'"></token-swap>
     <!-- <app-connect-wallet *ngIf="content=='earn'"></app-connect-wallet> -->
     <earn *ngIf="content=='earn'"></earn>
+    <faucet *ngIf="content=='faucet'"></faucet>
+
 
   </div>
 
