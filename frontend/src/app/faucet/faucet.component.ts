@@ -26,6 +26,10 @@ export class FaucetComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    if (this.userSession.loadUserData().profile.stxAddress.testnet == this.deployerAddress) {
+      this.loggedInAsAdmin = true;
+      console.log("loggedInAsAdmin: ", this.loggedInAsAdmin)
+    }
   }
   tokenList: any[] = ['USDA', 'xUSD'];
   tokenChoice: string = '';
@@ -33,6 +37,7 @@ export class FaucetComponent implements OnInit {
   tokenChoiceContractName: string = '';
   mintAmount: number = 0;
   deployerAddress: string = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+  loggedInAsAdmin: boolean = false;
 
   network: any = new StacksMocknet();
   usdaContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
@@ -153,7 +158,7 @@ export class FaucetComponent implements OnInit {
 
   setMintAmount(val: string) {
     console.log(val)
-    this.mintAmount = parseInt(val);
+    this.mintAmount = parseInt(val)*1000000;
 
   }
 }

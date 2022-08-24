@@ -1,7 +1,7 @@
 <div *ngIf="userSession.isUserSignedIn()">
-    <!-- <h3>Swap Apples and Oranges</h3>
-    <button (click)="swap('🍊')"> Swap for 🍊 </button>
-    <button (click)="swap('🍎')"> Swap for 🍎 </button> -->
+    <div *ngIf="loggedInAsAdmin">create pool</div>
+
+
     <div id="mint-box-main" class="card-container">
       <div id="mint-box-header">MINT</div>
       <div id="token-mint-box" class="token-box">
