@@ -1,6 +1,10 @@
 <div *ngIf="userSession.isUserSignedIn()">
-    <div *ngIf="loggedInAsAdmin">create pool</div>
-
+    <div *ngIf="loggedInAsAdmin">
+        <div class="card" id="add-pool">
+            <button (click)="createPool()">Create xUSD/USDA Pool</button>
+        </div>  
+    </div>
+    
 
     <div id="mint-box-main" class="card-container">
       <div id="mint-box-header">MINT</div>

@@ -9,6 +9,7 @@ import {
   contractPrincipalCVFromAddress,
   createAddress,
   createLPString,
+  intCV,
   PostConditionMode,
   stringUtf8CV,
   uintCV,
@@ -158,7 +159,33 @@ export class FaucetComponent implements OnInit {
 
   setMintAmount(val: string) {
     console.log(val)
-    this.mintAmount = parseInt(val)*1000000;
+    this.mintAmount = parseInt(val);
+  }
 
+  createPool() {
+    var tx = this.usdaContract;
+    var ty = this.xusdContract;
+    openContractCall({
+      network: this.network,
+      anchorMode: AnchorMode.Any,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap-v2',
+      functionName: 'create-pair',
+      functionArgs: [tx, ty, "usda-xusd", intCV(1000000), intCV(1000000)],
+      postConditionMode: PostConditionMode.Deny,
+      postConditions: [],
+      onFinish: (data) => {
+        console.log('onFinish:', data);
+        window
+          ?.open(
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            '_blank'
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log('onCancel:', 'Transaction was canceled');
+      },
+    });
   }
 }
