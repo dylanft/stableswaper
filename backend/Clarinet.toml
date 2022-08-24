@@ -1,0 +1,47 @@
+[project]
+name = "stableswap"
+authors = []
+description = ""
+telemetry = false
+requirements = []
+boot_contracts = ["pox", "costs-v2", "bns"]
+
+[project.cache_location]
+path = ".requirements"
+
+[contracts.sip-010-trait-ft-standard]
+path = "contracts/external/sip-010-trait-ft-standard.clar"
+depends_on = []
+
+[contracts.stableswap]
+path = "contracts/stableswap.clar"
+depends_on = []
+
+[contracts.stableswap-v2]
+path = "contracts/stableswap-v2.clar"
+depends_on = []
+
+[contracts.trait-stableswap]
+path = "contracts/trait-stableswap.clar"
+depends_on = []
+
+[contracts.usda-token]
+path = "contracts/external/usda-token.clar"
+depends_on = ["sip-010-trait-ft-standard"]
+
+[contracts.xusd-token]
+path = "contracts/external/xusd-token.clar"
+depends_on = ["sip-010-trait-ft-standard"]
+
+[repl]
+costs_version = 2
+parser_version = 2
+
+[repl.analysis]
+passes = ["check_checker"]
+
+[repl.analysis.check_checker]
+strict = false
+trusted_sender = false
+trusted_caller = false
+callee_filter = false

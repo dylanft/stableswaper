@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { openContractCall } from '@stacks/connect';
-import { StacksTestnet } from '@stacks/network';
+import { StacksMocknet, StacksTestnet } from '@stacks/network';
 import {
   AnchorMode,
   PostConditionMode,
@@ -64,11 +64,36 @@ export class EarnComponent implements OnInit {
 
   swap(pick: string) {
     openContractCall({
-      network: new StacksTestnet(),
+      network: new StacksMocknet(),
       anchorMode: AnchorMode.Any,
       contractAddress: 'ST39MJ145BR6S8C315AG2BD61SJ16E208P1FDK3AK',
       contractName: 'example-fruit-vote-contract',
       functionName: 'vote',
+      functionArgs: [stringUtf8CV(pick)],
+      postConditionMode: PostConditionMode.Deny,
+      postConditions: [],
+      onFinish: (data) => {
+        console.log('onFinish:', data);
+        window
+          ?.open(
+            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            '_blank'
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log('onCancel:', 'Transaction was canceled');
+      },
+    });
+  }
+
+  swapStxForMagic(pick: string) {
+    openContractCall({
+      network: new StacksTestnet(),
+      anchorMode: AnchorMode.Any,
+      contractAddress: 'ST1RF441MG7VMFPN73DNHEH341DH7GDZW0MYD0GDY',
+      contractName: 'beanstalk-exchange',
+      functionName: 'stx-to-token-swap',
       functionArgs: [stringUtf8CV(pick)],
       postConditionMode: PostConditionMode.Deny,
       postConditions: [],

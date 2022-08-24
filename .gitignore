@@ -9,6 +9,9 @@ frontend/npm_modules/
 *frontend/.vscode
 *DS_Store
 *.DS_Store
+backend/settings/Mainnet.toml
+backend/settings/Testnet.toml
+backend/history.txt
 
 # User-specific files
 *.rsuser
