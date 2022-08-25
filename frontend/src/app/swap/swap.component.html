@@ -24,7 +24,7 @@
             <td style="max-width: 40%;">
               <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
                 <mat-label>Amount</mat-label>
-                <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="printTokenAmount(tokenAmount_A.value)">
+                <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="updateTokenAmount(tokenAmount_A.value, 'A')" [(ngModel)]="tokenA_amt">
                 <span matPrefix>$&nbsp;</span>
                 <!-- <span matSuffix>.00</span> -->
               </mat-form-field>
@@ -66,7 +66,7 @@
             <td style="max-width: 40%;">
               <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
                 <mat-label>Amount</mat-label>
-                <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_B (keyup)="printTokenAmount(tokenAmount_B.value)">
+                <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_B (keyup)="updateTokenAmount(tokenAmount_B.value, 'B')" [(ngModel)]="tokenB_amt">
                 <span matPrefix>$&nbsp;</span>
                 <!-- <span matSuffix>.00</span> -->
               </mat-form-field>
@@ -87,7 +87,7 @@
       
       <div class="card" id="swap-box-footer">
         <!-- <button (click)="swap('🍎')">Confirm</button> -->
-        <button (click)="swapXforY('USDA', 'xUSD', 25000, 25000)">Confirm</button>
+        <button (click)="swapXforY('USDA', 'xUSD', tokenA_amt, tokenB_amt)">Confirm</button>
       </div>
     </div>
   </div>
