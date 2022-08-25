@@ -9,10 +9,10 @@ plan:
     - id: 0
       transactions:
         - contract-publish:
-            contract-name: trait-stableswap
+            contract-name: apples-r
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 14810
-            path: contracts/trait-stableswap.clar
+            cost: 10770
+            path: contracts/apples-r.clar
             anchor-block-only: true
         - contract-publish:
             contract-name: sip-010-trait-ft-standard
@@ -21,22 +21,10 @@ plan:
             path: contracts/external/sip-010-trait-ft-standard.clar
             anchor-block-only: true
         - contract-publish:
-            contract-name: stableswap-v2
+            contract-name: usda-token
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 210740
-            path: contracts/stableswap-v2.clar
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: usdex-lp
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 12910
-            path: contracts/usdex-lp.clar
-            anchor-block-only: true
-        - contract-publish:
-            contract-name: apples-lp
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 12950
-            path: contracts/apples-lp.clar
+            cost: 45290
+            path: contracts/external/usda-token.clar
             anchor-block-only: true
         - contract-publish:
             contract-name: xusd-token
@@ -45,22 +33,22 @@ plan:
             path: contracts/external/xusd-token.clar
             anchor-block-only: true
         - contract-publish:
-            contract-name: apples-r
+            contract-name: usdex-lp
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 10770
-            path: contracts/apples-r.clar
+            cost: 12910
+            path: contracts/usdex-lp.clar
             anchor-block-only: true
         - contract-publish:
-            contract-name: apple-dex
+            contract-name: trait-stableswap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 69170
-            path: contracts/apple-dex.clar
+            cost: 14810
+            path: contracts/trait-stableswap.clar
             anchor-block-only: true
         - contract-publish:
-            contract-name: usda-token
+            contract-name: stableswap-v2
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 45290
-            path: contracts/external/usda-token.clar
+            cost: 213290
+            path: contracts/stableswap-v2.clar
             anchor-block-only: true
         - contract-publish:
             contract-name: stableswap
@@ -73,4 +61,16 @@ plan:
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 69080
             path: contracts/usdex.clar
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: apples-lp
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 12950
+            path: contracts/apples-lp.clar
+            anchor-block-only: true
+        - contract-publish:
+            contract-name: apple-dex
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 69170
+            path: contracts/apple-dex.clar
             anchor-block-only: true

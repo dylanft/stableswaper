@@ -376,7 +376,7 @@
 
 ;; exchange known dy for whatever dx based on liquidity, returns (dx dy)
 ;; the swap will not happen if can't get at least min-dx back
-(define-public (swap-y-for-x (token-x-trait <sip-010-token>) (token-y-trait <sip-010-token>) (dy uint) (min-dx uint))
+(define-public (swap-y-for-x (token-y-trait <sip-010-token>) (token-x-trait <sip-010-token>) (dy uint) (min-dx uint))
   ;; calculate dx
   ;; calculate fee on dy
   ;; transfer
@@ -402,12 +402,15 @@
     ;; (asserts! (< min-dx dx) too-much-slippage-err)
 
     ;; TODO(psq): check that the amount transfered in matches the amount requested
-    (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer dx contract-address sender none))) transfer-x-failed-err)
     (asserts! (is-ok (contract-call? token-y-trait transfer dy sender contract-address none)) transfer-y-failed-err)
+    (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer dx contract-address sender none))) transfer-x-failed-err)
+
+    ;; (asserts! (is-ok (as-contract (contract-call? token-y-trait transfer dy contract-address sender none))) transfer-y-failed-err)
+    ;; (asserts! (is-ok (contract-call? token-x-trait transfer dx sender contract-address none)) transfer-x-failed-err)
 
     (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
     (print { object: "pair", action: "swap-y-for-x", data: pair-updated })
-    (ok (list dx dy))
+    (ok (list dy dx))
   )
 )
 
