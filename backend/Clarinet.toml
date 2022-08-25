@@ -29,6 +29,9 @@ path = "contracts/stableswap-v2.clar"
 [contracts.trait-stableswap]
 path = "contracts/trait-stableswap.clar"
 
+[contracts.usd-lp]
+path = "contracts/usd-lp.clar"
+
 [contracts.usda-token]
 path = "contracts/external/usda-token.clar"
 

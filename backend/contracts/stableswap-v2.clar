@@ -58,14 +58,9 @@
   }
 )
 
-
-;; TODO(psq): replace use of balance-x/balance-y with a call to balance-of(swapr) on the token itself, no write to do actually!!!  The transfer is the write, that's cool :)
-;; I don't think so anymore?
-
 ;; (define-data-var pairs-list (list 2000 uint) (list))
 (define-data-var pair-count uint u0)
 
-;; there can not be any tokens outside those involved in a pair (either as swapping fee or as flash loan fee, to be partly distributed to swapr holders, or kept in treasury)
 (define-map treasury-amounts
   {
     token: principal,
@@ -85,11 +80,8 @@
     {
         x-amount: uint,
         y-amount: uint,
-
     }
 )
-
-
 
 (define-read-only (get-name (token-x-trait <sip-010-token>) (token-y-trait <sip-010-token>))
   (let
@@ -182,6 +174,12 @@
           (/ (* x balance-y) balance-x)
         )
       )
+      (mint-amount 
+        (if (is-eq (get shares-total pair) u0)
+          (* (+ balance-x x) (+ balance-y new-y))
+          (/ (* (+ balance-x x) (+ balance-y new-y)) (get shares-total pair))
+        )
+      )    
       (pair-updated (merge pair {
         shares-total: (+ new-shares (get shares-total pair)),
         balance-x: (+ balance-x x),
@@ -194,7 +192,9 @@
         }
       )
     )
+    
       ;; TODO(psq) check if x or y is 0, to calculate proper exchange rate unless shares-total is 0, which would be an error
+    (asserts! (is-ok (contract-call? .usd-lp mint mint-amount tx-sender)) (err u1110))
     (asserts! (is-ok (contract-call? token-x-trait transfer x tx-sender contract-address none)) transfer-x-failed-err)
     (asserts! (is-ok (contract-call? token-y-trait transfer new-y tx-sender contract-address none)) transfer-y-failed-err)
 
@@ -238,16 +238,6 @@
       (token-x (contract-of token-x-trait))
       (token-y (contract-of token-y-trait))
       (pair-id (+ (var-get pair-count) u1))
-    ;;   (pair-data {
-    ;;     shares-total: u0,
-    ;;     balance-x: u0,
-    ;;     balance-y: u0,
-    ;;     fee-balance-x: u0,
-    ;;     fee-balance-y: u0,
-    ;;     fee-to-address: none,
-    ;;     swapr-token: (contract-of token-swapr-trait),
-    ;;     name: pair-name,
-    ;;   })
       (pair-data {
         shares-total: u0,
         balance-x: u0,
@@ -257,7 +247,9 @@
         fee-to-address: none,
         name: pair-name,
       })
+      
     )
+    ;; trying to add a pair for xusd-usda when the usda-xusd pair already exists will fail
     (asserts!
       (and
         (is-none (map-get? pairs-data-map { token-x: token-x, token-y: token-y }))
