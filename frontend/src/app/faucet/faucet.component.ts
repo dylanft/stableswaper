@@ -139,8 +139,7 @@ export class FaucetComponent implements OnInit {
       network: this.network,
       anchorMode: AnchorMode.Any,
       contractAddress: this.deployerAddress,
-      // contractName: this.tokenChoiceContractName,
-      contractName: 'apples-r',
+      contractName: this.tokenChoiceContractName,
       functionName: 'mint',
       functionArgs: [uintCV(this.mintAmount), principalCV(txSenderAddress)],
       postConditionMode: PostConditionMode.Deny,
@@ -168,8 +167,8 @@ export class FaucetComponent implements OnInit {
   }
 
   createPool() {
-    var tx_amt = 1000000;
-    var ty_amt = 1000000;
+    var tx_amt = 1000000*1e3;
+    var ty_amt = 1000000*1e3;
     var txSenderAddress: string;
     if (this.network.isMainnet()) {
       txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
@@ -181,16 +180,16 @@ export class FaucetComponent implements OnInit {
 
     var createPoolPC1 = makeStandardFungiblePostCondition(
       txSenderAddress,
-      FungibleConditionCode.LessEqual,
+      FungibleConditionCode.Equal,
       tx_amt,
-      createAssetInfo(this.deployerAddress, 'usda-token', 'USDA')
+      createAssetInfo(this.deployerAddress, 'usda-token', 'usda')
     )
 
     var createPoolPC2 = makeStandardFungiblePostCondition(
       txSenderAddress,
-      FungibleConditionCode.LessEqual,
+      FungibleConditionCode.Equal,
       tx_amt,
-      createAssetInfo(this.deployerAddress, 'xusd-token', 'xUSD')
+      createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd')
     )
 
     var tx = this.usdaContract;
@@ -203,7 +202,7 @@ export class FaucetComponent implements OnInit {
       contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'stableswap-v2',
       functionName: 'create-pair',
-      functionArgs: [tx, ty, stringAsciiCV("usda-xusd"), uintCV(1), uintCV(1)],
+      functionArgs: [tx, ty, stringAsciiCV("usda-xusd"), uintCV(tx_amt), uintCV(ty_amt)],
       postConditionMode: PostConditionMode.Deny,
       postConditions: [createPoolPC1, createPoolPC2],
       onFinish: (data) => {
