@@ -65,56 +65,6 @@ export class SwapComponent implements OnInit {
 
   public userSession = userSession;
 
-  swap(pick: string) {
-    openContractCall({
-      network: new StacksTestnet(),
-      anchorMode: AnchorMode.Any,
-      contractAddress: 'ST39MJ145BR6S8C315AG2BD61SJ16E208P1FDK3AK',
-      contractName: 'example-fruit-vote-contract',
-      functionName: 'vote',
-      functionArgs: [stringUtf8CV(pick)],
-      postConditionMode: PostConditionMode.Deny,
-      postConditions: [],
-      onFinish: (data) => {
-        console.log('onFinish:', data);
-        window
-          ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
-            '_blank'
-          )
-          ?.focus();
-      },
-      onCancel: () => {
-        console.log('onCancel:', 'Transaction was canceled');
-      },
-    });
-  }
- 
-  swapStxForMagic(pick: number) {
-    openContractCall({
-      network: this.network,
-      anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1RF441MG7VMFPN73DNHEH341DH7GDZW0MYD0GDY',
-      contractName: 'beanstalk-exchange',
-      functionName: 'stx-to-token-swap',
-      functionArgs: [uintCV(pick)],
-      postConditionMode: PostConditionMode.Deny,
-      postConditions: [],
-      onFinish: (data) => {
-        console.log('onFinish:', data);
-        window
-          ?.open(
-            `https://localhost:8000/txid/${data.txId}?chain=testnet`,
-            '_blank'
-          )
-          ?.focus();
-      },
-      onCancel: () => {
-        console.log('onCancel:', 'Transaction was canceled');
-      },
-    });
-  }
-
 
   swapXforY(tokenX: string, tokenY: string, x: number, y: number) {
     x = x*1e6;
@@ -137,7 +87,7 @@ export class SwapComponent implements OnInit {
         createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
       )
     }
-    else if (tokenX == 'xUSD' && tokenY=='USDA') {
+    else { //(tokenX == 'xUSD' && tokenY=='USDA')
       var tX = this.xusdContract;
       var tY = this.usdaContract;
       var fname = 'swap-y-for-x'
@@ -153,27 +103,6 @@ export class SwapComponent implements OnInit {
         FungibleConditionCode.GreaterEqual,
         y,
         createAssetInfo(this.deployerAddress, 'usda-token', 'usda') 
-      )
-      
-      
-    }
-    else {
-      var tX = this.usdaContract;
-      var tY = this.xusdContract;
-      var fname = 'swap-x-for-y'; 
-      //shouldn't happen
-      var createPoolPC1 = makeStandardFungiblePostCondition(
-        this.txSenderAddress,
-        FungibleConditionCode.Equal,
-        x,
-        createAssetInfo(this.deployerAddress, 'usda-token', 'usda')
-      )
-      var createPoolPC2 = makeContractFungiblePostCondition(
-        this.deployerAddress,
-        'stableswap-v2',
-        FungibleConditionCode.GreaterEqual,
-        y,
-        createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
       )
     }
     openContractCall({
@@ -220,8 +149,6 @@ export class SwapComponent implements OnInit {
   }
 
   updateTokenAmount(val: string, tokenType: string) {
-    //TODO: update this function to grab price of this # of stablecoins in real dollars based on AMM
-    //TODO: display output below the amount entered in the text field
     console.log(val)
     if (tokenType == "A") {
       this.tokenA = tokenType;
@@ -233,9 +160,5 @@ export class SwapComponent implements OnInit {
       this.tokenB_amt = parseInt(val);
       console.log("tokenB: ", this.tokenB_amt);
     }
-      // this.tokenA_amt = parseInt(val);
-      // this.tokenB_amt = this.tokenA_amt;
-    
-    
   }
 }
