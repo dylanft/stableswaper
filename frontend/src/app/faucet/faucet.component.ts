@@ -8,9 +8,14 @@ import {
   ContractPrincipalCV,
   contractPrincipalCVFromAddress,
   createAddress,
+  createAssetInfo,
   createLPString,
+  FungibleConditionCode,
   intCV,
+  makeStandardFungiblePostCondition,
+  makeStandardSTXPostCondition,
   PostConditionMode,
+  stringAsciiCV,
   stringUtf8CV,
   uintCV,
 } from '@stacks/transactions';
@@ -134,8 +139,8 @@ export class FaucetComponent implements OnInit {
       network: this.network,
       anchorMode: AnchorMode.Any,
       contractAddress: this.deployerAddress,
-      // contractName: this.tokenChoiceContract.contractName.content,
-      contractName: this.tokenChoiceContractName,
+      // contractName: this.tokenChoiceContractName,
+      contractName: 'apples-r',
       functionName: 'mint',
       functionArgs: [uintCV(this.mintAmount), principalCV(txSenderAddress)],
       postConditionMode: PostConditionMode.Deny,
@@ -163,15 +168,124 @@ export class FaucetComponent implements OnInit {
   }
 
   createPool() {
+    var tx_amt = 1000000;
+    var ty_amt = 1000000;
+    var txSenderAddress: string;
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var createPoolPC1 = makeStandardFungiblePostCondition(
+      txSenderAddress,
+      FungibleConditionCode.LessEqual,
+      tx_amt,
+      createAssetInfo(this.deployerAddress, 'usda-token', 'USDA')
+    )
+
+    var createPoolPC2 = makeStandardFungiblePostCondition(
+      txSenderAddress,
+      FungibleConditionCode.LessEqual,
+      tx_amt,
+      createAssetInfo(this.deployerAddress, 'xusd-token', 'xUSD')
+    )
+
     var tx = this.usdaContract;
     var ty = this.xusdContract;
+    console.log("tx: ", tx)
+    console.log("ty: ", ty)
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
       contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'stableswap-v2',
       functionName: 'create-pair',
-      functionArgs: [tx, ty, "usda-xusd", intCV(1000000), intCV(1000000)],
+      functionArgs: [tx, ty, stringAsciiCV("usda-xusd"), uintCV(1), uintCV(1)],
+      postConditionMode: PostConditionMode.Deny,
+      postConditions: [createPoolPC1, createPoolPC2],
+      onFinish: (data) => {
+        console.log('onFinish:', data);
+        window
+          ?.open(
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            '_blank'
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log('onCancel:', 'Transaction was canceled');
+      },
+    });
+  }
+
+  createPool2() {
+    var tx_amt = 1000;
+    var ty_amt = tx_amt;
+    var txSenderAddress: string;
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var createPoolPC1 = makeStandardSTXPostCondition(
+      txSenderAddress,
+      FungibleConditionCode.Equal,
+      tx_amt
+    )
+
+    var createPoolPC2 = makeStandardFungiblePostCondition(
+      txSenderAddress,
+      FungibleConditionCode.Equal,
+      ty_amt,
+      createAssetInfo('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', 'apples-r', 'apples-r')
+    )
+
+    // var tx = this.usdaContract;
+    // var ty = this.xusdContract;
+    // console.log("tx: ", tx)
+    // console.log("ty: ", ty)
+    openContractCall({
+      network: this.network,
+      anchorMode: AnchorMode.Any,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'apple-dex',
+      functionName: 'provide-liquidity',
+      functionArgs: [uintCV(tx_amt), uintCV(ty_amt)],
+      postConditionMode: PostConditionMode.Allow,
+      postConditions: [],
+      onFinish: (data) => {
+        console.log('onFinish:', data);
+        window
+          ?.open(
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            '_blank'
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log('onCancel:', 'Transaction was canceled');
+      },
+    });
+  }
+
+  addToPool() {
+    var tx = this.usdaContract;
+    var ty = this.xusdContract;
+    console.log("tx: ", tx)
+    console.log("ty: ", ty)
+    openContractCall({
+      network: this.network,
+      anchorMode: AnchorMode.Any,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap-v2',
+      functionName: 'add-to-position',
+      functionArgs: [tx, ty, uintCV(500000), uintCV(500000)],
       postConditionMode: PostConditionMode.Deny,
       postConditions: [],
       onFinish: (data) => {

@@ -1,10 +1,14 @@
 <div *ngIf="userSession.isUserSignedIn()">
     <div *ngIf="loggedInAsAdmin">
         <div class="card" id="add-pool">
-            <button (click)="createPool()">Create xUSD/USDA Pool</button>
+            <button (click)="createPool2()">Create xUSD/USDA Pool</button>
         </div>  
     </div>
-    
+    <div *ngIf="loggedInAsAdmin">
+      <div class="card" id="add-to-pool">
+          <button (click)="addToPool()">Add To xUSD/USDA Pool</button>
+      </div>  
+    </div>
 
     <div id="mint-box-main" class="card-container">
       <div id="mint-box-header">MINT</div>
@@ -27,9 +31,8 @@
             <td style="max-width: 40%;">
               <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
                 <mat-label>Amount</mat-label>
-                <input matInput type="number" min="1" max="10000" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="setMintAmount(tokenAmount_A.value)">
-                <!-- <span matPrefix>$&nbsp;</span> -->
-                <!-- <span matSuffix>.00</span> -->
+                <!-- <input matInput type="number" min="1" max="10000" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="setMintAmount(tokenAmount_A.value)"> -->
+                <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="setMintAmount(tokenAmount_A.value)">
               </mat-form-field>
             </td>
           </tr>
