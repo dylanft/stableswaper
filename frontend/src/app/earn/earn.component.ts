@@ -12,6 +12,7 @@ import {
   createLPString,
   FungibleConditionCode,
   intCV,
+  makeContractFungiblePostCondition,
   makeStandardFungiblePostCondition,
   makeStandardSTXPostCondition,
   PostConditionMode,
@@ -73,6 +74,7 @@ export class EarnComponent implements OnInit {
   lpToken_amt_user_earn: number = 0;
   lpToken_amt_user_pool: number = 0;
   lpToken_amt_total: number = 0;
+  withdrawalPct: number = 100;
 
   usdaContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
     createAddress(this.deployerAddress),
@@ -176,6 +178,16 @@ export class EarnComponent implements OnInit {
     
   }
 
+  updateWithdrawalPercentage(val: string) {
+    console.log("update withdrawal pct input:", val);
+    var pct = parseInt(val);
+    pct = Math.max(pct, 1);
+    pct = Math.min(pct, 100);
+    this.withdrawalPct = pct;
+    console.log("update withdrawal pct output:", this.withdrawalPct);
+
+  }
+
   toggle(poolOption: string) {
     this.poolChoice = poolOption;
     console.log(this.poolChoice)
@@ -244,4 +256,67 @@ export class EarnComponent implements OnInit {
       },
     });
   }
+
+
+  withdrawFromPool() {
+    var txSenderAddress: string;
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var PC1 = makeStandardFungiblePostCondition(
+      txSenderAddress,
+      FungibleConditionCode.GreaterEqual,
+      0,
+      createAssetInfo(this.deployerAddress, 'usd-lp', 'usd-lp')
+    )
+
+    var PC2 = makeContractFungiblePostCondition(
+      this.deployerAddress,
+      'stableswap-v2',
+      FungibleConditionCode.GreaterEqual,
+      0,
+      createAssetInfo(this.deployerAddress, 'usda-token', 'usda') 
+    )
+
+    var PC3 = makeContractFungiblePostCondition(
+      this.deployerAddress,
+      'stableswap-v2',
+      FungibleConditionCode.GreaterEqual,
+      0,
+      createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
+    )
+
+    var tx = this.usdaContract;
+    var ty = this.xusdContract;
+    console.log("tx: ", tx)
+    console.log("ty: ", ty)
+    openContractCall({
+      network: this.network,
+      anchorMode: AnchorMode.Any,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap-v2',
+      functionName: 'reduce-position',
+      functionArgs: [tx, ty, uintCV(this.withdrawalPct)],
+      postConditionMode: PostConditionMode.Deny,
+      postConditions: [PC1, PC2, PC3],
+      onFinish: (data) => {
+        console.log('onFinish:', data);
+        window
+          ?.open(
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            '_blank'
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log('onCancel:', 'Transaction was canceled');
+      },
+    });
+  }
+
 }

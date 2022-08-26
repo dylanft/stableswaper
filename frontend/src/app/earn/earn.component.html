@@ -143,8 +143,8 @@
                 </td>
                 <td style="max-width: 40%;">
                   <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
-                    <mat-label>Amount of LP Tokens</mat-label>
-                    <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP-pool')" [(ngModel)]="lpToken_amt_user_pool" >
+                    <mat-label>Withdraw % of Your Liquidity</mat-label>
+                    <input matInput type="number" min="1" max="100" step="1" class="input-right-align" placeholder="0" #wPct (keyup)="updateWithdrawalPercentage(wPct.value)" [(ngModel)]="withdrawalPct" >
                     <!-- <span matSuffix>.00</span> -->
                   </mat-form-field>
                 </td>
@@ -162,7 +162,7 @@
             </table>
           </div>
         <div class="card" id="swap-box-footer">
-            <button (click)="swap('🍎')">Confirm</button>
+            <button (click)="withdrawFromPool()">Confirm</button>
         </div>
       </div>
     </div>
