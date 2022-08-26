@@ -247,7 +247,6 @@
         fee-to-address: none,
         name: pair-name,
       })
-      
     )
     ;; trying to add a pair for xusd-usda when the usda-xusd pair already exists will fail
     (asserts!
@@ -290,6 +289,7 @@
       (withdrawal (/ (* shares percent) u100))
       (withdrawal-x (/ (* withdrawal balance-x) shares-total))
       (withdrawal-y (/ (* withdrawal balance-y) shares-total))
+      (burn-amount (- (get shares-total pair) (* (- balance-x withdrawal-x) (- balance-y withdrawal-y)))) 
       (pair-updated
         (merge pair
           {
@@ -302,21 +302,12 @@
     )
 
     (asserts! (<= percent u100) value-out-of-range-err)
+    (asserts! (is-ok (contract-call? .usd-lp burn tx-sender burn-amount)) (err u1110))
     (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer withdrawal-x contract-address sender none))) transfer-x-failed-err)
     (asserts! (is-ok (as-contract (contract-call? token-y-trait transfer withdrawal-y contract-address sender none))) transfer-y-failed-err)
 
     ;; (unwrap-panic (decrease-shares token-x token-y tx-sender withdrawal)) ;; should never fail, you know...
     (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
-    ;; TODO(psq): use burn
-    ;; (unwrap-panic (contract-call? token-swapr-trait transfer withdrawal tx-sender contract-address))  ;; transfer back to swapr, wish there was a burn instead...
-    
-    ;; DO NOT NEED A SWAPR TOKEN TO BURN WITH CURVE MODEL
-    ;; (try! (contract-call? token-swapr-trait burn tx-sender withdrawal))
-
-
-    ;; call reward contract `(cancel-rewards pair tx-sender)` and `(add-rewards pair tx-sender (- shares withdrawal))`
-
-
     (print { object: "pair", action: "liquidity-removed", data: pair-updated })
     (ok (list withdrawal-x withdrawal-y))
   )
