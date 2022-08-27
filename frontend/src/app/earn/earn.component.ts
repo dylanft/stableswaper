@@ -246,7 +246,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -308,7 +308,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
