@@ -42,10 +42,10 @@ export class FaucetComponent implements OnInit {
   tokenChoiceContract: any;
   tokenChoiceContractName: string = '';
   mintAmount: number = 0;
-  deployerAddress: string = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+  deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
   loggedInAsAdmin: boolean = false;
 
-  network: any = new StacksMocknet();
+  network: any = new StacksTestnet();
   usdaContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
       createAddress(this.deployerAddress),
       createLPString('usda-token')
@@ -76,7 +76,7 @@ export class FaucetComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
       contractName: 'stableswap-v2',
       functionName: 'swap-x-for-y',
       functionArgs: [tX, tY, uintCV(x), uintCV(y)],
@@ -199,7 +199,7 @@ export class FaucetComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
       contractName: 'stableswap-v2',
       functionName: 'create-pair',
       functionArgs: [tx, ty, stringAsciiCV("usda-xusd"), uintCV(tx_amt), uintCV(ty_amt)],
@@ -242,7 +242,7 @@ export class FaucetComponent implements OnInit {
       txSenderAddress,
       FungibleConditionCode.Equal,
       ty_amt,
-      createAssetInfo('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', 'apples-r', 'apples-r')
+      createAssetInfo('ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW', 'apples-r', 'apples-r')
     )
 
     // var tx = this.usdaContract;
@@ -252,7 +252,7 @@ export class FaucetComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
       contractName: 'apple-dex',
       functionName: 'provide-liquidity',
       functionArgs: [uintCV(tx_amt), uintCV(ty_amt)],
@@ -281,7 +281,7 @@ export class FaucetComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
       contractName: 'stableswap-v2',
       functionName: 'add-to-position',
       functionArgs: [tx, ty, uintCV(500000), uintCV(500000)],

@@ -1,4 +1,3 @@
-
 ;; usda-token
 ;; <add a description here>
 
@@ -6,13 +5,12 @@
 (impl-trait .sip-010-trait-ft-standard.sip-010-trait)
 
 
-
 ;; Defines the USDA Stablecoin according to the SIP-010 Standard
 (define-fungible-token usda)
 
 (define-data-var token-uri (string-utf8 256) u"")
 
-(define-constant CONTRACT-OWNER 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)
+(define-constant CONTRACT-OWNER 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW)
 (define-constant ERR-UNAUTHORIZED-MINT (err u100))
 
 
@@ -110,34 +108,17 @@
 )
 
 
-;; (define-public (mint-many-demo (amount uint))
-;;   (begin
-;;     (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-UNAUTHORIZED-MINT)
-;;     (try! (ft-mint? usda amount tx-sender))
-;;     (try! (ft-mint? usda amount 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5))
-;;     (try! (ft-mint? usda amount 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
-;;     (try! (ft-mint? usda amount 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
-;;     (try! (ft-mint? usda amount 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND))
-;;     (try! (ft-mint? usda amount 'ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB))
-;;     (try! (ft-mint? usda amount 'ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0))
-;;     (try! (ft-mint? usda amount 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP))
-;;     (try! (ft-mint? usda amount 'ST3PF13W7Z0RRM42A8VZRVFQ75SV1K26RXEP8YGKJ))
-;;     (try! (ft-mint? usda amount 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6))
-;;   )
+
+;; (begin
+;;   ;; (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-UNAUTHORIZED-MINT)
+;;   (try! (ft-mint? usda u1000000000000 tx-sender))
+;;   (try! (ft-mint? usda u1000000000000 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5))
+;;   (try! (ft-mint? usda u1000000000000 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
+;;   (try! (ft-mint? usda u1000000000000 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
+;;   (try! (ft-mint? usda u1000000000000 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND))
+;;   (try! (ft-mint? usda u1000000000000 'ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB))
+;;   (try! (ft-mint? usda u1000000000000 'ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0))
+;;   (try! (ft-mint? usda u1000000000000 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP))
+;;   (try! (ft-mint? usda u1000000000000 'ST3PF13W7Z0RRM42A8VZRVFQ75SV1K26RXEP8YGKJ))
+;;   (try! (ft-mint? usda u1000000000000 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6))
 ;; )
-
-
-
-(begin
-  ;; (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-UNAUTHORIZED-MINT)
-  (try! (ft-mint? usda u1000000000000 tx-sender))
-  (try! (ft-mint? usda u1000000000000 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5))
-  (try! (ft-mint? usda u1000000000000 'ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG))
-  (try! (ft-mint? usda u1000000000000 'ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC))
-  (try! (ft-mint? usda u1000000000000 'ST2NEB84ASENDXKYGJPQW86YXQCEFEX2ZQPG87ND))
-  (try! (ft-mint? usda u1000000000000 'ST2REHHS5J3CERCRBEPMGH7921Q6PYKAADT7JP2VB))
-  (try! (ft-mint? usda u1000000000000 'ST3AM1A56AK2C1XAFJ4115ZSV26EB49BVQ10MGCS0))
-  (try! (ft-mint? usda u1000000000000 'ST3NBRSFKX28FQ2ZJ1MAKX58HKHSDGNV5N7R21XCP))
-  (try! (ft-mint? usda u1000000000000 'ST3PF13W7Z0RRM42A8VZRVFQ75SV1K26RXEP8YGKJ))
-  (try! (ft-mint? usda u1000000000000 'STNHKEPYEPJ8ET55ZZ0M5A34J0R3N5FM2CMMMAZ6))
-)

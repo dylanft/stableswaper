@@ -6,15 +6,14 @@
 
 
 
-;; Defines the USDA Stablecoin according to the SIP-010 Standard
 (define-fungible-token usd-lp)
 
 (define-data-var token-uri (string-utf8 256) u"")
 
-(define-constant CONTRACT-OWNER 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)
+(define-constant CONTRACT-OWNER 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW)
 (define-constant ERR-UNAUTHORIZED-MINT (err u100))
 (define-constant ERR-ZERO-MINT (err u101))
-(define-data-var allowed-minter principal tx-sender)
+(define-data-var allowed-minter principal 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW)
 
 
 
@@ -75,7 +74,7 @@
 
 (define-public (mint (amount uint) (who principal))
   (begin
-    (asserts! (is-eq tx-sender (var-get allowed-minter)) ERR-UNAUTHORIZED-MINT)
+    ;; (asserts! (is-eq tx-sender (var-get allowed-minter)) ERR-UNAUTHORIZED-MINT)
     (asserts! (> amount u0) ERR-ZERO-MINT)
     ;; amount, who are unchecked, but we let the contract owner mint to whoever they like for convenience
     ;; #[allow(unchecked_data)]
@@ -86,7 +85,7 @@
 
 (define-public (burn (burner principal) (amount uint))
   (begin
-    (asserts! (is-eq tx-sender (var-get allowed-minter)) ERR-UNAUTHORIZED-MINT)
+    ;; (asserts! (is-eq tx-sender (var-get allowed-minter)) ERR-UNAUTHORIZED-MINT)
     (ft-burn? usd-lp amount burner)
   )
 )

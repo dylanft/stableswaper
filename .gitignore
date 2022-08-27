@@ -12,6 +12,8 @@ frontend/npm_modules/
 backend/settings/Mainnet.toml
 backend/settings/Testnet.toml
 backend/history.txt
+.vscode/
+backend/.debug_history
 
 # User-specific files
 *.rsuser
