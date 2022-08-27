@@ -204,8 +204,8 @@ export class EarnComponent implements OnInit {
 
 
   addToPool() {
-    var tx_amt = this.tokenA_amt*1e6;
-    var ty_amt = this.tokenB_amt*1e6;
+    var tx_amt = this.tokenA_amt;
+    var ty_amt = this.tokenB_amt;
     var txSenderAddress: string;
     if (this.network.isMainnet()) {
       txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
