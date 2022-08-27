@@ -121,6 +121,16 @@
   (ok (get shares-total (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err)))
 )
 
+(define-read-only (get-usdlp-shares (who principal))
+  (let 
+    (
+      (usdbal (unwrap! (contract-call? .usd-lp get-balance who) (err u111093)))
+      ;; (usdbal (contract-call? .usd-lp get-balance who))
+    )
+    (ok usdbal)
+  )
+)
+
 ;; get overall balances for the pair
 (define-public (get-balances (token-x-trait <sip-010-token>) (token-y-trait <sip-010-token>))
   (let
@@ -146,70 +156,7 @@
   )
 )
 
-;; since we can't use a constant to refer to contract address, here what x and y are
-;; (define-constant x-token 'SP2NC4YKZWM2YMCJV851VF278H9J50ZSNM33P3JM1.my-token)
-;; (define-constant y-token 'SP1QR3RAGH3GEME9WV7XB0TZCX6D5MNDQP97D35EH.my-token)
-;; (define-public (add-to-position (token-x-trait <sip-010-token>) (token-y-trait <sip-010-token>) (token-swapr-trait <swapr-token>) (x uint) (y uint))
-(define-public (add-to-position (token-x-trait <sip-010-token>) (token-y-trait <sip-010-token>) (x uint) (y uint))
-  (let
-    (
-      (token-x (contract-of token-x-trait))
-      (token-y (contract-of token-y-trait))
-      (pair (unwrap-panic (map-get? pairs-data-map { token-x: token-x, token-y: token-y })))
-      (contract-address (as-contract tx-sender))
-      (recipient-address tx-sender)
-      (balance-x (get balance-x pair))
-      (balance-y (get balance-y pair))
-      (new-shares
-        (if (is-eq (get shares-total pair) u0)
-          (sqrti (* x y))  ;; burn a fraction of initial lp token to avoid attack as described in WP https://uniswap.org/whitepaper.pdf
-          (/ (* x (get shares-total pair)) balance-x)
-        )
-      )
-      ;; TODO(psq): need to calculate y based on x, and only transfer the correct amount
-      ;; without this, people could game the pool by only providing x!!!  not nice...
-      (new-y
-        (if (is-eq (get shares-total pair) u0)
-          y
-          (/ (* x balance-y) balance-x)
-        )
-      )
-      (mint-amount 
-        (if (is-eq (get shares-total pair) u0)
-          (* (+ balance-x x) (+ balance-y new-y))
-          (/ (* (+ balance-x x) (+ balance-y new-y)) (get shares-total pair))
-        )
-      )    
-      (pair-updated (merge pair {
-        shares-total: (+ new-shares (get shares-total pair)),
-        balance-x: (+ balance-x x),
-        balance-y: (+ balance-y new-y)
-      }))
-      (new-amounts 
-        {
-            x-amount: x,
-            y-amount: new-y
-        }
-      )
-    )
-    
-      ;; TODO(psq) check if x or y is 0, to calculate proper exchange rate unless shares-total is 0, which would be an error
-    (asserts! (is-ok (contract-call? .usd-lp mint mint-amount tx-sender)) (err u1110))
-    (asserts! (is-ok (contract-call? token-x-trait transfer x tx-sender contract-address none)) transfer-x-failed-err)
-    (asserts! (is-ok (contract-call? token-y-trait transfer new-y tx-sender contract-address none)) transfer-y-failed-err)
 
-    (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
-    ;; (map-set LP-contributions { token-x: token-x, token-y: token-y, tx-sender } new-amounts)
-    ;; (try! (contract-call? token-swapr-trait mint recipient-address new-shares))
-
-
-    ;; call reward contract `(add-rewards pair tx-sender new-shares)`
-
-
-    (print { object: "pair", action: "liquidity-added", data: pair-updated })
-    (ok true)
-  )
-)
 
 (define-read-only (get-pair-details (token-x principal) (token-y principal))
   (unwrap-panic (map-get? pairs-data-map { token-x: token-x, token-y: token-y }))
@@ -269,6 +216,76 @@
   )
 )
 
+
+;; since we can't use a constant to refer to contract address, here what x and y are
+;; (define-constant x-token 'SP2NC4YKZWM2YMCJV851VF278H9J50ZSNM33P3JM1.my-token)
+;; (define-constant y-token 'SP1QR3RAGH3GEME9WV7XB0TZCX6D5MNDQP97D35EH.my-token)
+;; (define-public (add-to-position (token-x-trait <sip-010-token>) (token-y-trait <sip-010-token>) (token-swapr-trait <swapr-token>) (x uint) (y uint))
+(define-public (add-to-position (token-x-trait <sip-010-token>) (token-y-trait <sip-010-token>) (x uint) (y uint))
+  (let
+    (
+      (token-x (contract-of token-x-trait))
+      (token-y (contract-of token-y-trait))
+      (pair (unwrap-panic (map-get? pairs-data-map { token-x: token-x, token-y: token-y })))
+      (contract-address (as-contract tx-sender))
+      (recipient-address tx-sender)
+      (balance-x (get balance-x pair))
+      (balance-y (get balance-y pair))
+
+      ;; TODO(psq): need to calculate y based on x, and only transfer the correct amount
+      ;; without this, people could game the pool by only providing x!!!  not nice...
+      (new-y
+        (if (is-eq (get shares-total pair) u0)
+          y
+          (/ (* x balance-y) balance-x)
+        )
+      )
+      (new-shares
+        (if (is-eq (get shares-total pair) u0)
+          (sqrti (* (+ balance-x x) (+ balance-y new-y)))
+          (- (sqrti (* (+ balance-x x) (+ balance-y new-y))) (get shares-total pair))
+          ;; x ;; (sqrti (* x y))  ;; burn a fraction of initial lp token to avoid attack as described in WP https://uniswap.org/whitepaper.pdf
+          ;; (/ (* x (get shares-total pair)) balance-x)
+        )
+      )
+      ;; (mint-amount 
+      ;;   (if (is-eq (get shares-total pair) u0)
+      ;;     ;; (* (+ balance-x x) (+ balance-y new-y))
+      ;;     (* (+ balance-x x) (+ balance-y new-y))
+      ;;     (- (* (+ balance-x x) (+ balance-y new-y)) (get shares-total pair))
+      ;;   )
+      ;; )    
+      (pair-updated (merge pair {
+        shares-total: (+ new-shares (get shares-total pair)),
+        balance-x: (+ balance-x x),
+        balance-y: (+ balance-y new-y)
+      }))
+      (new-amounts 
+        {
+            x-amount: x,
+            y-amount: new-y
+        }
+      )
+    )
+    
+      ;; TODO(psq) check if x or y is 0, to calculate proper exchange rate unless shares-total is 0, which would be an error
+    (asserts! (is-ok (contract-call? .usd-lp mint new-shares tx-sender)) (err u1110))
+    (asserts! (is-ok (contract-call? token-x-trait transfer x tx-sender contract-address none)) transfer-x-failed-err)
+    (asserts! (is-ok (contract-call? token-y-trait transfer new-y tx-sender contract-address none)) transfer-y-failed-err)
+
+    (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
+    ;; (map-set LP-contributions { token-x: token-x, token-y: token-y, tx-sender } new-amounts)
+    ;; (try! (contract-call? token-swapr-trait mint recipient-address new-shares))
+
+
+    ;; call reward contract `(add-rewards pair tx-sender new-shares)`
+
+
+    (print { object: "pair", action: "liquidity-added", data: pair-updated })
+    (ok true)
+  )
+)
+
 ;; ;; reduce the amount of liquidity the sender provides to the pool
 ;; ;; to close, use u100
 ;; (define-public (reduce-position (token-x-trait <sip-010-token>) (token-y-trait <sip-010-token>) (percent uint))
@@ -280,8 +297,11 @@
       (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
       (balance-x (get balance-x pair))
       (balance-y (get balance-y pair))
-    ;;   (shares (unwrap-panic (contract-call? token-x get-balance-of tx-sender)))
-      (shares (get shares-total pair))
+      ;; (shares (unwrap! (get-usdlp-shares tx-sender) (err u12345679)))
+      ;; (shares (unwrap-panic (contract-call? .usd-lp get-balance tx-sender)))
+      (shares (unwrap! (contract-call? .usd-lp get-balance tx-sender) (err u1110)))
+      ;; (shares (unwrap-panic (contract-call? .usd-lp get-balance tx-sender)))
+      ;; (shares (get shares-total pair))
     ;;   (shares (* u2 (unwrap-panic (contract-call? token-x-trait get-balance tx-sender))))
       (shares-total (get shares-total pair))
       (contract-address (as-contract tx-sender))
@@ -289,7 +309,7 @@
       (withdrawal (/ (* shares percent) u100))
       (withdrawal-x (/ (* withdrawal balance-x) shares-total))
       (withdrawal-y (/ (* withdrawal balance-y) shares-total))
-      (burn-amount (- (get shares-total pair) (* (- balance-x withdrawal-x) (- balance-y withdrawal-y)))) 
+      ;; (burn-amount (- (get shares-total pair) (* (- balance-x withdrawal-x) (- balance-y withdrawal-y)))) 
       (pair-updated
         (merge pair
           {
@@ -302,7 +322,7 @@
     )
 
     (asserts! (<= percent u100) value-out-of-range-err)
-    (asserts! (is-ok (contract-call? .usd-lp burn tx-sender burn-amount)) (err u1110))
+    (asserts! (is-ok (contract-call? .usd-lp burn tx-sender withdrawal)) (err u1110))
     (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer withdrawal-x contract-address sender none))) transfer-x-failed-err)
     (asserts! (is-ok (as-contract (contract-call? token-y-trait transfer withdrawal-y contract-address sender none))) transfer-y-failed-err)
 

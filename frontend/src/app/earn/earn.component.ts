@@ -217,14 +217,14 @@ export class EarnComponent implements OnInit {
 
     var createPoolPC1 = makeStandardFungiblePostCondition(
       txSenderAddress,
-      FungibleConditionCode.Equal,
+      FungibleConditionCode.LessEqual,
       tx_amt,
       createAssetInfo(this.deployerAddress, 'usda-token', 'usda')
     )
 
     var createPoolPC2 = makeStandardFungiblePostCondition(
       txSenderAddress,
-      FungibleConditionCode.Equal,
+      FungibleConditionCode.LessEqual,
       tx_amt,
       createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd')
     )
