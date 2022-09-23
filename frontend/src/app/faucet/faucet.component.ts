@@ -42,10 +42,10 @@ export class FaucetComponent implements OnInit {
   tokenChoiceContract: any;
   tokenChoiceContractName: string = '';
   mintAmount: number = 0;
-  deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
+  deployerAddress: string = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
   loggedInAsAdmin: boolean = false;
 
-  network: any = new StacksTestnet();
+  network: any = new StacksMocknet();
   usdaContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
       createAddress(this.deployerAddress),
       createLPString('usda-token')
@@ -76,7 +76,7 @@ export class FaucetComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'stableswap-v2',
       functionName: 'swap-x-for-y',
       functionArgs: [tX, tY, uintCV(x), uintCV(y)],
@@ -86,7 +86,7 @@ export class FaucetComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -148,7 +148,7 @@ export class FaucetComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -199,7 +199,7 @@ export class FaucetComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'stableswap-v2',
       functionName: 'create-pair',
       functionArgs: [tx, ty, stringAsciiCV("usda-xusd"), uintCV(tx_amt), uintCV(ty_amt)],
@@ -209,7 +209,7 @@ export class FaucetComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -242,7 +242,7 @@ export class FaucetComponent implements OnInit {
       txSenderAddress,
       FungibleConditionCode.Equal,
       ty_amt,
-      createAssetInfo('ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW', 'apples-r', 'apples-r')
+      createAssetInfo('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM', 'apples-r', 'apples-r')
     )
 
     // var tx = this.usdaContract;
@@ -252,7 +252,7 @@ export class FaucetComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'apple-dex',
       functionName: 'provide-liquidity',
       functionArgs: [uintCV(tx_amt), uintCV(ty_amt)],
@@ -262,7 +262,7 @@ export class FaucetComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -281,7 +281,7 @@ export class FaucetComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'stableswap-v2',
       functionName: 'add-to-position',
       functionArgs: [tx, ty, uintCV(500000), uintCV(500000)],
@@ -291,7 +291,7 @@ export class FaucetComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();

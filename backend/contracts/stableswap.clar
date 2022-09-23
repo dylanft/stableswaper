@@ -3,7 +3,7 @@
 (use-trait swapr-token .trait-stableswap.trait-stableswap)
 
 ;; TODO(psq): this should be a var instead?
-(define-constant contract-owner 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW)
+(define-constant contract-owner 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)
 (define-constant no-liquidity-err (err u61))
 ;; (define-constant transfer-failed-err (err u62))
 (define-constant not-owner-err (err u63))

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { openContractCall } from '@stacks/connect';
-import { StacksTestnet } from '@stacks/network';
+import { StacksMocknet, StacksTestnet } from '@stacks/network';
 import {
   AnchorMode,
   PostConditionMode,
@@ -29,9 +29,9 @@ export class ContractVoteComponent implements OnInit {
 
   swap(pick: string) {
     openContractCall({
-      network: new StacksTestnet(),
+      network: new StacksMocknet(),
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST39MJ145BR6S8C315AG2BD61SJ16E208P1FDK3AK',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'example-fruit-vote-contract',
       functionName: 'vote',
       functionArgs: [stringUtf8CV(pick)],
@@ -41,7 +41,7 @@ export class ContractVoteComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();

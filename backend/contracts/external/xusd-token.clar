@@ -16,7 +16,7 @@
 
 (define-data-var token-uri (string-utf8 256) u"")
 
-(define-constant CONTRACT-OWNER 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW)
+(define-constant CONTRACT-OWNER 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)
 (define-constant ERR-UNAUTHORIZED-MINT (err u100))
 
 
@@ -96,7 +96,7 @@
 
 (define-public (mint (amount uint) (recipient principal))
   (begin
-    (asserts! (is-eq tx-sender CONTRACT-OWNER) ERR-UNAUTHORIZED-MINT)
+    (asserts! (is-eq tx-sender recipient) ERR-UNAUTHORIZED-MINT)
     (ft-mint? xusd amount recipient)
   )
 )

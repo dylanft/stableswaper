@@ -54,13 +54,13 @@ export class EarnComponent implements OnInit {
   ngOnInit(): void {
   }
   public userSession = userSession;
-  deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
+  deployerAddress: string = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
   tokenList: any[] = ['USDA', 'xUSD'];
   lpTokenList: any[] = ['USDA-xUSD-LP']
   poolChoice: string = 'add';
   cycleView: string = 'cycle';
   cycleClaimNumber: number = 1;
-  network: any = new StacksTestnet();
+  network: any = new StacksMocknet();
 
 
   tokenA: string = '';
@@ -93,9 +93,9 @@ export class EarnComponent implements OnInit {
 
   swap(pick: string) {
     openContractCall({
-      network: new StacksTestnet(),
+      network: new StacksMocknet(),
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST39MJ145BR6S8C315AG2BD61SJ16E208P1FDK3AK',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'example-fruit-vote-contract',
       functionName: 'vote',
       functionArgs: [stringUtf8CV(pick)],
@@ -105,7 +105,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -118,9 +118,9 @@ export class EarnComponent implements OnInit {
 
   swapStxForMagic(pick: string) {
     openContractCall({
-      network: new StacksTestnet(),
+      network: new StacksMocknet(),
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1RF441MG7VMFPN73DNHEH341DH7GDZW0MYD0GDY',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'beanstalk-exchange',
       functionName: 'stx-to-token-swap',
       functionArgs: [stringUtf8CV(pick)],
@@ -130,7 +130,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -236,7 +236,7 @@ export class EarnComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'stableswap-v2',
       functionName: 'add-to-position',
       functionArgs: [tx, ty, uintCV(tx_amt), uintCV(ty_amt)],
@@ -246,7 +246,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -298,7 +298,7 @@ export class EarnComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
       contractName: 'stableswap-v2',
       functionName: 'reduce-position',
       functionArgs: [tx, ty, uintCV(this.withdrawalPct)],
@@ -308,7 +308,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `https://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();

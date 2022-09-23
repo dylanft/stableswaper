@@ -1,7 +1,7 @@
 
 (use-trait sip-010-trait .sip-010-trait-ft-standard.sip-010-trait)
 
-(define-constant contract-owner 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW)
+(define-constant contract-owner 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM)
 (define-constant no-liquidity-err (err u61))
 (define-constant not-owner-err (err u63))
 (define-constant no-fee-to-address-err (err u64))
@@ -20,7 +20,7 @@
 (define-constant not-enough-fund-err (err u77))
 (define-constant fee-mismatch-err (err u78))
 (define-constant ERR_CANNOT_STAKE (err u79))
-(define-constant fee-to-address 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW.stableswap-v2)
+(define-constant fee-to-address 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant init-bh block-height)
 (define-constant MAX_REWARD_CYCLES u32)
 (define-constant REWARD_CYCLE_INDEXES (list u0 u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 u17 u18 u19 u20 u21 u22 u23 u24 u25 u26 u27 u28 u29 u30 u31))
