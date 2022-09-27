@@ -14,12 +14,14 @@
 (define-constant too-much-slippage-err (err u71))
 (define-constant transfer-x-failed-err (err u72))
 (define-constant transfer-y-failed-err (err u73))
-(define-constant value-out-of-range-err (err u74))
-(define-constant no-fee-x-err (err u75))
-(define-constant no-fee-y-err (err u76))
-(define-constant not-enough-fund-err (err u77))
-(define-constant fee-mismatch-err (err u78))
-(define-constant ERR_CANNOT_STAKE (err u79))
+(define-constant transfer-lp-failed-err (err u74))
+(define-constant value-out-of-range-err (err u75))
+(define-constant no-fee-x-err (err u76))
+(define-constant no-fee-y-err (err u77))
+(define-constant not-enough-fund-err (err u78))
+(define-constant fee-mismatch-err (err u79))
+(define-constant ERR_CANNOT_STAKE (err u80))
+(define-constant CONTRACT_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant fee-to-address 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant init-bh block-height)
 (define-constant MAX_REWARD_CYCLES u32)
@@ -460,7 +462,8 @@
         }
         {
           token-x-bal: token-x-bal,
-          token-y-bal: token-x-bal,
+          token-y-bal: token-y-bal,
+          ;; token-y-bal: token-x-bal, ;; y was set to x before for some reason
           total-lp-staked: (+ totalAmountStaked amount),
         }
       )
@@ -480,6 +483,35 @@
     (ok true)
   )
 )
+
+(define-private (stake-lp-at-cycle (who principal) (amt uint) (cycle-num uint) (token-x principal) (token-y principal)) 
+  (as-contract (set-lp-staked-by-user-at-cycle token-x token-y cycle-num who amt))
+)
+
+(define-private (update-user-staking-data (cycle uint) (user-info {token-x: principal, token-y: principal, amt: uint, who: principal}))
+  ;; (stake-lp-at-cycle (get who user-info) (get lp-token user-info) (get amt user-info) cycle)
+  (let (
+    (token-x (get token-x user-info))
+    (token-y (get token-y user-info))
+    (amt (get amt user-info))
+    (who (get who user-info))
+    ) 
+    (if (is-ok (stake-lp-at-cycle who amt cycle token-x token-y))
+      user-info
+      user-info ;; should return something else here to showcase that stake-lp-at-cycle threw an error
+    )
+  )
+)
+
+;; need to assert that amount is <= how many LP tokens the user has
+;; need to replace reward_cycle_indexes with a list that represents the actual cycle numbers
+(define-public (stake-LP-tokens (lp-token <sip-010-trait>) (token-x <sip-010-trait>) (token-y <sip-010-trait>) (amount uint) (numCycles uint))
+  (begin 
+    (asserts! (is-ok (contract-call? lp-token transfer amount tx-sender CONTRACT_ADDRESS none)) transfer-lp-failed-err)
+    (ok (fold update-user-staking-data REWARD_CYCLE_INDEXES {token-x: (contract-of token-x), token-y: (contract-of token-y), amt: amount, who: tx-sender}))
+  )
+)
+
 
 ;; (define-public (stake-usd-lp (who principal) (lp-amount uint) (num-cycles uint)) 
 ;;   (begin 
