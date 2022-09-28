@@ -8,7 +8,7 @@
 (define-constant invalid-pair-err (err u65))
 (define-constant no-such-position-err (err u66))
 (define-constant balance-too-low-err (err u67))
-(define-constant too-many-pairs-err (err u68))
+;; (define-constant pair-dne-err (err u68))
 (define-constant pair-already-exists-err (err u69))
 (define-constant wrong-token-err (err u70))
 (define-constant too-much-slippage-err (err u71))
@@ -20,13 +20,13 @@
 (define-constant no-fee-y-err (err u77))
 (define-constant not-enough-fund-err (err u78))
 (define-constant fee-mismatch-err (err u79))
-(define-constant ERR_CANNOT_STAKE (err u80))
+(define-constant max-staking-length (err u80))
 (define-constant min-staking-length (err u81))
 (define-constant CONTRACT_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant fee-to-address 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant init-bh block-height)
-(define-constant MAX_REWARD_CYCLES u32)
-(define-constant REWARD_CYCLE_INDEXES (list u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 u17 u18 u19 u20 u21 u22 u23 u24 u25 u26 u27 u28 u29 u30 u31))
+(define-constant MAX_REWARD_CYCLES u100)
+(define-constant REWARD_CYCLE_INDEXES (list u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 u17 u18 u19 u20 u21 u22 u23 u24 u25 u26 u27 u28 u29 u30 u31 u32 u33 u34 u35 u36 u37 u38 u39 u40 u41 u42 u43 u44 u45 u46 u47 u48 u49 u50 u51 u52 u53 u54 u55 u56 u57 u58 u59 u60 u61 u62 u63 u64 u65 u66 u67 u68 u69 u70 u71 u72 u73 u74 u75 u76 u77 u78 u79 u80 u81 u82 u83 u84 u85 u86 u87 u88 u89 u90 u91 u92 u93 u94 u95 u96 u97 u98 u99 u100))
 
 
 (define-data-var loan-fee-num uint u10)
@@ -56,6 +56,7 @@
   }
 )
 
+;; used to update UserStakingData everytime a principal stakes more LP tokens
 (define-map cycle-staking
   { id: principal }
   { num-cycles: uint}
@@ -509,20 +510,31 @@
   )
 )
 
-;; need to assert that amount is <= how many LP tokens the user has
-;; need to replace reward_cycle_indexes with a list that represents the actual cycle numbers
+
+;; need to find a consistent mapping for token-x and token-y. if order is swapped, the LP staked is tracked separately !!!
 (define-public (stake-LP-tokens (lp-token <sip-010-trait>) (token-x <sip-010-trait>) (token-y <sip-010-trait>) (amount uint) (numCycles uint))
   (let (
       (cycle-preference-is-set (map-set cycle-staking {id: tx-sender} {num-cycles: numCycles}))
       (staking-cycles (get-list-of-staking-cycles numCycles))
       (valid-staking-cycles (map shift-verified-cycles-to-current staking-cycles))
+      (txc (contract-of token-x))
+      (tyc (contract-of token-y))
     ) 
     (begin 
-      ;; (asserts! (> numCycles u0) (err min-staking-length))
+      (asserts! (> numCycles u0) min-staking-length) ;; stake for at least one cycle
+      (asserts! (<= numCycles MAX_REWARD_CYCLES) max-staking-length) ;; limited by length of the REWARD_CYCLES_INDEXES list
+      ;; ensure that this pair has been created
+      ;; ensure that the pair already exists 
+      (asserts!
+        (or
+          (is-some (get name (map-get? pairs-data-map { token-x: txc, token-y: tyc })))
+          (is-some (get name (map-get? pairs-data-map { token-x: tyc, token-y: txc })))
+        )
+        invalid-pair-err
+      )
       (print valid-staking-cycles)
       (asserts! (is-ok (contract-call? lp-token transfer amount tx-sender CONTRACT_ADDRESS none)) transfer-lp-failed-err)
-      ;; (map-set cycle-staking {id: tx-sender} {num-cycles: numCycles})
-      (ok (fold update-user-staking-data valid-staking-cycles {token-x: (contract-of token-x), token-y: (contract-of token-y), amt: amount, who: tx-sender}))
+      (ok (fold update-user-staking-data valid-staking-cycles {token-x: txc, token-y: tyc, amt: amount, who: tx-sender}))
     )
   )
 )
