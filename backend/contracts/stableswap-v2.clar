@@ -21,11 +21,12 @@
 (define-constant not-enough-fund-err (err u78))
 (define-constant fee-mismatch-err (err u79))
 (define-constant ERR_CANNOT_STAKE (err u80))
+(define-constant min-staking-length (err u81))
 (define-constant CONTRACT_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant fee-to-address 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant init-bh block-height)
 (define-constant MAX_REWARD_CYCLES u32)
-(define-constant REWARD_CYCLE_INDEXES (list u0 u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 u17 u18 u19 u20 u21 u22 u23 u24 u25 u26 u27 u28 u29 u30 u31))
+(define-constant REWARD_CYCLE_INDEXES (list u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 u17 u18 u19 u20 u21 u22 u23 u24 u25 u26 u27 u28 u29 u30 u31))
 
 
 (define-data-var loan-fee-num uint u10)
@@ -53,6 +54,11 @@
     fee-to-address: (optional principal), 
     name: (string-ascii 32),
   }
+)
+
+(define-map cycle-staking
+  { id: principal }
+  { num-cycles: uint}
 )
 
 (define-data-var pair-count uint u0)
@@ -506,13 +512,55 @@
 ;; need to assert that amount is <= how many LP tokens the user has
 ;; need to replace reward_cycle_indexes with a list that represents the actual cycle numbers
 (define-public (stake-LP-tokens (lp-token <sip-010-trait>) (token-x <sip-010-trait>) (token-y <sip-010-trait>) (amount uint) (numCycles uint))
+  (let (
+      (cycle-preference-is-set (map-set cycle-staking {id: tx-sender} {num-cycles: numCycles}))
+      (staking-cycles (get-list-of-staking-cycles numCycles))
+      (valid-staking-cycles (map shift-verified-cycles-to-current staking-cycles))
+    ) 
+    (begin 
+      ;; (asserts! (> numCycles u0) (err min-staking-length))
+      (print valid-staking-cycles)
+      (asserts! (is-ok (contract-call? lp-token transfer amount tx-sender CONTRACT_ADDRESS none)) transfer-lp-failed-err)
+      ;; (map-set cycle-staking {id: tx-sender} {num-cycles: numCycles})
+      (ok (fold update-user-staking-data valid-staking-cycles {token-x: (contract-of token-x), token-y: (contract-of token-y), amt: amount, who: tx-sender}))
+    )
+  )
+)
+
+;; (define-private (append-cycle (cycle-num uint) (cycle-list-info {max-cycles: uint, cycle-list: uint}))
+;;   ;; (stake-lp-at-cycle (get who user-info) (get lp-token user-info) (get amt user-info) cycle)
+;;   (let (
+;;     (mc (get max-cycles cycle-list-info))
+;;     (cycle-list (get cycle-list cycle-list-info))
+;;     ) 
+;;     (ok true)
+;;   )
+;; )
+
+(define-private (verify-upcoming-cycle (cycle-num uint))
+  (let (
+    (user-max-cycles-staking (get num-cycles (unwrap-panic (map-get? cycle-staking {id: tx-sender})))) ;;avoid unwrap-panic if possible
+    (valid-cycle (<= cycle-num user-max-cycles-staking)) 
+    ) 
+    valid-cycle
+  )
+)
+
+(define-private (get-list-of-staking-cycles (user-max-cycles-staking uint))
   (begin 
-    (asserts! (is-ok (contract-call? lp-token transfer amount tx-sender CONTRACT_ADDRESS none)) transfer-lp-failed-err)
-    (ok (fold update-user-staking-data REWARD_CYCLE_INDEXES {token-x: (contract-of token-x), token-y: (contract-of token-y), amt: amount, who: tx-sender}))
+    (filter verify-upcoming-cycle REWARD_CYCLE_INDEXES)
   )
 )
 
 
+(define-private (shift-verified-cycles-to-current (cycle-num uint))
+  (let (
+    (shift-amount (unwrap-panic (get-current-cycle)))
+    (valid-cycle-num (+ cycle-num shift-amount))
+    ) 
+    valid-cycle-num
+  )
+)
 ;; (define-public (stake-usd-lp (who principal) (lp-amount uint) (num-cycles uint)) 
 ;;   (begin 
 ;;     ;; (asserts! (< block-height (unwrap-panic (get-current-cycle)) (err 1010101)))
