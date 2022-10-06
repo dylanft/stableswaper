@@ -396,7 +396,7 @@
       (pair-updated
         (merge pair
           {
-            balance-x: (+ (get balance-x pair) dx),
+            balance-x: (+ (get balance-x pair) dxlf),
             balance-y: (- (get balance-y pair) dy),
             fee-balance-x: (if (is-some (get fee-to-address pair))  ;; only collect fee when fee-to-address is set
               (+ fee (get fee-balance-x pair))
@@ -450,7 +450,7 @@
         (dx (/ (* u1000 balance-x dylf) (+ (* u1000 balance-y) (* u1000 dylf)))) 
         (pair-updated (merge pair {
           balance-x: (- (get balance-x pair) dx),
-          balance-y: (+ (get balance-y pair) dy),
+          balance-y: (+ (get balance-y pair) dylf),
           fee-balance-y: (if (is-some (get fee-to-address pair))  ;; only collect fee when fee-to-address is set
             (+ fee (get fee-balance-y pair))
             (get fee-balance-y pair))
