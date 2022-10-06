@@ -17,6 +17,9 @@ path = "contracts/apples-lp.clar"
 [contracts.apples-r]
 path = "contracts/apples-r.clar"
 
+[contracts.fee-escrow]
+path = "contracts/fee-escrow.clar"
+
 [contracts.sip-010-trait-ft-standard]
 path = "contracts/external/sip-010-trait-ft-standard.clar"
 

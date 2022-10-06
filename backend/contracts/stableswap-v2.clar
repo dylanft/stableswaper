@@ -22,8 +22,9 @@
 (define-constant fee-mismatch-err (err u79))
 (define-constant max-staking-length (err u80))
 (define-constant min-staking-length (err u81))
+(define-constant claim-too-early (err u82))
 (define-constant CONTRACT_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
-(define-constant fee-to-address 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
+(define-constant FEE_TO_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant init-bh block-height)
 (define-constant MAX_REWARD_CYCLES u100)
 (define-constant REWARD_CYCLE_INDEXES (list u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 u17 u18 u19 u20 u21 u22 u23 u24 u25 u26 u27 u28 u29 u30 u31 u32 u33 u34 u35 u36 u37 u38 u39 u40 u41 u42 u43 u44 u45 u46 u47 u48 u49 u50 u51 u52 u53 u54 u55 u56 u57 u58 u59 u60 u61 u62 u63 u64 u65 u66 u67 u68 u69 u70 u71 u72 u73 u74 u75 u76 u77 u78 u79 u80 u81 u82 u83 u84 u85 u86 u87 u88 u89 u90 u91 u92 u93 u94 u95 u96 u97 u98 u99 u100))
@@ -77,7 +78,18 @@
   {
     token-x-bal: uint,
     token-y-bal: uint,
-    total-lp-staked: uint,
+    ;; total-lp-staked: uint,
+  }
+)
+
+(define-map CycleLPData
+  {
+    token-x: principal,
+    token-y: principal,
+    cycleNum: uint
+  }
+  {
+    total-lp-staked: uint
   }
 )
 
@@ -93,6 +105,53 @@
     reward-claimed: bool
   }
 )
+
+;; (define-map pool-fees
+;;   {
+;;     token-x: principal,
+;;     token-y: principal
+;;   }
+;;   {
+;;     amount: uint
+;;   }
+;; )
+
+;; (define-read-only (get-total-pool-fees (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>))
+;;   (let
+;;     (
+;;       (token-x (contract-of token-x-trait))
+;;       (token-y (contract-of token-y-trait))
+;;       (current-fees (unwrap! (map-get? pool-fees { token-x: token-x, token-y: token-y }) invalid-pair-err))
+;;     )
+;;     (ok (get amount current-fees))
+;;   )
+
+
+;; (define-private (add-to-total-pool-fees (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>) (adjustment uint) )
+;;   (let
+;;     (
+;;       (token-x (contract-of token-x-trait))
+;;       (token-y (contract-of token-y-trait))
+;;       (current-fees (unwrap! (map-get? pool-fees { token-x: token-x, token-y: token-y }) invalid-pair-err))
+;;       (cf-amount (get amount current-fees))
+;;       (updated (+ cf-amount adjustment))
+;;     )
+;;     (ok (map-set pool-fees { token-x: token-x, token-y: token-y } {amount: updated}))
+;;   )
+;; )
+
+;; (define-private (subtract-from-total-pool-fees (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>) (adjustment uint) )
+;;   (let
+;;     (
+;;       (token-x (contract-of token-x-trait))
+;;       (token-y (contract-of token-y-trait))
+;;       (current-fees (unwrap! (map-get? pool-fees { token-x: token-x, token-y: token-y }) invalid-pair-err))
+;;       (cf-amount (get amount current-fees))
+;;       (updated (- cf-amount adjustment))
+;;     )
+;;     (ok (map-set pool-fees { token-x: token-x, token-y: token-y } {amount: updated}))
+;;   )
+;; )
 
 (define-read-only (get-name (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>))
   (let
@@ -122,8 +181,34 @@
       (token-x (contract-of token-x-trait))
       (token-y (contract-of token-y-trait))
       (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
+      (balance-x (get balance-x pair))
+      (balance-y (get balance-y pair))
     )
-    (ok (get shares-total pair))
+    (ok (list balance-x balance-y))
+  )
+)
+
+(define-read-only (get-total-supply-x (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>))
+  (let
+    (
+      (token-x (contract-of token-x-trait))
+      (token-y (contract-of token-y-trait))
+      (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
+      (balance-x (get balance-x pair))
+    )
+    (ok balance-x)
+  )
+)
+
+(define-read-only (get-total-supply-y (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>))
+  (let
+    (
+      (token-x (contract-of token-x-trait))
+      (token-y (contract-of token-y-trait))
+      (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
+      (balance-y (get balance-y pair))
+    )
+    (ok balance-y)
   )
 )
 
@@ -174,7 +259,7 @@
         balance-y: u0,
         fee-balance-x: u0,
         fee-balance-y: u0,
-        fee-to-address: none,
+        fee-to-address: (some FEE_TO_ADDRESS),
         name: pair-name,
       })
     )
@@ -252,8 +337,10 @@
       (token-x (contract-of token-x-trait))
       (token-y (contract-of token-y-trait))
       (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
-      (balance-x (get balance-x pair))
-      (balance-y (get balance-y pair))
+      (fee-balance-x (get fee-balance-x pair))
+      (fee-balance-y (get fee-balance-y pair))
+      (balance-x (- (get balance-x pair) fee-balance-x))
+      (balance-y (- (get balance-y pair) fee-balance-y))
       (shares (unwrap! (contract-call? .usd-lp get-balance tx-sender) (err u1110)))
       (shares-total (get shares-total pair))
       (contract-address (as-contract tx-sender))
@@ -296,13 +383,16 @@
     (
       (token-x (contract-of token-x-trait))
       (token-y (contract-of token-y-trait))
+      (this-cycle (unwrap-panic (get-current-cycle)))
       (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
       (balance-x (get balance-x pair))
       (balance-y (get balance-y pair))
       (contract-address (as-contract tx-sender))
       (sender tx-sender)
-      (dy (/ (* u1000 balance-y dx) (+ (* u1000 balance-x) (* u1000 dx))))
-      (fee (/ (* u4 dx) u10000)) ;; 4 basis points
+      (fee (/ (* u6 dx) u10000)) ;; 6 basis points
+      (dxlf (- dx fee)) ;;dx less fees
+      (dy (/ (* u1000 balance-y dxlf) (+ (* u1000 balance-x) (* u1000 dxlf))))
+      ;; (fee (/ (* u6 dx) u10000)) ;; 6 basis points
       (pair-updated
         (merge pair
           {
@@ -316,14 +406,26 @@
       )
     )
 
-    ;; (asserts! (< min-dy dy) too-much-slippage-err) ;;now enforced by post conditions
+    (asserts! (< min-dy dy) too-much-slippage-err)
 
     (asserts! (is-ok (contract-call? token-x-trait transfer dx sender contract-address none)) transfer-x-failed-err)
+    
     (asserts! (is-ok (as-contract (contract-call? token-y-trait transfer dy contract-address sender none))) transfer-y-failed-err)
 
     (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
+    (map-set CycleFeeData ;;cycleLPData
+      {
+        token-x: token-x,
+        token-y: token-y,
+        cycleNum: this-cycle 
+      }
+      {
+        token-x-bal: (+ fee (get fee-balance-x pair)),
+        token-y-bal: (get fee-balance-y pair)
+      }
+    )
     (print { object: "pair", action: "swap-x-for-y", data: pair-updated })
-    (ok (list dx dy))
+    (ok (list dxlf dy))
   )
 )
 
@@ -336,14 +438,16 @@
   ;; update balances
   (let ((token-x (contract-of token-x-trait))
         (token-y (contract-of token-y-trait))
+        (this-cycle (unwrap-panic (get-current-cycle)))
         (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
         (balance-x (get balance-x pair))
         (balance-y (get balance-y pair))
         (contract-address (as-contract tx-sender))
         (sender tx-sender)
         ;; check formula, vs x-for-y???
-        (dx (/ (* u997 balance-x dy) (+ (* u1000 balance-y) (* u997 dy)))) ;; overall fee is 30 bp, either all for the pool, or 25 bp for pool and 5 bp for operator
-        (fee (/ (* u5 dy) u10000)) ;; 5 bp
+        (fee (/ (* u6 dy) u10000)) ;; 6 bp
+        (dylf (- dy fee)) ;;dy less fees
+        (dx (/ (* u1000 balance-x dylf) (+ (* u1000 balance-y) (* u1000 dylf)))) 
         (pair-updated (merge pair {
           balance-x: (- (get balance-x pair) dx),
           balance-y: (+ (get balance-y pair) dy),
@@ -352,14 +456,25 @@
             (get fee-balance-y pair))
         })))
 
-    ;; (asserts! (< min-dx dx) too-much-slippage-err) ;;now handled in post conditions
+    (asserts! (< min-dx dx) too-much-slippage-err)
 
     (asserts! (is-ok (contract-call? token-y-trait transfer dy sender contract-address none)) transfer-y-failed-err)
     (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer dx contract-address sender none))) transfer-x-failed-err)
 
     (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
+    (map-set CycleFeeData ;;cycleLPData
+      {
+        token-x: token-x,
+        token-y: token-y,
+        cycleNum: this-cycle 
+      }
+      {
+        token-x-bal: (get fee-balance-x pair),
+        token-y-bal: (+ fee (get fee-balance-y pair))
+      }
+    )
     (print { object: "pair", action: "swap-y-for-x", data: pair-updated })
-    (ok (list dy dx))
+    (ok (list dylf dx))
   )
 )
 
@@ -424,12 +539,25 @@
 ;; number of token-x and token-y goes up with every trade
 (define-read-only (get-total-cycle-fee (token-x principal) (token-y principal) (cycleNum uint))
  (default-to
-    {token-x-bal: u0, token-y-bal: u0, total-lp-staked: u0} 
+    {token-x-bal: u0, token-y-bal: u0} 
     (map-get? CycleFeeData 
       {
         token-x: token-x,
         token-y: token-y,
         cycleNum: cycleNum
+      }
+    )
+  )
+)
+
+(define-read-only (get-total-lp-staked-at-cycle (token-x principal) (token-y principal) (rewardCycle uint))
+ (default-to
+    {total-lp-staked: u0} 
+      (map-get? CycleLPData 
+      {
+        token-x: token-x,
+        token-y: token-y,
+        cycleNum: rewardCycle,
       }
     )
   )
@@ -453,23 +581,24 @@
   (let 
     (
     (cycleFeeData (get-total-cycle-fee token-x token-y rewardCycle))
+    (cycleLPData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
     (userStakingData (get-lp-staked-by-user-at-cycle token-x token-y rewardCycle who))
-    (totalAmountStaked (get total-lp-staked cycleFeeData))
+    (totalAmountStaked (get total-lp-staked cycleLPData)) ;;cycleLPData
     (token-x-bal (get token-x-bal cycleFeeData))
     (token-y-bal (get token-y-bal cycleFeeData))
     (claimed (get reward-claimed userStakingData))
     (user-staked (get lp-staked userStakingData))
     )
     (begin 
-      (map-set CycleFeeData
+      (map-set CycleLPData ;;cycleLPData
         {
           token-x: token-x,
           token-y: token-y,
           cycleNum: rewardCycle
         }
         {
-          token-x-bal: token-x-bal,
-          token-y-bal: token-y-bal,
+          ;; token-x-bal: token-x-bal,
+          ;; token-y-bal: token-y-bal,
           ;; token-y-bal: token-x-bal, ;; y was set to x before for some reason
           total-lp-staked: (+ totalAmountStaked amount),
         }
@@ -522,8 +651,7 @@
     ) 
     (begin 
       (asserts! (> numCycles u0) min-staking-length) ;; stake for at least one cycle
-      (asserts! (<= numCycles MAX_REWARD_CYCLES) max-staking-length) ;; limited by length of the REWARD_CYCLES_INDEXES list
-      ;; ensure that this pair has been created
+      (asserts! (<= numCycles MAX_REWARD_CYCLES) max-staking-length) ;; limited by length of the REWARD_CYCLES_INDEXES listed
       ;; ensure that the pair already exists 
       (asserts!
         (or
@@ -683,3 +811,86 @@
 ;;     reward-claimed: bool
 ;;   }
 ;; )
+
+
+;; TODO 
+;; - DONE. ensure fees are collected by protocol on each swap.
+;; - write function to calculate which cycles the principal/user participated
+;; - ^^ same + AND where user has not claimed rewards
+;; - write function to calculate proportional rewards for LP staker per pair
+;; - write function to calculate proportional rewards for xBTC escrower per pair
+;; - write function to calculate proportional rewards for xBTC escrow + LP staker per pair
+;; - write function to calculate fees generated for the protocol per pair
+;; - write function to claim rewards at a cycle
+;; - write function to claim rewards over several cycles
+;; - integrate curve functinoality rather than regular DEX
+
+;; (define-read-only (get-lp-staked-by-user-at-cycle (token-x principal) (token-y principal) (rewardCycle uint) (who principal))
+;;  (default-to
+;;     {lp-staked: u0, reward-claimed: false} 
+;;       (map-get? UserStakingData 
+;;       {
+;;         token-x: token-x,
+;;         token-y: token-y,
+;;         rewardCycle: rewardCycle,
+;;         who: who 
+;;       }
+;;     )
+;;   )
+;; )
+
+(define-public (claim-reward-at-cycle (rewardCycle uint) (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>)) 
+  (let 
+    (
+    (token-x (contract-of token-x-trait))
+    (token-y (contract-of token-y-trait))
+    (cycleFeeData (get-total-cycle-fee token-x token-y rewardCycle))
+    (total-x-rewards (get token-x-bal cycleFeeData))
+    (total-y-rewards (get token-y-bal cycleFeeData))
+    (cycleLPData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
+    (userStakingData (get-lp-staked-by-user-at-cycle token-x token-y rewardCycle tx-sender))
+    (total-amount-staked (get total-lp-staked cycleLPData)) ;;cycleLPData
+    (user-amount-staked (get lp-staked userStakingData))
+    (claimed (get reward-claimed userStakingData))
+    (user-rewards-pct (/ (* u100 user-amount-staked) total-amount-staked)) ;;what if total-amount-staked is zero
+    (user-x-rewards (/ (* user-rewards-pct total-x-rewards) u100))
+    (user-y-rewards (/ (* user-rewards-pct total-y-rewards) u100))
+    (sender tx-sender)
+    (contract-address (as-contract tx-sender))
+    (this-cycle (unwrap-panic (get-current-cycle)))
+
+    )
+    (begin 
+
+      (print {user-amt-lp: user-amount-staked, total-amt-lp: total-amount-staked, uxr: user-x-rewards, uyr: user-y-rewards, txr: total-x-rewards, tyr: total-y-rewards})
+      (asserts! (> this-cycle rewardCycle) claim-too-early)
+      (if (> user-x-rewards u0) 
+          (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer user-x-rewards contract-address sender none))) transfer-x-failed-err)
+          (asserts! (is-ok (ok true)) (err u123412341))
+      )
+      (if (> user-y-rewards u0) 
+          (asserts! (is-ok (as-contract (contract-call? token-y-trait transfer user-y-rewards contract-address sender none))) transfer-y-failed-err)
+          (asserts! (is-ok (ok true)) (err u123412342))
+      )
+      (map-set UserStakingData
+        {
+          token-x: token-x,
+          token-y: token-y,
+          rewardCycle: rewardCycle,
+          who: tx-sender
+        }
+        {
+          lp-staked: user-amount-staked,
+          reward-claimed: true
+        }
+      )
+      ;;todo: UPDATE fee-balance FOR  TOKEN-X AND TOKEN-Y
+      ;; (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
+      ;; (fee-balance-x (get fee-balance-x pair))
+      ;; (fee-balance-y (get fee-balance-y pair))
+      ;; (balance-x (- (get balance-x pair) fee-balance-x))
+      ;; (balance-y (- (get balance-y pair) fee-balance-y))
+    )
+    (ok true)
+  )
+)
