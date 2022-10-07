@@ -23,8 +23,10 @@
 (define-constant max-staking-length (err u80))
 (define-constant min-staking-length (err u81))
 (define-constant claim-too-early (err u82))
+(define-constant transfer-xbtc-failed-err (err u83))
 (define-constant CONTRACT_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant FEE_TO_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.fee-escrow)
+(define-constant XBTC_CONTRACT_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token)
 (define-constant init-bh block-height)
 (define-constant MAX_REWARD_CYCLES u100)
 (define-constant REWARD_CYCLE_INDEXES (list u1 u2 u3 u4 u5 u6 u7 u8 u9 u10 u11 u12 u13 u14 u15 u16 u17 u18 u19 u20 u21 u22 u23 u24 u25 u26 u27 u28 u29 u30 u31 u32 u33 u34 u35 u36 u37 u38 u39 u40 u41 u42 u43 u44 u45 u46 u47 u48 u49 u50 u51 u52 u53 u54 u55 u56 u57 u58 u59 u60 u61 u62 u63 u64 u65 u66 u67 u68 u69 u70 u71 u72 u73 u74 u75 u76 u77 u78 u79 u80 u81 u82 u83 u84 u85 u86 u87 u88 u89 u90 u91 u92 u93 u94 u95 u96 u97 u98 u99 u100))
@@ -82,7 +84,7 @@
   }
 )
 
-(define-map CycleLPData
+(define-map TotalStakingData
   {
     token-x: principal,
     token-y: principal,
@@ -105,6 +107,19 @@
     reward-claimed: bool
   }
 )
+
+(define-map TotalBitflowEscrow 
+  { cycle: uint } 
+  { amount: uint }
+)
+
+(define-map UserBitflowEscrow 
+  { who: principal,
+    cycle: uint
+  } 
+  { amount: uint }
+)
+
 
 ;; (define-map pool-fees
 ;;   {
@@ -161,6 +176,17 @@
       (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
     )
     (ok (get name pair))
+  )
+)
+
+(define-read-only (get-pair-data (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>))
+  (let
+    (
+      (token-x (contract-of token-x-trait))
+      (token-y (contract-of token-y-trait))
+      (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
+    )
+    (ok pair)
   )
 )
 
@@ -413,7 +439,7 @@
     (asserts! (is-ok (as-contract (contract-call? token-y-trait transfer dy contract-address sender none))) transfer-y-failed-err)
 
     (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
-    (map-set CycleFeeData ;;cycleLPData
+    (map-set CycleFeeData
       {
         token-x: token-x,
         token-y: token-y,
@@ -463,7 +489,7 @@
     (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer dx contract-address sender none))) transfer-x-failed-err)
 
     (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
-    (map-set CycleFeeData ;;cycleLPData
+    (map-set CycleFeeData
       {
         token-x: token-x,
         token-y: token-y,
@@ -554,7 +580,7 @@
 (define-read-only (get-total-lp-staked-at-cycle (token-x principal) (token-y principal) (rewardCycle uint))
  (default-to
     {total-lp-staked: u0} 
-      (map-get? CycleLPData 
+      (map-get? TotalStakingData 
       {
         token-x: token-x,
         token-y: token-y,
@@ -582,16 +608,16 @@
   (let 
     (
     (cycleFeeData (get-total-cycle-fee token-x token-y rewardCycle))
-    (cycleLPData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
+    (totalStakingData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
     (userStakingData (get-lp-staked-by-user-at-cycle token-x token-y rewardCycle who))
-    (totalAmountStaked (get total-lp-staked cycleLPData)) ;;cycleLPData
+    (totalAmountStaked (get total-lp-staked totalStakingData))
     (token-x-bal (get token-x-bal cycleFeeData))
     (token-y-bal (get token-y-bal cycleFeeData))
     (claimed (get reward-claimed userStakingData))
     (user-staked (get lp-staked userStakingData))
     )
     (begin 
-      (map-set CycleLPData ;;cycleLPData
+      (map-set TotalStakingData
         {
           token-x: token-x,
           token-y: token-y,
@@ -826,9 +852,9 @@
     (cycleFeeData (get-total-cycle-fee token-x token-y rewardCycle))
     (total-x-rewards (get token-x-bal cycleFeeData))
     (total-y-rewards (get token-y-bal cycleFeeData))
-    (cycleLPData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
+    (totalStakingData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
     (userStakingData (get-lp-staked-by-user-at-cycle token-x token-y rewardCycle tx-sender))
-    (total-amount-staked (get total-lp-staked cycleLPData)) ;;cycleLPData
+    (total-amount-staked (get total-lp-staked totalStakingData))
     (user-amount-staked (get lp-staked userStakingData))
     (claimed (get reward-claimed userStakingData))
     (user-rewards-pct (/ (* u100 user-amount-staked) total-amount-staked)) ;;what if total-amount-staked is zero
@@ -908,3 +934,102 @@
   )
 )
 
+(define-read-only (get-total-xbtc-escrowed-at-cycle (cycleNum uint))
+ (default-to
+    {amount: u0} 
+    (map-get? TotalBitflowEscrow 
+      {
+        cycle: cycleNum
+      }
+    )
+  )
+)
+
+(define-read-only (get-user-xbtc-escrowed-at-cycle (who principal) (cycleNum uint))
+ (default-to
+    {amount: u0} 
+    (map-get? UserBitflowEscrow 
+      {
+        who: who,
+        cycle: cycleNum
+      }
+    )
+  )
+)
+
+
+
+(define-read-only (get-pct-xbtc-escrow-at-cycle (who principal) (cycleNum uint))
+  (let (
+      (user-amount (get amount (get-user-xbtc-escrowed-at-cycle who cycleNum)))
+      (total-amount (get amount (get-total-xbtc-escrowed-at-cycle cycleNum)))
+      (pct (/ (* u100 user-amount) total-amount))
+    )
+    (if (> total-amount u0) 
+      (/ (* u100 user-amount) total-amount)
+      u0
+    )
+  )
+)
+
+
+
+
+(define-private (escrow-xbtc-at-cycle (who principal) (amt uint) (cycle-num uint)) 
+  (as-contract (set-xbtc-escrowed-by-user-at-cycle cycle-num who amt))
+)
+
+(define-private (update-user-escrow-data (cycle uint) (user-info {amt: uint, who: principal}))
+  (let (
+    (amt (get amt user-info))
+    (who (get who user-info))
+    ) 
+    (if (is-ok (escrow-xbtc-at-cycle who amt cycle))
+      user-info
+      user-info ;; should return something else here to showcase that stake-lp-at-cycle threw an error
+    )
+  )
+)
+
+
+
+(define-private (set-xbtc-escrowed-by-user-at-cycle (rewardCycle uint) (who principal) (amount uint))
+  (let 
+    (
+    (user-xbtc-escrowed (get amount (get-user-xbtc-escrowed-at-cycle who rewardCycle)))     
+    (total-xbtc-escrowed (get amount (get-total-xbtc-escrowed-at-cycle rewardCycle)))     
+
+    )
+    (begin 
+      (map-set UserBitflowEscrow
+        {
+          who: who,
+          cycle: rewardCycle
+        }
+        { amount: (+ user-xbtc-escrowed amount) }
+      )
+      (map-set TotalBitflowEscrow
+        { cycle: rewardCycle }
+        { amount: (+ total-xbtc-escrowed amount) }
+      )
+    )
+    (ok true)
+  )
+)
+
+(define-public (escrow-xbtc (xbtc-token <sip-010-trait>) (amount uint) (numCycles uint))
+    (let (
+      (cycle-preference-is-set (map-set cycle-staking {id: tx-sender} {num-cycles: numCycles}))
+      (staking-cycles (get-list-of-staking-cycles numCycles))
+      (valid-staking-cycles (map shift-verified-cycles-to-current staking-cycles))
+    ) 
+    (begin 
+      ;; todo: assert that the xbtc contract is correct. don't want to get credit for staking a bs token
+      (asserts! (> numCycles u0) min-staking-length) ;; stake for at least one cycle
+      (asserts! (<= numCycles MAX_REWARD_CYCLES) max-staking-length) ;; limited by length of the REWARD_CYCLES_INDEXES listed
+      (print valid-staking-cycles)
+      (asserts! (is-ok (contract-call? xbtc-token transfer amount tx-sender CONTRACT_ADDRESS none)) transfer-lp-failed-err)
+      (ok (fold update-user-escrow-data valid-staking-cycles {amt: amount, who: tx-sender}))
+    )
+  )
+)

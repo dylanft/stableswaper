@@ -44,6 +44,9 @@ path = "contracts/usdex.clar"
 [contracts.usdex-lp]
 path = "contracts/usdex-lp.clar"
 
+[contracts.xbtc-token]
+path = "contracts/xbtc-token.clar"
+
 [contracts.xusd-token]
 path = "contracts/external/xusd-token.clar"
 
