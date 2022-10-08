@@ -505,52 +505,6 @@
   )
 )
 
-;; get the current address used to collect a fee
-;; (define-read-only (get-fee-to-address (token-x principal) (token-y principal))
-;;   (let ((pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err)))
-;;     (ok (get fee-to-address pair))
-;;   )
-;; )
-
-;; get the amount of fees charged on x-token and y-token exchanges that have not been collected yet
-;; (define-read-only (get-fees (token-x principal) (token-y principal))
-;;   (let ((pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err)))
-;;     (ok (list (get fee-balance-x pair) (get fee-balance-y pair)))
-;;   )
-;; )
-
-;; send the collected fees the fee-to-address
-;; (define-public (collect-fees (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>))
-;;   (let
-;;     (
-;;       (token-x (contract-of token-x-trait))
-;;       (token-y (contract-of token-y-trait))
-;;       (contract-address (as-contract tx-sender))
-;;       (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
-;;       (address (unwrap! (get fee-to-address pair) no-fee-to-address-err))
-;;       (fee-x (get fee-balance-x pair))
-;;       (fee-y (get fee-balance-y pair))
-;;     )
-
-;;     (asserts! (is-eq fee-x u0) no-fee-x-err)
-;;     (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer fee-x contract-address address none))) transfer-x-failed-err)
-;;     (asserts! (is-eq fee-y u0) no-fee-y-err)
-;;     (asserts! (is-ok (as-contract (contract-call? token-y-trait transfer fee-y contract-address address none))) transfer-y-failed-err)
-
-;;     (map-set pairs-data-map { token-x: token-x, token-y: token-y }
-;;       {
-;;         shares-total: (get shares-total pair),
-;;         balance-x: (get balance-x pair),
-;;         balance-y: (get balance-y pair),
-;;         fee-balance-x: u0,
-;;         fee-balance-y: u0,
-;;         fee-to-address: (get fee-to-address pair),
-;;         name: (get name pair),
-;;       }
-;;     )
-;;     (ok (list fee-x fee-y))
-;;   )
-;; )
 
 (define-read-only (get-current-cycle)
   (let 
@@ -841,7 +795,9 @@
 
 
 
-(define-public (claim-rewards-at-cycle (rewardCycle uint) (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>)) 
+(define-public (claim-rewards-at-cycle (rewardCycle uint) (token-x-trait <sip-010-trait>) (token-y-trait <sip-010-trait>) (lp-token-trait <sip-010-trait>) (xbtc-token-trait <sip-010-trait>)) 
+  ;; todo: traits as inputs isn't secure for lp-token and xbtc. need to ensure can't be abused / find diff way to call in transfer function.
+  ;; what happens if staking 50 btc for x cycles, and then 50 more for x cycles starting at x+1 (cycle following prev lockup). can't claim xbtc or lptokens using current logic.
   (let 
     (
     (token-x (contract-of token-x-trait))
@@ -864,7 +820,22 @@
     (pool-balance-y (- (get balance-y pair) user-y-rewards))
     (claimer tx-sender)
     (contract-address (as-contract tx-sender))
-    (this-cycle (unwrap-panic (get-current-cycle)))
+    (this-cycle (unwrap-panic (get-current-cycle))) ;; cycle when calling function
+    (reward-cycle rewardCycle) ;; cycle claiming rewards from
+    (following-cycle (+ u1 reward-cycle)) ;; cycle after the one claiming rewards from
+    (user-lp-staked-following-cycle (get lp-staked (get-lp-staked-by-user-at-cycle token-x token-y following-cycle tx-sender)))
+    (lp-claim
+      (if (> user-amount-staked user-lp-staked-following-cycle)
+            (- user-amount-staked user-lp-staked-following-cycle)
+            u0
+            ))
+    (user-xbtc-escrowed (get amount (get-user-xbtc-escrowed-at-cycle tx-sender reward-cycle)))     
+    (user-xbtc-escrowed-following-cycle (get amount (get-user-xbtc-escrowed-at-cycle tx-sender following-cycle)))
+    (xbtc-claim
+      (if (> user-xbtc-escrowed user-xbtc-escrowed-following-cycle)
+            (- user-xbtc-escrowed user-xbtc-escrowed-following-cycle)
+            u0
+            ))
     (pair-updated
       (merge pair
         {
@@ -896,7 +867,16 @@
           (asserts! (is-ok (as-contract (contract-call? .fee-escrow claim-token-rewards-from-escrow token-y-trait claimer user-y-rewards))) transfer-y-failed-err)
           (asserts! (is-ok (ok true)) (err u123412342))
       )
+
+      (if (> lp-claim u0) 
+          (asserts! (is-ok (as-contract (contract-call? lp-token-trait transfer lp-claim CONTRACT_ADDRESS claimer none))) transfer-lp-failed-err)
+          (asserts! (is-ok (ok true)) (err u123412342))
+      )
       
+      (if (> xbtc-claim u0) 
+          (asserts! (is-ok (as-contract (contract-call? xbtc-token-trait transfer xbtc-claim CONTRACT_ADDRESS claimer none))) transfer-lp-failed-err)
+          (asserts! (is-ok (ok true)) (err u123412342))
+      )
       (map-set pairs-data-map { token-x: token-x, token-y: token-y } pair-updated)
       (map-set UserStakingData
         {
