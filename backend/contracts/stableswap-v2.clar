@@ -23,7 +23,8 @@
 (define-constant max-staking-length (err u80))
 (define-constant min-staking-length (err u81))
 (define-constant claim-too-early (err u82))
-(define-constant transfer-xbtc-failed-err (err u83))
+(define-constant already-claimed (err u83))
+(define-constant transfer-xbtc-failed-err (err u84))
 (define-constant CONTRACT_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
 (define-constant FEE_TO_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.fee-escrow)
 (define-constant XBTC_CONTRACT_ADDRESS 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token)
@@ -410,6 +411,10 @@
       (token-x (contract-of token-x-trait))
       (token-y (contract-of token-y-trait))
       (this-cycle (unwrap-panic (get-current-cycle)))
+      (cycleFeeData (get-total-cycle-fee token-x token-y this-cycle))
+      (total-x-rewards (get token-x-bal cycleFeeData))
+      (total-y-rewards (get token-y-bal cycleFeeData))
+
       (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
       (balance-x (get balance-x pair))
       (balance-y (get balance-y pair))
@@ -446,8 +451,8 @@
         cycleNum: this-cycle 
       }
       {
-        token-x-bal: (+ fee (get fee-balance-x pair)),
-        token-y-bal: (get fee-balance-y pair)
+        token-x-bal: (+ fee total-x-rewards),
+        token-y-bal: total-y-rewards
       }
     )
     (print { object: "pair", action: "swap-x-for-y", data: pair-updated })
@@ -465,6 +470,10 @@
   (let ((token-x (contract-of token-x-trait))
         (token-y (contract-of token-y-trait))
         (this-cycle (unwrap-panic (get-current-cycle)))
+        (cycleFeeData (get-total-cycle-fee token-x token-y this-cycle))
+        (total-x-rewards (get token-x-bal cycleFeeData))
+        (total-y-rewards (get token-y-bal cycleFeeData))
+ 
         (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
         (balance-x (get balance-x pair))
         (balance-y (get balance-y pair))
@@ -473,7 +482,7 @@
         ;; check formula, vs x-for-y???
         (fee (/ (* u6 dy) u10000)) ;; 6 bp
         (dylf (- dy fee)) ;;dy less fees
-        (dx (/ (* u1000 balance-x dylf) (+ (* u1000 balance-y) (* u1000 dylf)))) 
+        (dx (/ (* u1000 balance-x dylf) (+ (* u1000 balance-y) (* u1000 dylf))))
         (pair-updated (merge pair {
           balance-x: (- (get balance-x pair) dx),
           balance-y: (+ (get balance-y pair) dylf),
@@ -496,8 +505,8 @@
         cycleNum: this-cycle 
       }
       {
-        token-x-bal: (get fee-balance-x pair),
-        token-y-bal: (+ fee (get fee-balance-y pair))
+        token-x-bal: total-x-rewards,
+        token-y-bal: (+ fee total-y-rewards)
       }
     )
     (print { object: "pair", action: "swap-y-for-x", data: pair-updated })
@@ -561,12 +570,9 @@
 (define-private (set-lp-staked-by-user-at-cycle (token-x principal) (token-y principal) (rewardCycle uint) (who principal) (amount uint))
   (let 
     (
-    (cycleFeeData (get-total-cycle-fee token-x token-y rewardCycle))
     (totalStakingData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
-    (userStakingData (get-lp-staked-by-user-at-cycle token-x token-y rewardCycle who))
     (totalAmountStaked (get total-lp-staked totalStakingData))
-    (token-x-bal (get token-x-bal cycleFeeData))
-    (token-y-bal (get token-y-bal cycleFeeData))
+    (userStakingData (get-lp-staked-by-user-at-cycle token-x token-y rewardCycle who))
     (claimed (get reward-claimed userStakingData))
     (user-staked (get lp-staked userStakingData))
     )
@@ -578,9 +584,6 @@
           cycleNum: rewardCycle
         }
         {
-          ;; token-x-bal: token-x-bal,
-          ;; token-y-bal: token-y-bal,
-          ;; token-y-bal: token-x-bal, ;; y was set to x before for some reason
           total-lp-staked: (+ totalAmountStaked amount),
         }
       )
@@ -800,71 +803,86 @@
   ;; what happens if staking 50 btc for x cycles, and then 50 more for x cycles starting at x+1 (cycle following prev lockup). can't claim xbtc or lptokens using current logic.
   (let 
     (
-    (token-x (contract-of token-x-trait))
-    (token-y (contract-of token-y-trait))
-    (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
-    (fee-balance-x (get fee-balance-x pair))
-    (fee-balance-y (get fee-balance-y pair))
-    (cycleFeeData (get-total-cycle-fee token-x token-y rewardCycle))
-    (total-x-rewards (get token-x-bal cycleFeeData))
-    (total-y-rewards (get token-y-bal cycleFeeData))
-    (totalStakingData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
-    (userStakingData (get-lp-staked-by-user-at-cycle token-x token-y rewardCycle tx-sender))
-    (total-amount-staked (get total-lp-staked totalStakingData))
-    (user-amount-staked (get lp-staked userStakingData))
-    (claimed (get reward-claimed userStakingData))
-    (user-rewards-pct (/ (* u100 user-amount-staked) total-amount-staked)) ;;what if total-amount-staked is zero
-    (user-x-rewards (/ (* user-rewards-pct total-x-rewards) u100))
-    (user-y-rewards (/ (* user-rewards-pct total-y-rewards) u100))
-    (pool-balance-x (- (get balance-x pair) user-x-rewards))
-    (pool-balance-y (- (get balance-y pair) user-y-rewards))
-    (claimer tx-sender)
-    (contract-address (as-contract tx-sender))
-    (this-cycle (unwrap-panic (get-current-cycle))) ;; cycle when calling function
-    (reward-cycle rewardCycle) ;; cycle claiming rewards from
-    (following-cycle (+ u1 reward-cycle)) ;; cycle after the one claiming rewards from
-    (user-lp-staked-following-cycle (get lp-staked (get-lp-staked-by-user-at-cycle token-x token-y following-cycle tx-sender)))
-    (lp-claim
-      (if (> user-amount-staked user-lp-staked-following-cycle)
-            (- user-amount-staked user-lp-staked-following-cycle)
-            u0
-            ))
-    (user-xbtc-escrowed (get amount (get-user-xbtc-escrowed-at-cycle tx-sender reward-cycle)))     
-    (user-xbtc-escrowed-following-cycle (get amount (get-user-xbtc-escrowed-at-cycle tx-sender following-cycle)))
-    (xbtc-claim
-      (if (> user-xbtc-escrowed user-xbtc-escrowed-following-cycle)
-            (- user-xbtc-escrowed user-xbtc-escrowed-following-cycle)
-            u0
-            ))
-    (pair-updated
-      (merge pair
-        {
-          ;; balance-x: (max-of (- (get balance-x pair) user-x-rewards) u0),
-          fee-balance-x: (if (is-some (get fee-to-address pair))  ;; only collect fee when fee-to-address is set
-            (- (get fee-balance-x pair) user-x-rewards)
-            (get fee-balance-x pair)),
+      (token-x (contract-of token-x-trait))
+      (token-y (contract-of token-y-trait))
+      (pair (unwrap! (map-get? pairs-data-map { token-x: token-x, token-y: token-y }) invalid-pair-err))
+      (fee-balance-x (get fee-balance-x pair))
+      (fee-balance-y (get fee-balance-y pair))
+      (cycleFeeData (get-total-cycle-fee token-x token-y rewardCycle))
+      (total-x-rewards (get token-x-bal cycleFeeData))
+      (total-y-rewards (get token-y-bal cycleFeeData))
+      (totalStakingData (get-total-lp-staked-at-cycle token-x token-y rewardCycle))
+      (userStakingData (get-lp-staked-by-user-at-cycle token-x token-y rewardCycle tx-sender))
+      (total-amount-staked (get total-lp-staked totalStakingData))
+      (user-amount-staked (get lp-staked userStakingData))
+      (claimed (get reward-claimed userStakingData))
+      (user-rewards-pct (/ (* u100 user-amount-staked) total-amount-staked)) ;;what if total-amount-staked is zero
+      (user-x-rewards (/ (* user-rewards-pct total-x-rewards) u100))
+      (user-y-rewards (/ (* user-rewards-pct total-y-rewards) u100))
+      (pool-balance-x (- (get balance-x pair) user-x-rewards))
+      (pool-balance-y (- (get balance-y pair) user-y-rewards))
+      (claimer tx-sender)
+      (contract-address (as-contract tx-sender))
+      (this-cycle (unwrap-panic (get-current-cycle))) ;; cycle when calling function
+      (reward-cycle rewardCycle) ;; cycle claiming rewards from
+      (following-cycle (+ u1 reward-cycle)) ;; cycle after the one claiming rewards from
+      (user-lp-staked-following-cycle (get lp-staked (get-lp-staked-by-user-at-cycle token-x token-y following-cycle tx-sender)))
+      (lp-claim
+        (if (> user-amount-staked user-lp-staked-following-cycle)
+              (- user-amount-staked user-lp-staked-following-cycle)
+              u0
+              ))
+      (user-xbtc-escrowed (get amount (get-user-xbtc-escrowed-at-cycle tx-sender reward-cycle)))     
+      (user-xbtc-escrowed-following-cycle (get amount (get-user-xbtc-escrowed-at-cycle tx-sender following-cycle)))
+      (xbtc-claim
+        (if (> user-xbtc-escrowed user-xbtc-escrowed-following-cycle)
+              (- user-xbtc-escrowed user-xbtc-escrowed-following-cycle)
+              u0
+              ))
+      (pair-updated
+        (merge pair
+          {
+            ;; balance-x: (max-of (- (get balance-x pair) user-x-rewards) u0),
+            fee-balance-x: (if (is-some (get fee-to-address pair))  ;; only collect fee when fee-to-address is set
+              (- (get fee-balance-x pair) user-x-rewards)
+              (get fee-balance-x pair)),
 
-          ;; balance-y: (max-of (- (get balance-y pair) user-y-rewards) u0),  
-          fee-balance-y: (if (is-some (get fee-to-address pair))  ;; only collect fee when fee-to-address is set
-            (- (get fee-balance-y pair) user-y-rewards)
-            (get fee-balance-y pair))
-        }
+            ;; balance-y: (max-of (- (get balance-y pair) user-y-rewards) u0),  
+            fee-balance-y: (if (is-some (get fee-to-address pair))  ;; only collect fee when fee-to-address is set
+              (- (get fee-balance-y pair) user-y-rewards)
+              (get fee-balance-y pair))
+          }
+        )
       )
-    )
+      (is-lp (> user-amount-staked u0))
+      (uses-bitflow-escrow (> user-xbtc-escrowed u0))
+      (is-both (and is-lp uses-bitflow-escrow))
+      (available-bps u6) ;; 5 for lps and xbtc escrow'ers. 1 for foundation.
+      (earned-bps (if is-both
+                      u5 
+                      (if is-lp 
+                        u3 
+                        (if uses-bitflow-escrow
+                          u1 
+                          u0)))
+      )
+      (user-x-rewards-proportional (/ (* earned-bps user-x-rewards ) available-bps))
+      (user-y-rewards-proportional (/ (* earned-bps user-y-rewards ) available-bps))
 
     )
     (begin 
 
       (print {user-amt-lp: user-amount-staked, total-amt-lp: total-amount-staked, uxr: user-x-rewards, uyr: user-y-rewards, txr: total-x-rewards, tyr: total-y-rewards})
+      (asserts! (is-eq claimed false) already-claimed)
       (asserts! (> this-cycle rewardCycle) claim-too-early)
       (if (> user-x-rewards u0) 
           ;; (asserts! (is-ok (as-contract (contract-call? token-x-trait transfer user-x-rewards contract-address sender none))) transfer-x-failed-err)
           
-          (asserts! (is-ok (as-contract (contract-call? .fee-escrow claim-token-rewards-from-escrow token-x-trait claimer user-x-rewards))) transfer-x-failed-err)
+          (asserts! (is-ok (as-contract (contract-call? .fee-escrow claim-token-rewards-from-escrow token-x-trait claimer user-x-rewards-proportional))) transfer-x-failed-err)
           (asserts! (is-ok (ok true)) (err u123412341))
       )
       (if (> user-y-rewards u0) 
-          (asserts! (is-ok (as-contract (contract-call? .fee-escrow claim-token-rewards-from-escrow token-y-trait claimer user-y-rewards))) transfer-y-failed-err)
+          (asserts! (is-ok (as-contract (contract-call? .fee-escrow claim-token-rewards-from-escrow token-y-trait claimer user-y-rewards-proportional))) transfer-y-failed-err)
           (asserts! (is-ok (ok true)) (err u123412342))
       )
 
