@@ -237,7 +237,7 @@ export class EarnComponent implements OnInit {
       network: this.network,
       anchorMode: AnchorMode.Any,
       contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap-v2',
+      contractName: 'stableswap',
       functionName: 'add-to-position',
       functionArgs: [tx, ty, uintCV(tx_amt), uintCV(ty_amt)],
       postConditionMode: PostConditionMode.Deny,
@@ -277,7 +277,7 @@ export class EarnComponent implements OnInit {
 
     var PC2 = makeContractFungiblePostCondition(
       this.deployerAddress,
-      'stableswap-v2',
+      'stableswap',
       FungibleConditionCode.GreaterEqual,
       0,
       createAssetInfo(this.deployerAddress, 'usda-token', 'usda') 
@@ -285,7 +285,7 @@ export class EarnComponent implements OnInit {
 
     var PC3 = makeContractFungiblePostCondition(
       this.deployerAddress,
-      'stableswap-v2',
+      'stableswap',
       FungibleConditionCode.GreaterEqual,
       0,
       createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
@@ -299,7 +299,7 @@ export class EarnComponent implements OnInit {
       network: this.network,
       anchorMode: AnchorMode.Any,
       contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap-v2',
+      contractName: 'stableswap',
       functionName: 'reduce-position',
       functionArgs: [tx, ty, uintCV(this.withdrawalPct)],
       postConditionMode: PostConditionMode.Deny,

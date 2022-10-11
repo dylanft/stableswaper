@@ -26,9 +26,6 @@ path = "contracts/external/sip-010-trait-ft-standard.clar"
 [contracts.stableswap]
 path = "contracts/stableswap.clar"
 
-[contracts.stableswap-v2]
-path = "contracts/stableswap-v2.clar"
-
 [contracts.trait-stableswap]
 path = "contracts/trait-stableswap.clar"
 

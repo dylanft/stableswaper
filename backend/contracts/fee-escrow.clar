@@ -4,7 +4,7 @@
 
 
 ;; constants
-(define-constant CONTRACT-OWNER 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2)
+(define-constant CONTRACT-OWNER 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap)
 (define-constant unauthorized-claim (err u1))
 (define-constant transfer-x-failed-err (err u2))
 (define-constant transfer-y-failed-err (err u3))

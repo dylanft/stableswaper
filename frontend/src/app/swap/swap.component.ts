@@ -82,7 +82,7 @@ export class SwapComponent implements OnInit {
       )
       var createPoolPC2 = makeContractFungiblePostCondition(
         this.deployerAddress,
-        'stableswap-v2',
+        'stableswap',
         FungibleConditionCode.GreaterEqual,
         y,
         createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
@@ -100,7 +100,7 @@ export class SwapComponent implements OnInit {
       )
       var createPoolPC2 = makeContractFungiblePostCondition(
         this.deployerAddress,
-        'stableswap-v2',
+        'stableswap',
         FungibleConditionCode.GreaterEqual,
         y,
         createAssetInfo(this.deployerAddress, 'usda-token', 'usda') 
@@ -110,7 +110,7 @@ export class SwapComponent implements OnInit {
       network: this.network,
       anchorMode: AnchorMode.Any,
       contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap-v2',
+      contractName: 'stableswap',
       functionName: fname,
       functionArgs: [tX, tY, uintCV(x), uintCV(y)],
       postConditionMode: PostConditionMode.Deny,

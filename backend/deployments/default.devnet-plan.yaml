@@ -51,10 +51,10 @@ plan:
             path: contracts/usd-lp.clar
             anchor-block-only: true
         - contract-publish:
-            contract-name: stableswap-v2
+            contract-name: stableswap
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             cost: 204300
-            path: contracts/stableswap-v2.clar
+            path: contracts/stableswap.clar
             anchor-block-only: true
         - contract-publish:
             contract-name: trait-stableswap
