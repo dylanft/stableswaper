@@ -37,7 +37,7 @@ export class FaucetComponent implements OnInit {
       console.log("loggedInAsAdmin: ", this.loggedInAsAdmin)
     }
   }
-  tokenList: any[] = ['USDA', 'xUSD'];
+  tokenList: any[] = ['USDA', 'xUSD', 'xBTC'];
   tokenChoice: string = '';
   tokenChoiceContract: any;
   tokenChoiceContractName: string = '';
@@ -54,6 +54,11 @@ export class FaucetComponent implements OnInit {
   xusdContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
     createAddress(this.deployerAddress),
     createLPString('xusd-token')
+  );
+
+  xbtcContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
+    createAddress(this.deployerAddress),
+    createLPString('xbtc-token')
   );
 
 
@@ -113,9 +118,13 @@ export class FaucetComponent implements OnInit {
       this.tokenChoiceContract = this.usdaContract;
       this.tokenChoiceContractName = 'usda-token';
     }
-    else {
+    else if (this.tokenChoice == 'xUSD') {
       this.tokenChoiceContract = this.xusdContract;
       this.tokenChoiceContractName = 'xusd-token';
+    }
+    else {
+      this.tokenChoiceContract = this.xbtcContract;
+      this.tokenChoiceContractName = 'xbtc-token'
     }
     console.log("tokenChoice: ", this.tokenChoice);
     console.log("tokenChoiceContract", this.tokenChoiceContract);
@@ -124,8 +133,7 @@ export class FaucetComponent implements OnInit {
   }
 
   mintTokens() {
-    console.log("minting ", this.mintAmount, " of ", this.tokenChoice);
-    console.log(userSession.loadUserData().profile.stxAddress.testnet);
+    var amount = this.mintAmount;
     var txSenderAddress: string;
     if (this.network.isMainnet()) {
       txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
@@ -135,13 +143,19 @@ export class FaucetComponent implements OnInit {
       txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
     }
 
+    if (this.tokenChoice == 'USDA' || this.tokenChoice == 'xUSD') {
+      amount = this.mintAmount * 1e6; // handles token decimals so user can input natural dollar amount
+    }
+    console.log("minting ", amount, " of ", this.tokenChoice);
+    console.log(userSession.loadUserData().profile.stxAddress.testnet);
+
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
       contractAddress: this.deployerAddress,
       contractName: this.tokenChoiceContractName,
       functionName: 'mint',
-      functionArgs: [uintCV(this.mintAmount), principalCV(txSenderAddress)],
+      functionArgs: [uintCV(amount), principalCV(txSenderAddress)],
       postConditionMode: PostConditionMode.Deny,
       postConditions: [],
       onFinish: (data) => {
@@ -167,8 +181,8 @@ export class FaucetComponent implements OnInit {
   }
 
   createPool() {
-    var tx_amt = 1000000*1e3;
-    var ty_amt = 1000000*1e3;
+    var tx_amt = 1000000*1e6;
+    var ty_amt = 1000000*1e6;
     var txSenderAddress: string;
     if (this.network.isMainnet()) {
       txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;

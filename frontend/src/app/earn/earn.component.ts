@@ -76,6 +76,9 @@ export class EarnComponent implements OnInit {
   lpToken_amt_total: number = 0;
   withdrawalPct: number = 100;
 
+  lpTokenContractName: string = '';
+  lpTokenAssetName: string = '';
+
   usdaContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
     createAddress(this.deployerAddress),
     createLPString('usda-token')
@@ -85,6 +88,11 @@ export class EarnComponent implements OnInit {
     createAddress(this.deployerAddress),
     createLPString('xusd-token')
   );
+
+  usda_xusd_lpContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
+    createAddress(this.deployerAddress),
+    createLPString('usd-lp')
+  )
 
   numCycles: number = 50;
 
@@ -154,6 +162,10 @@ export class EarnComponent implements OnInit {
     }
     else if (tokenType == "LP") {
       this.lpToken = event.value;
+      if (this.lpToken == 'USDA-xUSD-LP') {
+        this.lpTokenContractName = 'usd-lp';
+        this.lpTokenAssetName = 'usd-lp';
+      }
       console.log("LP Token: ", this.lpToken);
     }
   }
@@ -204,8 +216,8 @@ export class EarnComponent implements OnInit {
 
 
   addToPool() {
-    var tx_amt = this.tokenA_amt;
-    var ty_amt = this.tokenB_amt;
+    var tx_amt = this.tokenA_amt * 1e6;
+    var ty_amt = this.tokenB_amt * 1e6;
     var txSenderAddress: string;
     if (this.network.isMainnet()) {
       txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
@@ -318,5 +330,54 @@ export class EarnComponent implements OnInit {
       },
     });
   }
+
+  stakeLiquidityPoolTokens() {
+    var txSenderAddress: string;
+    var amountLPtokens = this.lpToken_amt_user_earn
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var PC1 = makeStandardFungiblePostCondition(
+      txSenderAddress,
+      FungibleConditionCode.GreaterEqual,
+      amountLPtokens,
+      createAssetInfo(this.deployerAddress, this.lpTokenContractName, this.lpTokenAssetName)
+      
+    )
+
+    var token_x = this.usdaContract;
+    var token_y = this.xusdContract;
+    var token_lp = this.usda_xusd_lpContract;
+    console.log("tx: ", token_x)
+    console.log("ty: ", token_y)
+    openContractCall({
+      network: this.network,
+      anchorMode: AnchorMode.Any,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'stake-LP-tokens',
+      functionArgs: [token_lp, token_x, token_y, uintCV(amountLPtokens), uintCV(this.numCycles)],
+      postConditionMode: PostConditionMode.Deny,
+      postConditions: [PC1],
+      onFinish: (data) => {
+        console.log('onFinish:', data);
+        window
+          ?.open(
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            '_blank'
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log('onCancel:', 'Transaction was canceled');
+      },
+    });
+  }
+
 
 }

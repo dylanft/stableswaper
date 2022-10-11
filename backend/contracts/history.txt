@@ -1,101 +1,101 @@
 #V2
-::set_tx_sender ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5
-(contract-call? .stableswap call-claim-function .usda-token .xusd-token tx-sender u0 u0)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap call-claim-function .usda-token .xusd-token tx-sender u0 u0)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap call-claim-function 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token tx-sender u0 u0)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap call-claim-function 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token tx-sender u1 u1)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap call-claim-function 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token tx-sender u0 u0)
 (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token mint u1000000000 tx-sender)
 (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token mint u1000000000 tx-sender)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap create-pair 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token "usda-xusd" u10000000 u10000000)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap add-to-position 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token u99000000 u99000000)
 ::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap stake-LP-tokens .usd-lp .usda-token .xusd-token u109000000 u10)
-::advance_chain_tip 10
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u99000)
-::advance_chain_tip 10
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 create-pair 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token "usda-xusd" u10000000 u10000000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 add-to-position 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token u99000000 u99000000)
 ::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap claim-rewards-at-cycle u1 .usda-token .xusd-token)
-::get_assets_maps
-(contract-call? .stableswap get-current-cycle)
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u1)
-(contract-call? .stableswap get-total-supply .usda-token .xusd-token)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token mint u1000000000 tx-sender)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token mint u1000000000 tx-sender)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 stake-LP-tokens .usd-lp .usda-token .xusd-token u109000000 u10)
 (contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token mint u1000 tx-sender)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap.xbtc-token u50 u10)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token u50 u10)
 ::get_assets_maps
-(contract-call? .stableswap escrow-btc .xbtc-token u10 u2)
-(contract-call? .stableswap escrow-xbtc .xbtc-token u10 u2)
-::get_assets_maps
-(contract-call? .stableswap get-pct-btc-escrow-at-cycle tx-sender u1)
-::set_tx_sender 'ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5
-::set_tx_sender ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token mint u1000000000 tx-sender)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token mint u1000000000 tx-sender)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token mint u1000 tx-sender)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap escrow-xbtc .xbtc-token u30 u2)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token u30 u2)
-::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-pct-btc-escrow-at-cycle tx-sender u1)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token mint u1000000000 tx-sender)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token mint u1000000000 tx-sender)
-::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap create-pair 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token "usda-xusd" u10000000 u10000000)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap add-to-position 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token u99000000 u99000000)
-::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap stake-LP-tokens .usd-lp .usda-token .xusd-token u109000000 u10)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token mint u1000 tx-sender)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap.xbtc-token u50 u10)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token u50 u10)
-::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-pct-btc-escrow-at-cycle tx-sender u1)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-pct-xbtc-escrow-at-cycle tx-sender u1)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 get-pct-btc-escrow-at-cycle tx-sender u1)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 get-pct-xbtc-escrow-at-cycle tx-sender u1)
 ::advance_chain_tip 7
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-current-cycle)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u99000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 get-current-cycle)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
 ::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap.xbtc-token u5 u10)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token u5 u10)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap.xbtc-token u5 u10)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token u5 u10)
 ::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap add-to-position 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token u1000 u1000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 add-to-position 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token u1000 u1000)
 ::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap stake-LP-tokens .usd-lp .usda-token .xusd-token u999 u10)
-::get_assets_maps
-::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-current-cycle)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u99000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 stake-LP-tokens .usd-lp .usda-token .xusd-token u999 u10)
 ::get_assets_maps
 ::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u99000)
-::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u99000)
-::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u99000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 get-current-cycle)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
 ::get_assets_maps
 ::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u99000)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u98000)
-::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-current-cycle)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
 ::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-current-cycle)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap claim-rewards-at-cycle u1 .usda-token .xusd-token)
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap claim-rewards-at-cycle u1 .usda-token .xusd-token .usd-lp .xbtc-token)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
+::advance_chain_tip 6
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
 ::get_assets_maps
 ::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap swap-x-for-y .usda-token .xusd-token u100000 u98000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u98000)
 ::get_assets_maps
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-current-cycle)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 get-current-cycle)
 ::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap get-current-cycle)
-::advance_chain_tip 6
-(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap claim-rewards-at-cycle u10 .usda-token .xusd-token .usd-lp .xbtc-token)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 get-current-cycle)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 claim-rewards-at-cycle u1 .usda-token .xusd-token)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 claim-rewards-at-cycle u1 .usda-token .xusd-token .usd-lp .xbtc-token)
 ::get_assets_maps
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u1)
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u10)
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u2)
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u3)
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u4)
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u5)
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u6)
-(contract-call? .stableswap get-total-cycle-fee .usda-token .xusd-token u7)
+::advance_chain_tip 6
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u98000)
+::get_assets_maps
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 get-current-cycle)
+::advance_chain_tip 6
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 get-current-cycle)
+::advance_chain_tip 6
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 claim-rewards-at-cycle u10 .usda-token .xusd-token .usd-lp .xbtc-token)
+::get_assets_maps
+(contract-call? .stableswap-v2 get-total-cycle-fee .usda-token .xusd-token u1)
+(contract-call? .stableswap-v2 get-total-cycle-fee .usda-token .xusd-token u10)
+(contract-call? .stableswap-v2 get-total-cycle-fee .usda-token .xusd-token u2)
+(contract-call? .stableswap-v2 get-total-cycle-fee .usda-token .xusd-token u3)
+(contract-call? .stableswap-v2 get-total-cycle-fee .usda-token .xusd-token u4)
+(contract-call? .stableswap-v2 get-total-cycle-fee .usda-token .xusd-token u5)
+(contract-call? .stableswap-v2 get-total-cycle-fee .usda-token .xusd-token u6)
+(contract-call? .stableswap-v2 get-total-cycle-fee .usda-token .xusd-token u7)
+::get_assets_maps
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token mint u1000000000 tx-sender)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token mint u1000000000 tx-sender)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 create-pair 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token "usda-xusd" u10000000 u10000000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 add-to-position 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usda-token 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xusd-token u99000000 u99000000)
+::get_assets_maps
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 stake-LP-tokens .usd-lp .usda-token .xusd-token u109000000 u10)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token mint u1000 tx-sender)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap.xbtc-token u50 u10)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 escrow-xbtc 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.xbtc-token u50 u10)
+::advance_chain_tip 7
+::get_assets_maps
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
+::get_assets_maps
+::advance_chain_tip 7
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
+::advance_chain_tip 7
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
+::advance_chain_tip 7
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
+::advance_chain_tip 7
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
+::advance_chain_tip 7
+::get_assets_maps
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u99000)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 swap-x-for-y .usda-token .xusd-token u100000 u98000)
+::get_assets_maps
+(contract-call? .stableswap-v2 get-current-cycle)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 claim-rewards-at-cycle u1 .usda-token .xusd-token .usd-lp .xbtc-token)
+::get_assets_maps
+::advance_chain_tip 7
+(contract-call? .stableswap-v2 get-current-cycle)
+::advance_chain_tip 7
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 claim-rewards-at-cycle u1 .usda-token .xusd-token .usd-lp .xbtc-token)
+(not true)
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 claim-rewards-at-cycle u10 .usda-token .xusd-token .usd-lp .xbtc-token)
+::get_assets_maps
+(contract-call? 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.stableswap-v2 claim-rewards-at-cycle u5 .usda-token .xusd-token .usd-lp .xbtc-token)
