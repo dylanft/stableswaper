@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EarnComponent } from './earn/earn.component';
 import { SwapComponent } from './swap/swap.component';
 import { FaucetComponent } from './faucet/faucet.component';
+import { PoolComponent } from './pool/pool.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FaucetComponent } from './faucet/faucet.component';
     ContractVoteComponent,
     EarnComponent,
     SwapComponent,
-    FaucetComponent
+    FaucetComponent,
+    PoolComponent
   ],
   imports: [
     BrowserModule,
