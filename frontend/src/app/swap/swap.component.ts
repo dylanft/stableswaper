@@ -67,8 +67,8 @@ export class SwapComponent implements OnInit {
 
 
   swapXforY(tokenX: string, tokenY: string, x: number, y: number) {
-    // x = x*1e6;
-    // y= y*1e6;
+    x = x*1e6;
+    y= y*1e6;
     console.log("tokenX: ", tokenX, "tokenY: ", tokenY)
     if (tokenX == 'USDA' && tokenY=='xUSD') {
       var tX = this.usdaContract;

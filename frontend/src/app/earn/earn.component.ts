@@ -3,6 +3,7 @@ import { openContractCall } from '@stacks/connect';
 import { StacksMocknet, StacksTestnet } from '@stacks/network';
 import {
   AnchorMode,
+  callReadOnlyFunction,
   ContractPrincipal,
   contractPrincipalCV,
   ContractPrincipalCV,
@@ -87,6 +88,11 @@ export class EarnComponent implements OnInit {
   xusdContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
     createAddress(this.deployerAddress),
     createLPString('xusd-token')
+  );
+
+  xbtcContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
+    createAddress(this.deployerAddress),
+    createLPString('xbtc-token')
   );
 
   usda_xusd_lpContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
@@ -380,4 +386,70 @@ export class EarnComponent implements OnInit {
   }
 
 
+  claimRewardsAtCycle() {
+    this.getCurrentCycle();
+    var txSenderAddress: string;
+    var cycleNum = this.cycleClaimNumber;
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var token_x = this.usdaContract;
+    var token_y = this.xusdContract;
+    var token_lp = this.usda_xusd_lpContract;
+    var token_xbtc = this.xbtcContract;
+    console.log("tx: ", token_x)
+    console.log("ty: ", token_y)
+    openContractCall({
+      network: this.network,
+      anchorMode: AnchorMode.Any,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'claim-rewards-at-cycle',
+      functionArgs: [uintCV(cycleNum), token_x, token_y, token_lp, token_xbtc],
+      postConditionMode: PostConditionMode.Allow,
+      postConditions: [],
+      onFinish: (data) => {
+        console.log('onFinish:', data);
+        window
+          ?.open(
+            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            '_blank'
+          )
+          ?.focus();
+      },
+      onCancel: () => {
+        console.log('onCancel:', 'Transaction was canceled');
+      },
+    });
+  }
+
+
+  async getCurrentCycle() {
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var options = {
+      network: this.network,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'get-current-cycle',
+      functionArgs: [],
+      senderAddress: txSenderAddress
+
+    }
+    const result = await callReadOnlyFunction(options);
+    console.log(result);
+  }
 }
