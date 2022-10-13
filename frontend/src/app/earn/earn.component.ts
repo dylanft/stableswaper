@@ -577,6 +577,7 @@ export class EarnComponent implements OnInit {
     }
     if (is_both) {
       eligible_bps = 1
+      bps_ratio = eligible_bps / fees_on_swaps;
       var pct_of_lp_staked = user_lp_staked / total_lp_staked
       fees_earned_x += total_cycle_rewards_x * bps_ratio * pct_of_lp_staked
       fees_earned_y += total_cycle_rewards_y * bps_ratio * pct_of_lp_staked
