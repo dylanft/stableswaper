@@ -31,7 +31,7 @@
 
     <!-- start of earn box-->
     <div id="earn-box-main" class="card-container">
-        <div id="earn-box-header">EARN</div>
+        <div id="earn-box-header">STACK</div>
         <div id="token-A-box" class="token-box">
             <table style="display:table; width:100%">
                 <tr align="center">
@@ -39,9 +39,9 @@
                     <!-- token dropdown -->
                     <div id="token-dropdown">
                         <mat-form-field appearance="fill" style="max-width:85%; background-color: cornsilk; border-radius: 10px;">
-                        <mat-label>Select LP Token</mat-label>
-                        <mat-select (selectionChange)="selectToken($event, 'LP')">
-                            <mat-option *ngFor="let token of lpTokenList" [value]="token">{{token}}</mat-option>
+                        <mat-label>Select Token</mat-label>
+                        <mat-select (selectionChange)="selectToken($event, 'LP-Earn')">
+                            <mat-option *ngFor="let token of earnOptions" [value]="token">{{token}}</mat-option>
                         </mat-select>
                         </mat-form-field>
         
@@ -49,7 +49,7 @@
                     </td>
                     <td style="max-width: 40%;">
                     <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
-                        <mat-label>Amount of LP Tokens</mat-label>
+                        <mat-label>Amount of Tokens</mat-label>
                         <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP-earn')" [(ngModel)]="lpToken_amt_user_earn">
                         <!-- <span matSuffix>.00</span> -->
                     </mat-form-field>
@@ -78,7 +78,7 @@
 
         </div>
         <div class="card" id="swap-box-footer">
-            <button (click)="stakeLiquidityPoolTokens()">Confirm</button>
+            <button (click)="stakeOrEscrow()">Confirm</button>
         </div>
       </div>
     <!-- end of earn box-->

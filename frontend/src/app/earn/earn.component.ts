@@ -61,6 +61,7 @@ export class EarnComponent implements OnInit {
   deployerAddress: string = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
   tokenList: any[] = ['USDA', 'xUSD'];
   lpTokenList: any[] = ['USDA-xUSD-LP']
+  earnOptions: any[] = ['USDA-xUSD-LP', 'xBTC']
   poolChoice: string = 'add';
   cycleView: string = 'search';
   cycleClaimNumber: number = 1;
@@ -175,13 +176,17 @@ export class EarnComponent implements OnInit {
       this.tokenB = event.value;
       console.log("tokenB: ", this.tokenB);
     }
-    else if (tokenType == "LP") {
+    else if (tokenType == "LP-Earn") {
       this.lpToken = event.value;
       if (this.lpToken == 'USDA-xUSD-LP') {
         this.lpTokenContractName = 'usd-lp';
         this.lpTokenAssetName = 'usd-lp';
       }
-      console.log("LP Token: ", this.lpToken);
+      else if (this.lpToken == 'xBTC') {
+          this.lpTokenContractName = 'xbtc-token';
+          this.lpTokenAssetName = 'xbtc-token';
+      }
+      console.log("Earn Token: ", this.lpToken);
     }
     else if (tokenType == "LP-rewardCycle") {
       this.cycleRewardLPToken = event.value;
@@ -354,7 +359,7 @@ export class EarnComponent implements OnInit {
     });
   }
 
-  stakeLiquidityPoolTokens() {
+  stakeOrEscrow() {
     var txSenderAddress: string;
     var amountLPtokens = this.lpToken_amt_user_earn
     if (this.network.isMainnet()) {
@@ -367,39 +372,64 @@ export class EarnComponent implements OnInit {
 
     var PC1 = makeStandardFungiblePostCondition(
       txSenderAddress,
-      FungibleConditionCode.GreaterEqual,
+      FungibleConditionCode.Equal,
       amountLPtokens,
       createAssetInfo(this.deployerAddress, this.lpTokenContractName, this.lpTokenAssetName)
-      
     )
 
-    var token_x = this.usdaContract;
-    var token_y = this.xusdContract;
-    var token_lp = this.usda_xusd_lpContract;
-    console.log("tx: ", token_x)
-    console.log("ty: ", token_y)
-    openContractCall({
-      network: this.network,
-      anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
-      functionName: 'stake-LP-tokens',
-      functionArgs: [token_lp, token_x, token_y, uintCV(amountLPtokens), uintCV(this.numCycles)],
-      postConditionMode: PostConditionMode.Deny,
-      postConditions: [PC1],
-      onFinish: (data) => {
-        console.log('onFinish:', data);
-        window
-          ?.open(
-            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
-            '_blank'
-          )
-          ?.focus();
-      },
-      onCancel: () => {
-        console.log('onCancel:', 'Transaction was canceled');
-      },
-    });
+    if (this.lpToken == 'USDA-xUSD-LP') {
+      var token_x = this.usdaContract;
+      var token_y = this.xusdContract;
+      var token_lp = this.usda_xusd_lpContract;
+      console.log("tx: ", token_x)
+      console.log("ty: ", token_y)
+      openContractCall({
+        network: this.network,
+        anchorMode: AnchorMode.Any,
+        contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+        contractName: 'stableswap',
+        functionName: 'stake-LP-tokens',
+        functionArgs: [token_lp, token_x, token_y, uintCV(amountLPtokens), uintCV(this.numCycles)],
+        postConditionMode: PostConditionMode.Deny,
+        postConditions: [PC1],
+        onFinish: (data) => {
+          console.log('onFinish:', data);
+          window
+            ?.open(
+              `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+              '_blank'
+            )
+            ?.focus();
+        },
+        onCancel: () => {
+          console.log('onCancel:', 'Transaction was canceled');
+        },
+      });
+    }
+    else if (this.lpToken == 'xBTC') {
+      openContractCall({
+        network: this.network,
+        anchorMode: AnchorMode.Any,
+        contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+        contractName: 'stableswap',
+        functionName: 'escrow-xbtc',
+        functionArgs: [this.xbtcContract, uintCV(amountLPtokens), uintCV(this.numCycles)],
+        postConditionMode: PostConditionMode.Allow,
+        postConditions: [],
+        onFinish: (data) => {
+          console.log('onFinish:', data);
+          window
+            ?.open(
+              `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+              '_blank'
+            )
+            ?.focus();
+        },
+        onCancel: () => {
+          console.log('onCancel:', 'Transaction was canceled');
+        },
+      });
+    }
   }
 
 
