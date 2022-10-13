@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { getGlobalObject } from '@stacks/common';
 import { openContractCall } from '@stacks/connect';
 import { StacksMocknet, StacksTestnet } from '@stacks/network';
 import {
@@ -11,7 +12,9 @@ import {
   createAddress,
   createAssetInfo,
   createLPString,
+  cvToValue,
   FungibleConditionCode,
+  getTypeString,
   intCV,
   makeContractFungiblePostCondition,
   makeStandardFungiblePostCondition,
@@ -21,7 +24,7 @@ import {
   stringUtf8CV,
   uintCV,
 } from '@stacks/transactions';
-import { principalCV } from '@stacks/transactions/dist/clarity/types/principalCV';
+import { principalCV, standardPrincipalCV } from '@stacks/transactions/dist/clarity/types/principalCV';
 import { userSession } from 'src/stacksUserSession';
 
 
@@ -59,8 +62,9 @@ export class EarnComponent implements OnInit {
   tokenList: any[] = ['USDA', 'xUSD'];
   lpTokenList: any[] = ['USDA-xUSD-LP']
   poolChoice: string = 'add';
-  cycleView: string = 'cycle';
+  cycleView: string = 'search';
   cycleClaimNumber: number = 1;
+  currentCycle: number | null = null;
   network: any = new StacksMocknet();
 
 
@@ -68,7 +72,10 @@ export class EarnComponent implements OnInit {
   tokenB: string = '';
   tokenA_amt: number = 0;
   tokenB_amt: number = 0;
-
+  token_x_rewards: number = 0;
+  token_y_rewards: number = 0;
+  token_x_symbol: string = 'USDA';
+  token_y_symbol: string = 'xUSD';
 
   lpToken: string = '';
   lpToken_amt_user: number = 0;
@@ -79,6 +86,8 @@ export class EarnComponent implements OnInit {
 
   lpTokenContractName: string = '';
   lpTokenAssetName: string = '';
+  cycleRewardLPToken: string | null = '';
+  clickedSearch: boolean = false;
 
   usdaContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
     createAddress(this.deployerAddress),
@@ -173,6 +182,14 @@ export class EarnComponent implements OnInit {
         this.lpTokenAssetName = 'usd-lp';
       }
       console.log("LP Token: ", this.lpToken);
+    }
+    else if (tokenType == "LP-rewardCycle") {
+      this.cycleRewardLPToken = event.value;
+      if (this.cycleRewardLPToken == 'USDA-xUSD-LP') {
+        this.lpTokenContractName = 'usd-lp';
+        this.lpTokenAssetName = 'usd-lp';
+      }
+      console.log("LP-rewardCycle Token: ", this.cycleRewardLPToken);
     }
   }
 
@@ -450,6 +467,289 @@ export class EarnComponent implements OnInit {
 
     }
     const result = await callReadOnlyFunction(options);
-    console.log(result);
+    var output = cvToValue(result);
+    this.currentCycle = output.value
   }
+
+  async viewUsersRewardsAtCycle() {
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var options = {
+      network: this.network,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'get-current-cycle',
+      functionArgs: [],
+      senderAddress: txSenderAddress
+
+    }
+    const result = await callReadOnlyFunction(options);
+    console.log(result);
+    console.log(result.type);
+    this.clickedSearch = true;
+    
+    // get user lp staked
+    var user_lp_cycle_info = (await this.getTotalLPStakedByUserAtCycle());
+    var user_lp_staked = user_lp_cycle_info.at(0);
+    var claimed = user_lp_cycle_info.at(1);
+    var total_lp_staked = (await this.getTotalLPStakedAtCycle());
+
+    var user_xbtc_escrowed = (await this.getTotalXBTCEscrowedByUserAtCycle());
+    var total_xbtc_escrowed = (await this.getTotalXBTCEscrowedAtCycle());
+    
+    var total_rewards_at_cycle = (await this.viewTotalRewardsAtCycle());
+    var total_cycle_rewards_x = total_rewards_at_cycle[0] //token x
+    var total_cycle_rewards_y = total_rewards_at_cycle[1] //token y
+
+
+    this.token_x_rewards = 0;
+    this.token_y_rewards = 0;
+    console.log("claimed: ", claimed)
+    console.log("user_lp_staked: ", user_lp_staked)
+    console.log("total_lp_staked: ", total_lp_staked)
+    console.log("user_xbtc_escrowed: ", user_xbtc_escrowed)
+    console.log("total_xbtc_escrowed: ", total_xbtc_escrowed)
+    console.log("total_rewards_at_cycle", total_rewards_at_cycle)
+    
+
+    var is_lp = user_lp_staked > 0
+    var is_verified_xbtc_holder = user_xbtc_escrowed > 0
+    var is_both = is_lp && is_verified_xbtc_holder
+    
+    var fees_earned_x = 0
+    var fees_earned_y = 0
+    var bps_ratio = 0
+    var eligible_bps = 0
+    var fees_on_swaps = 6 //basis points
+    if (is_verified_xbtc_holder) {
+      eligible_bps = 1;
+      bps_ratio = eligible_bps / fees_on_swaps;
+      var pct_of_btc_escrow = user_xbtc_escrowed / total_xbtc_escrowed
+      fees_earned_x += total_cycle_rewards_x * bps_ratio * pct_of_btc_escrow
+      fees_earned_y += total_cycle_rewards_y * bps_ratio * pct_of_btc_escrow
+
+    }
+    if (is_lp) {
+      eligible_bps = 3
+      bps_ratio = eligible_bps / fees_on_swaps;
+      var pct_of_lp_staked = user_lp_staked / total_lp_staked
+      fees_earned_x += total_cycle_rewards_x * bps_ratio * pct_of_lp_staked
+      fees_earned_y += total_cycle_rewards_y * bps_ratio * pct_of_lp_staked
+
+    }
+    if (is_both) {
+      eligible_bps = 1
+      var pct_of_lp_staked = user_lp_staked / total_lp_staked
+      fees_earned_x += total_cycle_rewards_x * bps_ratio * pct_of_lp_staked
+      fees_earned_y += total_cycle_rewards_y * bps_ratio * pct_of_lp_staked
+    }
+    
+    // if (claimed) {
+    //   //resets to 0 if already claimed the rewards
+    //   fees_earned_x = 0;
+    //   fees_earned_y = 0;
+    // }
+
+    console.log("claimable_fees_x: ", fees_earned_x)
+    console.log("claimable_fees_y: ", fees_earned_y)
+    this.token_x_rewards = fees_earned_x;
+    this.token_y_rewards = fees_earned_y;
+
+  }
+
+  async viewTotalRewardsAtCycle() {
+    this.getCurrentCycle()
+    var cycleNum = this.cycleClaimNumber;
+    var token_x = this.usdaContract;
+    var token_y = this.xusdContract;
+    this.token_x_symbol = "USDA";
+    this.token_y_symbol = "xUSD";
+    var token_x_decimals = 1e6;
+    var token_y_decimals = 1e6;
+
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var options = {
+      network: this.network,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'get-total-cycle-fees',
+      functionArgs: [token_x, token_y, uintCV(cycleNum)],
+      senderAddress: txSenderAddress
+
+    }
+    const result = await callReadOnlyFunction(options);
+    console.log(result);
+    console.log(result.type);
+    this.clickedSearch = true;
+    console.log(cvToValue(result));
+    var output = cvToValue(result);
+    console.log(output[0]);
+    console.log(typeof(output));
+    console.log(output['token-x-bal'].value)
+    console.log(output['token-y-bal'].value)
+    var token_x_rewards = output['token-x-bal'].value / token_x_decimals
+    var token_y_rewards = output['token-y-bal'].value / token_y_decimals
+    return [token_x_rewards, token_y_rewards]
+  }
+
+  async getTotalLPStakedByUserAtCycle() {
+    var cycleNum = this.cycleClaimNumber;
+    var token_x = this.usdaContract;
+    var token_y = this.xusdContract;
+    var token_x_decimals = 1e6;
+    var token_y_decimals = 1e6;
+
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var options = {
+      network: this.network,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'get-lp-staked-by-user-at-cycle',
+      functionArgs: [token_x, token_y, uintCV(cycleNum), standardPrincipalCV(txSenderAddress)],
+      senderAddress: txSenderAddress
+
+    }
+    const result = await callReadOnlyFunction(options);
+    console.log(result);
+    // console.log(result.type);
+    this.clickedSearch = true;
+    console.log(cvToValue(result));
+    var output = cvToValue(result);
+    var lp_staked = output['lp-staked'].value
+    var claimed = output['reward-claimed'].value
+    console.log("lp_staked: ",lp_staked, "claimed: ", claimed)
+    return [lp_staked, claimed]
+
+  }
+
+  async getTotalLPStakedAtCycle() {
+    var cycleNum = this.cycleClaimNumber;
+    var token_x = this.usdaContract;
+    var token_y = this.xusdContract;
+    var token_x_decimals = 1e6;
+    var token_y_decimals = 1e6;
+
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var options = {
+      network: this.network,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'get-total-lp-staked-at-cycle',
+      functionArgs: [token_x, token_y, uintCV(cycleNum)],
+      senderAddress: txSenderAddress
+
+    }
+    const result = await callReadOnlyFunction(options);
+    var output = cvToValue(result);
+    var total_lp_staked = output['total-lp-staked'].value
+    console.log("toal_lp_staked: ",total_lp_staked)
+    return total_lp_staked
+  }
+
+  async getTotalXBTCEscrowedByUserAtCycle() {
+    var cycleNum = this.cycleClaimNumber;
+    var token_x = this.usdaContract;
+    var token_y = this.xusdContract;
+    var token_x_decimals = 1e6;
+    var token_y_decimals = 1e6;
+
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var options = {
+      network: this.network,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'get-user-xbtc-escrowed-at-cycle',
+      functionArgs: [standardPrincipalCV(txSenderAddress), uintCV(cycleNum)],
+      senderAddress: txSenderAddress
+
+    }
+    const result = await callReadOnlyFunction(options);
+    console.log(result);
+    // console.log(result.type);
+    this.clickedSearch = true;
+    console.log(cvToValue(result));
+    var output = cvToValue(result);
+    var user_xbtc_escrowed = output['amount'].value
+    console.log("toal_xbtc_escrowed: ",user_xbtc_escrowed)
+    return user_xbtc_escrowed
+
+  }
+
+  async getTotalXBTCEscrowedAtCycle() {
+    var cycleNum = this.cycleClaimNumber;
+    var token_x = this.usdaContract;
+    var token_y = this.xusdContract;
+    var token_x_decimals = 1e6;
+    var token_y_decimals = 1e6;
+
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var options = {
+      network: this.network,
+      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractName: 'stableswap',
+      functionName: 'get-total-xbtc-escrowed-at-cycle',
+      functionArgs: [uintCV(cycleNum)],
+      senderAddress: txSenderAddress
+
+    }
+    const result = await callReadOnlyFunction(options);
+    var output = cvToValue(result);
+    var toal_xbtc_escrowed = output['amount'].value
+    console.log("toal_xbtc_escrowed: ",toal_xbtc_escrowed)
+    return toal_xbtc_escrowed
+  }
+
 }
