@@ -129,7 +129,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            `http://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -154,7 +154,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            `http://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -286,7 +286,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            `http://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -348,7 +348,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            `http://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
@@ -396,7 +396,7 @@ export class EarnComponent implements OnInit {
           console.log('onFinish:', data);
           window
             ?.open(
-              `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+              `http://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
               '_blank'
             )
             ?.focus();
@@ -420,7 +420,7 @@ export class EarnComponent implements OnInit {
           console.log('onFinish:', data);
           window
             ?.open(
-              `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+              `http://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
               '_blank'
             )
             ?.focus();
@@ -464,7 +464,7 @@ export class EarnComponent implements OnInit {
         console.log('onFinish:', data);
         window
           ?.open(
-            `http://localhost:8000/txid/${data.txId}?chain=testnet`,
+            `http://explorer.stacks.co/txid/${data.txId}?chain=testnet`,
             '_blank'
           )
           ?.focus();
