@@ -1,5 +1,5 @@
 <div *ngIf="userSession.isUserSignedIn()">
-    <div id="info-box" class="card-container">
+    <!-- <div id="info-box" class="card-container">
         <div class="info-box-line">Idle Tokens:
             <table id="idle-info">
                 <tr>
@@ -14,7 +14,6 @@
                 <tr style="text-align:center;">
                     <td># LP Tokens</td>
                     <td>$ Amount:</td>
-                    <!-- <td>Unclaimed Rewards:</td> -->
                 </tr>
             </table>
         </div>
@@ -27,7 +26,7 @@
                 </tr>
             </table>            
         </div>
-    </div>
+    </div> -->
 
     <!-- start of pool box-->
     <div id="pool-box-main" class="card-container">
@@ -169,6 +168,6 @@
     <!-- end of pool box-->
 
 
-<div *ngIf="!userSession.isUserSignedIn()">
-    <app-connect-wallet></app-connect-wallet>
-</div>
+  <div *ngIf="!userSession.isUserSignedIn()">
+      <app-connect-wallet></app-connect-wallet>
+  </div>
