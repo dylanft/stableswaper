@@ -29,9 +29,9 @@ export class ContractVoteComponent implements OnInit {
 
   swap(pick: string) {
     openContractCall({
-      network: new StacksMocknet(),
+      network: new StacksTestnet(),
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
       contractName: 'example-fruit-vote-contract',
       functionName: 'vote',
       functionArgs: [stringUtf8CV(pick)],

@@ -58,7 +58,7 @@ export class EarnComponent implements OnInit {
   ngOnInit(): void {
   }
   public userSession = userSession;
-  deployerAddress: string = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+  deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
   tokenList: any[] = ['USDA', 'xUSD'];
   lpTokenList: any[] = ['USDA-xUSD-LP']
   earnOptions: any[] = ['USDA-xUSD-LP', 'xBTC']
@@ -66,7 +66,7 @@ export class EarnComponent implements OnInit {
   cycleView: string = 'search';
   cycleClaimNumber: number = 1;
   currentCycle: number | null = null;
-  network: any = new StacksMocknet();
+  network: any = new StacksTestnet();
 
 
   tokenA: string = '';
@@ -117,9 +117,9 @@ export class EarnComponent implements OnInit {
 
   swap(pick: string) {
     openContractCall({
-      network: new StacksMocknet(),
+      network: new StacksTestnet(),
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
       contractName: 'example-fruit-vote-contract',
       functionName: 'vote',
       functionArgs: [stringUtf8CV(pick)],
@@ -142,9 +142,9 @@ export class EarnComponent implements OnInit {
 
   swapStxForMagic(pick: string) {
     openContractCall({
-      network: new StacksMocknet(),
+      network: new StacksTestnet(),
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
       contractName: 'beanstalk-exchange',
       functionName: 'stx-to-token-swap',
       functionArgs: [stringUtf8CV(pick)],
@@ -276,8 +276,8 @@ export class EarnComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'add-to-position',
       functionArgs: [tx, ty, uintCV(tx_amt), uintCV(ty_amt)],
       postConditionMode: PostConditionMode.Deny,
@@ -317,7 +317,7 @@ export class EarnComponent implements OnInit {
 
     var PC2 = makeContractFungiblePostCondition(
       this.deployerAddress,
-      'stableswap',
+      'stableswap-v3',
       FungibleConditionCode.GreaterEqual,
       0,
       createAssetInfo(this.deployerAddress, 'usda-token', 'usda') 
@@ -325,7 +325,7 @@ export class EarnComponent implements OnInit {
 
     var PC3 = makeContractFungiblePostCondition(
       this.deployerAddress,
-      'stableswap',
+      'stableswap-v3',
       FungibleConditionCode.GreaterEqual,
       0,
       createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
@@ -338,8 +338,8 @@ export class EarnComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'reduce-position',
       functionArgs: [tx, ty, uintCV(this.withdrawalPct)],
       postConditionMode: PostConditionMode.Deny,
@@ -386,8 +386,8 @@ export class EarnComponent implements OnInit {
       openContractCall({
         network: this.network,
         anchorMode: AnchorMode.Any,
-        contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-        contractName: 'stableswap',
+        contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+        contractName: 'stableswap-v3',
         functionName: 'stake-LP-tokens',
         functionArgs: [token_lp, token_x, token_y, uintCV(amountLPtokens), uintCV(this.numCycles)],
         postConditionMode: PostConditionMode.Deny,
@@ -410,8 +410,8 @@ export class EarnComponent implements OnInit {
       openContractCall({
         network: this.network,
         anchorMode: AnchorMode.Any,
-        contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-        contractName: 'stableswap',
+        contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+        contractName: 'stableswap-v3',
         functionName: 'escrow-xbtc',
         functionArgs: [this.xbtcContract, uintCV(amountLPtokens), uintCV(this.numCycles)],
         postConditionMode: PostConditionMode.Allow,
@@ -454,8 +454,8 @@ export class EarnComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'claim-rewards-at-cycle',
       functionArgs: [uintCV(cycleNum), token_x, token_y, token_lp, token_xbtc],
       postConditionMode: PostConditionMode.Allow,
@@ -489,8 +489,8 @@ export class EarnComponent implements OnInit {
 
     var options = {
       network: this.network,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'get-current-cycle',
       functionArgs: [],
       senderAddress: txSenderAddress
@@ -514,8 +514,8 @@ export class EarnComponent implements OnInit {
 
     var options = {
       network: this.network,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'get-current-cycle',
       functionArgs: [],
       senderAddress: txSenderAddress
@@ -618,8 +618,8 @@ export class EarnComponent implements OnInit {
 
     var options = {
       network: this.network,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'get-total-cycle-fees',
       functionArgs: [token_x, token_y, uintCV(cycleNum)],
       senderAddress: txSenderAddress
@@ -659,8 +659,8 @@ export class EarnComponent implements OnInit {
 
     var options = {
       network: this.network,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'get-lp-staked-by-user-at-cycle',
       functionArgs: [token_x, token_y, uintCV(cycleNum), standardPrincipalCV(txSenderAddress)],
       senderAddress: txSenderAddress
@@ -698,8 +698,8 @@ export class EarnComponent implements OnInit {
 
     var options = {
       network: this.network,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'get-total-lp-staked-at-cycle',
       functionArgs: [token_x, token_y, uintCV(cycleNum)],
       senderAddress: txSenderAddress
@@ -731,8 +731,8 @@ export class EarnComponent implements OnInit {
 
     var options = {
       network: this.network,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'get-user-xbtc-escrowed-at-cycle',
       functionArgs: [standardPrincipalCV(txSenderAddress), uintCV(cycleNum)],
       senderAddress: txSenderAddress
@@ -769,8 +769,8 @@ export class EarnComponent implements OnInit {
 
     var options = {
       network: this.network,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'get-total-xbtc-escrowed-at-cycle',
       functionArgs: [uintCV(cycleNum)],
       senderAddress: txSenderAddress

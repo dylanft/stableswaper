@@ -36,13 +36,13 @@ export class PoolComponent implements OnInit {
   ngOnInit(): void {
   }
   public userSession = userSession;
-  deployerAddress: string = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+  deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
   tokenList: any[] = ['USDA', 'xUSD'];
   lpTokenList: any[] = ['USDA-xUSD-LP']
   poolChoice: string = 'add';
   cycleView: string = 'cycle';
   cycleClaimNumber: number = 1;
-  network: any = new StacksMocknet();
+  network: any = new StacksTestnet();
 
 
   tokenA: string = '';
@@ -117,8 +117,8 @@ export class PoolComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'add-to-position',
       functionArgs: [tx, ty, uintCV(tx_amt), uintCV(ty_amt)],
       postConditionMode: PostConditionMode.Deny,
@@ -158,7 +158,7 @@ export class PoolComponent implements OnInit {
 
     var PC2 = makeContractFungiblePostCondition(
       this.deployerAddress,
-      'stableswap',
+      'stableswap-v3',
       FungibleConditionCode.GreaterEqual,
       0,
       createAssetInfo(this.deployerAddress, 'usda-token', 'usda') 
@@ -166,7 +166,7 @@ export class PoolComponent implements OnInit {
 
     var PC3 = makeContractFungiblePostCondition(
       this.deployerAddress,
-      'stableswap',
+      'stableswap-v3',
       FungibleConditionCode.GreaterEqual,
       0,
       createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
@@ -179,8 +179,8 @@ export class PoolComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: 'reduce-position',
       functionArgs: [tx, ty, uintCV(this.withdrawalPct)],
       postConditionMode: PostConditionMode.Deny,

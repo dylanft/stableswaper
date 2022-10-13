@@ -43,7 +43,7 @@ export class SwapComponent implements OnInit {
     }
   }
   tokenList: any[] = ['USDA', 'xUSD'];
-  deployerAddress: string = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM';
+  deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
 
   tokenA: string = '';
   tokenB: string = '';
@@ -51,14 +51,14 @@ export class SwapComponent implements OnInit {
   tokenB_amt: number = 0;
   txSenderAddress: any;
   
-  network: any = new StacksMocknet();
+  network: any = new StacksTestnet();
   usdaContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
-      createAddress('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM'),
+      createAddress('ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'),
       createLPString('usda-token')
     );
 
   xusdContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
-    createAddress('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM'),
+    createAddress('ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'),
     createLPString('xusd-token')
   );
 
@@ -82,7 +82,7 @@ export class SwapComponent implements OnInit {
       )
       var createPoolPC2 = makeContractFungiblePostCondition(
         this.deployerAddress,
-        'stableswap',
+        'stableswap-v3',
         FungibleConditionCode.GreaterEqual,
         y,
         createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
@@ -100,7 +100,7 @@ export class SwapComponent implements OnInit {
       )
       var createPoolPC2 = makeContractFungiblePostCondition(
         this.deployerAddress,
-        'stableswap',
+        'stableswap-v3',
         FungibleConditionCode.GreaterEqual,
         y,
         createAssetInfo(this.deployerAddress, 'usda-token', 'usda') 
@@ -109,8 +109,8 @@ export class SwapComponent implements OnInit {
     openContractCall({
       network: this.network,
       anchorMode: AnchorMode.Any,
-      contractAddress: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
-      contractName: 'stableswap',
+      contractAddress: 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW',
+      contractName: 'stableswap-v3',
       functionName: fname,
       functionArgs: [tX, tY, uintCV(x), uintCV(y)],
       postConditionMode: PostConditionMode.Deny,

@@ -1,5 +1,5 @@
 [project]
-name = "stableswap"
+name = "stableswap-v3"
 authors = []
 description = ""
 telemetry = false
@@ -23,8 +23,8 @@ path = "contracts/fee-escrow.clar"
 [contracts.sip-010-trait-ft-standard]
 path = "contracts/external/sip-010-trait-ft-standard.clar"
 
-[contracts.stableswap]
-path = "contracts/stableswap.clar"
+[contracts.stableswap-v3]
+path = "contracts/stableswap-v3.clar"
 
 [contracts.trait-stableswap]
 path = "contracts/trait-stableswap.clar"
