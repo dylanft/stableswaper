@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { userSession } from 'src/stacksUserSession';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  ngOnInit(): void {
+  }
+  public userSession = userSession;
   title = 'stacks-angular';
   content: string = "home";
 

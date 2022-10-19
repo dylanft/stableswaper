@@ -21,7 +21,8 @@
   <!-- Stacks -->
   <div align="center">
 
-    <!-- <img *ngIf="content=='home'" src="../assets/brand/homepage_dummy.png" width="100%"> -->
+    <img *ngIf="content=='home' && userSession.isUserSignedIn()" (click)="setContent('earn')"  src="../assets/brand/phone.png" width="50%"><br>
+    <img *ngIf="content=='home'" (click)="setContent('swap')"  src="../assets/brand/bitflow-intro.png" width="100%">
     <!-- <img *ngIf="content=='home'" src="../assets/brand/graph.jpeg" width="100%"> -->
 
     <token-swap *ngIf="content=='swap'"></token-swap>
