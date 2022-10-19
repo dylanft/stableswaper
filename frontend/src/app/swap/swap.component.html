@@ -12,7 +12,7 @@
               <!-- token dropdown -->
               <div id="token-dropdown">
                 <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                <mat-form-field appearance="fill" style="max-width:85%; background-color: cornsilk; border-radius: 10px;">
+                <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
                   <mat-label>Select Token</mat-label>
                   <mat-select (selectionChange)="selectToken($event, 'A')">
                     <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
@@ -22,7 +22,7 @@
               </div>
             </td>
             <td style="max-width: 40%;">
-              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
                 <mat-label>Amount</mat-label>
                 <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="updateTokenAmount(tokenAmount_A.value, 'A')" [(ngModel)]="tokenA_amt">
                 <span matPrefix>$&nbsp;</span>
@@ -44,7 +44,7 @@
       </div>
   
       <div id="arrow-row">
-        <div id="down-arrow-circle" style="background-color:cornsilk; border-radius:50%; max-width: 35px; border: 2px solid #254841;">&#x2193;</div>
+        <div id="down-arrow-circle" style="background-color:#1C534A; border-radius:50%; max-width: 35px; border: 2px solid #45A165;">&#x2193;</div>
       </div>
   
       <div id="token-B-box" class="token-box">
@@ -54,7 +54,8 @@
               <!-- token dropdown -->
               <div id="token-dropdown">
                 <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                <mat-form-field appearance="fill" style="max-width:85%; background-color: cornsilk; border-radius: 10px;">
+                <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5;
+                ; border-radius: 10px;">
                   <mat-label>Select Token</mat-label>
                   <mat-select (selectionChange)="selectToken($event, 'B')">
                     <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
@@ -64,7 +65,7 @@
               </div>
             </td>
             <td style="max-width: 40%;">
-              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
                 <mat-label>Amount</mat-label>
                 <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_B (keyup)="updateTokenAmount(tokenAmount_B.value, 'B')" [(ngModel)]="tokenB_amt">
                 <span matPrefix>$&nbsp;</span>

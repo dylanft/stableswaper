@@ -3,8 +3,8 @@ div {
   }
   
   button {
-    color: cornsilk;
-    background-color: #254841;
+    color: #254841;
+    background-color: cornsilk;
     border: 2px solid #777;
     border-radius: 10px;
     padding: 8px 12px;
@@ -14,7 +14,7 @@ div {
   #swap-box-main, #pool-box-main, #earn-box-main, #cycle-box-main {
     /* min-height: 400px; */
     min-width: 400px;
-    border: 10px solid #254841;
+    border: 10px solid cornsilk;
     border-radius: 10px;
     color: white;
   
@@ -22,7 +22,7 @@ div {
 
   #info-box {
     min-width: 400px;
-    border: 10px solid #254841;
+    border: 10px solid cornsilk;
     border-radius: 10px;
     color: white;
     padding: 5px;
@@ -31,16 +31,16 @@ div {
   .info-box-line {
     margin: 0;
     padding: 5px;
-    background-color: #254841;
-    color: cornsilk;
+    background-color: cornsilk;
+    color: #254841;
     font-weight: bold;
   }
   
   #swap-box-header, #pool-box-header, #earn-box-header, #cycle-box-header {
     margin: 0;
     padding: 10px;
-    background-color: #254841;
-    color: cornsilk;
+    background-color: cornsilk;
+    color: #254841;
     font-weight: bold;
     font-size: 30px;
   }
@@ -48,14 +48,14 @@ div {
   #arrow-row, #plus-row {
     font-weight: bold;
     font-size: 30px;
-    color: #254841;
+    color: cornsilk;
   }
   
   .token-box {
     margin: 10px;
     padding: 3%;
-    background-color: #254841;
-    color: cornsilk;
+    background-color: cornsilk;
+    color: #254841;
     border-radius: 10px;
     border: 2px solid #777;
   
@@ -75,7 +75,90 @@ div {
   
   .input-right-align {
     text-align: right;
-    color:#254841
+    color:cornsilk
+  }
+  
+  input.example-right-align::-webkit-outer-spin-button,
+  input.example-right-align::-webkit-inner-spin-button {
+    display: none;
+  }
+  
+  input.input-right-align {
+    -moz-appearance: textfield;
+  }
+  
+  #token-dropdown{
+    margin:0px;
+  }
+
+
+
+  div {
+    margin-top: 16px;
+  }
+  
+  button {
+    color: #F5F5F5;
+    background-color: #1C534A;
+    border: 2px solid #45A165;
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin: 4px;
+  }
+  
+  #swap-box-main, #pool-box-main, #earn-box-main, #cycle-box-main{
+    /* min-height: 400px; */
+    min-width: 400px;
+    border: 10px solid #1C534A;
+    border-radius: 10px;
+    color: white;
+    background-color: #1C534A;
+  
+  }
+  
+  #swap-box-header, #pool-box-header, #earn-box-header, #cycle-box-header {
+    margin: 0;
+    padding: 10px;
+    background-color: #1C534A;
+    color: #F5F5F5;
+    font-weight: bold;
+    font-size: 30px;
+  }
+  #arrow-row, #plus-row {
+    font-weight: bold;
+    font-size: 30px;
+    color: #F5F5F5;
+  }
+  
+  .token-box {
+    margin: 10px;
+    padding: 3%;
+    background-color: cornsilk;
+    color: #254841;
+    border-radius: 10px;
+    border: 2px solid #777;
+  
+  }
+  
+  ::ng-deep .mat-form-field {
+    color: #1C534A !important;
+  }
+
+  ::ng-deep .mat-form-field-underline {
+    display: none;
+  }
+  
+  ::ng-deep .mat-form-field-wrapper{
+    margin-bottom: -1.25em;
+  }
+  
+  .example-container .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+  }
+  
+  .input-right-align {
+    text-align: right;
+    color:#1C534A
   }
   
   input.example-right-align::-webkit-outer-spin-button,
@@ -111,13 +194,19 @@ div {
 
   mat-button-toggle-group {
     margin-left: 12px;
-    color: #254841;
+    color: cornsilk;
   }
 
   mat-button-toggle {
-    color: #254841;
-    background-color: cornsilk;
-    border: 1pt solid #254841;
+    color: #1C534A;
+    background-color: #F5F5F5;
+    border: 1pt solid #45A165;
+  }
+
+  ::ng-deep .mat-button-toggle-checked {
+    color: cornsilk !important;
+    background-color: #45A165 !important;
+    border: 1pt solid #45A165 !important;
   }
 
 
@@ -135,7 +224,7 @@ div {
     height: 100%;
   }
   ::ng-deep .mat-slider.mat-slider-horizontal .mat-slider-track-fill {
-    background-color: #254841;
+    background-color: cornsilk;
   }
   ::ng-deep .mat-accent .mat-slider-thumb {
     height: 30px;
@@ -157,7 +246,7 @@ div {
   }
 
   /* .cycle-table {
-    background-color: #254841;
-    color: cornsilk;
+    background-color: cornsilk;
+    color: #254841;
   } */
 

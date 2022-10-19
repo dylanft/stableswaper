@@ -3,9 +3,9 @@ div {
   }
   
   button {
-    color: cornsilk;
-    background-color: #254841;
-    border: 2px solid #777;
+    color: #F5F5F5;
+    background-color: #1C534A;
+    border: 2px solid #45A165;
     border-radius: 10px;
     padding: 8px 12px;
     margin: 4px;
@@ -14,17 +14,18 @@ div {
   #swap-box-main {
     /* min-height: 400px; */
     min-width: 400px;
-    border: 10px solid #254841;
+    border: 10px solid #1C534A;
     border-radius: 10px;
     color: white;
+    background-color: #1C534A;
   
   }
   
   #swap-box-header {
     margin: 0;
     padding: 10px;
-    background-color: #254841;
-    color: cornsilk;
+    background-color: #1C534A;
+    color: #F5F5F5;
     font-weight: bold;
     font-size: 30px;
   }
@@ -32,19 +33,23 @@ div {
   #arrow-row {
     font-weight: bold;
     font-size: 30px;
-    color: #254841;
+    color: #F5F5F5;
   }
   
   .token-box {
     margin: 10px;
     padding: 3%;
-    background-color: #254841;
-    color: cornsilk;
+    background-color: cornsilk;
+    color: #254841;
     border-radius: 10px;
     border: 2px solid #777;
   
   }
   
+  ::ng-deep .mat-form-field {
+    color: #1C534A !important;
+  }
+
   ::ng-deep .mat-form-field-underline {
     display: none;
   }
@@ -59,7 +64,7 @@ div {
   
   .input-right-align {
     text-align: right;
-    color:#254841
+    color:#1C534A
   }
   
   input.example-right-align::-webkit-outer-spin-button,

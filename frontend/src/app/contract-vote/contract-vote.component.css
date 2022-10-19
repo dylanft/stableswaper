@@ -3,8 +3,8 @@ div {
 }
 
 button {
-  color: cornsilk;
-  background-color: #254841;
+  color: #254841;
+  background-color: cornsilk;
   border: 2px solid #777;
   border-radius: 10px;
   padding: 8px 12px;
@@ -14,7 +14,7 @@ button {
 #swap-box-main {
   /* min-height: 400px; */
   min-width: 400px;
-  border: 10px solid #254841;
+  border: 10px solid cornsilk;
   border-radius: 10px;
   color: white;
 
@@ -23,8 +23,8 @@ button {
 #swap-box-header {
   margin: 0;
   padding: 10px;
-  background-color: #254841;
-  color: cornsilk;
+  background-color: cornsilk;
+  color: #254841;
   font-weight: bold;
   font-size: 30px;
 }
@@ -32,14 +32,14 @@ button {
 #arrow-row {
   font-weight: bold;
   font-size: 30px;
-  color: #254841;
+  color: cornsilk;
 }
 
 .token-box {
   margin: 10px;
   padding: 3%;
-  background-color: #254841;
-  color: cornsilk;
+  background-color: cornsilk;
+  color: #254841;
   border-radius: 10px;
   border: 2px solid #777;
 
@@ -59,7 +59,7 @@ button {
 
 .input-right-align {
   text-align: right;
-  color:#254841
+  color:cornsilk
 }
 
 input.example-right-align::-webkit-outer-spin-button,

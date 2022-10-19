@@ -37,7 +37,7 @@
                     <td align="left" style="float:left;">
                     <!-- token dropdown -->
                     <div id="token-dropdown">
-                        <mat-form-field appearance="fill" style="max-width:85%; background-color: cornsilk; border-radius: 10px;">
+                        <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
                         <mat-label>Select Token</mat-label>
                         <mat-select (selectionChange)="selectToken($event, 'LP-Earn')">
                             <mat-option *ngFor="let token of earnOptions" [value]="token">{{token}}</mat-option>
@@ -47,7 +47,7 @@
                     </div>
                     </td>
                     <td style="max-width: 40%;">
-                    <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+                    <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
                         <mat-label>Amount of Tokens</mat-label>
                         <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP-earn')" [(ngModel)]="lpToken_amt_user_earn">
                         <!-- <span matSuffix>.00</span> -->
@@ -68,7 +68,7 @@
         </div>
         <div id="slider-row">
 
-            <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+            <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
                 <mat-label>Number of Cycles (1 Cycle ~ 1 Day)</mat-label>
                 <input matInput type="number" min="1" class="input-right-align" placeholder="" #nCycles (keyup)="printNumCycles()" [(ngModel)]="numCycles" >
                 <!-- <span matSuffix>.00</span> -->
@@ -101,7 +101,7 @@
                     <!-- token dropdown -->
                     <div id="token-dropdown">
                       <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                      <mat-form-field appearance="fill" style="max-width:85%; background-color: cornsilk; border-radius: 10px;">
+                      <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
                         <mat-label>Select LP Token</mat-label>
                         <mat-select (selectionChange)="selectToken($event, 'LP-rewardCycle')">
                           <mat-option *ngFor="let token of lpTokenList" [value]="token">{{token}}</mat-option>
@@ -111,7 +111,7 @@
                     </div>
                   </td>
                   <td style="max-width: 40%;">
-                    <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+                    <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
                       <mat-label>Enter the Cycle Number</mat-label>
                       <input matInput type="number" min="1" class="input-right-align" placeholder="1" #cycleClaimNum (keyup)="updateTokenAmount(cycleClaimNum.value, 'Cycle')" [(ngModel)]="cycleClaimNumber" >
                       <!-- <span matSuffix>.00</span> -->
@@ -187,7 +187,7 @@
                       <!-- token dropdown -->
                       <div id="token-dropdown">
                         <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                        <mat-form-field appearance="fill" style="max-width:85%; background-color: cornsilk; border-radius: 10px;">
+                        <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
                           <mat-label>Select LP Token</mat-label>
                           <mat-select (selectionChange)="selectToken($event, 'LP-rewardCycle')">
                             <mat-option *ngFor="let token of lpTokenList" [value]="token">{{token}}</mat-option>
@@ -197,7 +197,7 @@
                       </div>
                     </td>
                     <td style="max-width: 40%;">
-                      <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: cornsilk; border-radius: 10px; color:#254841">
+                      <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
                         <mat-label>Enter the Cycle Number</mat-label>
                         <input matInput type="number" min="1" class="input-right-align" placeholder="1" #cycleClaimNum (keyup)="updateTokenAmount(cycleClaimNum.value, 'Cycle')" [(ngModel)]="cycleClaimNumber" >
                         <!-- <span matSuffix>.00</span> -->
