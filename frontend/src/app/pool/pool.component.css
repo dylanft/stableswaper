@@ -99,7 +99,7 @@
 
   mat-button-toggle-group {
     margin-left: 12px;
-    color: cornsilk;
+    color: white;
   }
 
   mat-button-toggle {
@@ -109,7 +109,7 @@
   }
 
   ::ng-deep .mat-button-toggle-checked {
-    color: cornsilk !important;
+    color: white !important;
     background-color: #45A165 !important;
     border: 1pt solid #45A165 !important;
   }
