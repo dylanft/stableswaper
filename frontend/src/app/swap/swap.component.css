@@ -3,37 +3,39 @@ div {
   }
   
   button {
+    min-width: 420px;
     color: #F5F5F5;
-    background-color: #1C534A;
+    background-color: #45A165;
     border: 2px solid #45A165;
-    border-radius: 10px;
-    padding: 8px 12px;
-    margin: 4px;
+    border-radius: 28px;
+    padding: 10px 14px;
+    margin: 10px;
   }
   
   #swap-box-main {
     /* min-height: 400px; */
-    min-width: 400px;
+    min-width: 420px;
     border: 10px solid #1C534A;
-    border-radius: 10px;
+    border-radius: 25px;
     color: white;
     background-color: #1C534A;
   
   }
   
   #swap-box-header {
-    margin: 0;
-    padding: 10px;
+    margin: 5px;
+    padding: 5px;
     background-color: #1C534A;
     color: #F5F5F5;
-    font-weight: bold;
-    font-size: 30px;
+    font-weight: medium;
+    font-size: 28px;
   }
   
   #arrow-row {
     font-weight: bold;
-    font-size: 30px;
-    color: #F5F5F5;
+    margin: 4px;
+    font-size: 24px;
+    color: #45A165;
   }
   
   .token-box {
@@ -42,7 +44,7 @@ div {
     background-color: #0B4138;
     color: #254841;
     border-radius: 10px;
-    border: 1px solid #45A165;
+    border: 1px solid #45a1657c;
   
   }
   
