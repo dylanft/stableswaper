@@ -4,7 +4,7 @@
     <button (click)="swap('🍊')"> Swap for 🍊 </button>
     <button (click)="swap('🍎')"> Swap for 🍎 </button> -->
     <div id="swap-box-main" class="card-container">
-      <div id="swap-box-header">SWAP</div>
+      <div id="swap-box-header">Swap</div>
       <div id="token-A-box" class="token-box">
         <table style="display:table; width:100%">
           <tr align="center">
@@ -13,7 +13,7 @@
               <div id="token-dropdown">
                 <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
                 <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                  <mat-label>Select Token</mat-label>
+                  <mat-label>Select a Token</mat-label>
                   <mat-select (selectionChange)="selectToken($event, 'A')">
                     <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
                   </mat-select>
@@ -22,7 +22,7 @@
               </div>
             </td>
             <td style="max-width: 40%;">
-              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
+              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:#45A165">
                 <mat-label>Amount</mat-label>
                 <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="updateTokenAmount(tokenAmount_A.value, 'A')" [(ngModel)]="tokenA_amt">
                 <span matPrefix>$&nbsp;</span>
@@ -31,9 +31,9 @@
             </td>
           </tr>
           <tr>
-            <td style="float:left; font-size: x-small;">
+            <td style="float:left; font-size: x-small; color:#F5F5F5">
               <!-- balance display -->            
-              &nbsp; balance: #
+              &nbsp; Balance: #
             </td>
             <!-- dollar equivalent -->
             <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
@@ -44,7 +44,7 @@
       </div>
   
       <div id="arrow-row">
-        <div id="down-arrow-circle" style="background-color:#1C534A; border-radius:50%; max-width: 35px; border: 2px solid #45A165;">&#x2193;</div>
+        <div id="down-arrow-circle" style="background-color:#1C534A; border-radius:50%; max-width: 35px; border: 1px solid #45A165;">&#x2193;</div>
       </div>
   
       <div id="token-B-box" class="token-box">
@@ -56,7 +56,7 @@
                 <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
                 <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5;
                 ; border-radius: 10px;">
-                  <mat-label>Select Token</mat-label>
+                  <mat-label>Select a Token</mat-label>
                   <mat-select (selectionChange)="selectToken($event, 'B')">
                     <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
                   </mat-select>
@@ -74,9 +74,9 @@
             </td>
           </tr>
           <tr>
-            <td style="float:left; font-size: x-small;">
+            <td style="float:left; font-size: x-small; color:#F5F5F5">
               <!-- balance display -->            
-              &nbsp; balance: #
+              &nbsp; Balance: #
             </td>
             <!-- dollar equivalent -->
             <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
