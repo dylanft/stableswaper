@@ -30,7 +30,7 @@
 
     <!-- start of pool box-->
     <div id="pool-box-main" class="card-container">
-      <div id="pool-box-header">POOL</div>
+      <div id="pool-box-header">Pool</div>
       <div id="add-remove-toggle">
         <mat-button-toggle-group name="poolChoice">
             <mat-button-toggle value="add" (click)="toggle('add')">Add to Pool</mat-button-toggle>
@@ -46,7 +46,7 @@
                   <div id="token-dropdown">
                     <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
                     <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                      <mat-label>Select Token</mat-label>
+                      <mat-label>Select a Token</mat-label>
                       <mat-select (selectionChange)="selectToken($event, 'A')">
                         <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
                       </mat-select>
@@ -64,9 +64,9 @@
                 </td>
               </tr>
               <tr>
-                <td style="float:left; font-size: x-small;">
+                <td style="float:left; font-size: x-small; color:#F5F5F5">
                   <!-- balance display -->            
-                  &nbsp; balance: #
+                  &nbsp; Balance: #
                 </td>
                 <!-- dollar equivalent -->
                 <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
@@ -77,7 +77,7 @@
           </div>
       
           <div id="plus-row">
-            <div id="plus-circle" style="background-color:#254841; border-radius:50%; max-width: 35px; border: 2px solid #45A165;">&plus;</div>
+            <div id="plus-circle" style="background-color:#254841; border-radius:50%; max-width: 35px; border: 1px solid #45A165;">&plus;</div>
           </div>
       
           <div id="token-B-box" class="token-box">
@@ -88,7 +88,7 @@
                   <div id="token-dropdown">
                     <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
                     <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                      <mat-label>Select Token</mat-label>
+                      <mat-label>Select a Token</mat-label>
                       <mat-select (selectionChange)="selectToken($event, 'B')">
                         <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
                       </mat-select>
@@ -106,9 +106,9 @@
                 </td>
               </tr>
               <tr>
-                <td style="float:left; font-size: x-small;">
+                <td style="float:left; font-size: x-small; color:#F5F5F5">
                   <!-- balance display -->            
-                  &nbsp; balance: #
+                  &nbsp; Balance: #
                 </td>
                 <!-- dollar equivalent -->
                 <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
