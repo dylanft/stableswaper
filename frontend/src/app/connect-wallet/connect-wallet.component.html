@@ -2,7 +2,7 @@
 <ng-template #thenBlock>
   <div>
     <button (click)="disconnect()">
-      Disconnect
+      Disconnet
     </button>
     <div *ngIf="showNetworkAddresses">
       <p>mainnet: {{ userSession.loadUserData().profile.stxAddress.mainnet }}</p>
@@ -13,7 +13,7 @@
 <ng-template #elseBlock>
   <div>
     <button (click)="authenticate()">
-      Connect
+      Connect Wallet
     </button>
   </div>
 </ng-template>
