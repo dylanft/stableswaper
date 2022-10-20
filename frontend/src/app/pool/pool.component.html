@@ -64,9 +64,12 @@
                 </td>
               </tr>
               <tr>
-                <td style="float:left; font-size: x-small; color:#F5F5F5">
-                  <!-- balance display -->            
-                  &nbsp; Balance: #
+                <!-- balance display -->  
+                <td *ngIf="tokenA=='USDA'" style="float:left; font-size: x-small; color:#F5F5F5">
+                  &nbsp; Balance: {{usdaBalance}}
+                </td>
+                <td *ngIf="tokenA=='xUSD'" style="float:left; font-size: x-small; color:#F5F5F5">         
+                  &nbsp; Balance: {{xusdBalance}}
                 </td>
                 <!-- dollar equivalent -->
                 <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
@@ -106,9 +109,12 @@
                 </td>
               </tr>
               <tr>
-                <td style="float:left; font-size: x-small; color:#F5F5F5">
-                  <!-- balance display -->            
-                  &nbsp; Balance: #
+                <!-- balance display -->  
+                <td *ngIf="tokenB=='USDA'" style="float:left; font-size: x-small; color:#F5F5F5">
+                  &nbsp; Balance: {{usdaBalance}}
+                </td>
+                <td *ngIf="tokenB=='xUSD'" style="float:left; font-size: x-small; color:#F5F5F5">         
+                  &nbsp; Balance: {{xusdBalance}}
                 </td>
                 <!-- dollar equivalent -->
                 <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">

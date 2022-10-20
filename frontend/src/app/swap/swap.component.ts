@@ -169,6 +169,7 @@ export class SwapComponent implements OnInit {
       console.log("tokenB: ", this.tokenB_amt);
     }
   }
+  
   async getUsersTokenBalance(token: string, decimalFactor: number) {
     var txSenderAddress: string;
 
