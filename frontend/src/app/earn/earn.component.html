@@ -30,7 +30,7 @@
 
     <!-- start of earn box-->
     <div id="earn-box-main" class="card-container">
-        <div id="earn-box-header">STACK</div>
+        <div id="earn-box-header">Stack</div>
         <div id="token-A-box" class="token-box">
             <table style="display:table; width:100%">
                 <tr align="center">
@@ -38,7 +38,7 @@
                     <!-- token dropdown -->
                     <div id="token-dropdown">
                         <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                        <mat-label>Select Token</mat-label>
+                        <mat-label>Select a Token</mat-label>
                         <mat-select (selectionChange)="selectToken($event, 'LP-Earn')">
                             <mat-option *ngFor="let token of earnOptions" [value]="token">{{token}}</mat-option>
                         </mat-select>
@@ -55,9 +55,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="float:left; font-size: x-small;">
+                    <td style="float:left; font-size: x-small; color:#F5F5F5">
                     <!-- balance display -->            
-                    &nbsp; balance: #
+                    &nbsp; Balance: #
                     </td>
                     <!-- dollar equivalent -->
                     <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
@@ -68,7 +68,7 @@
         </div>
         <div id="slider-row">
 
-            <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
+            <mat-form-field appearance="fill" floatLabel="always" style="max-width:100%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
                 <mat-label>Number of Cycles (1 Cycle ~ 1 Day)</mat-label>
                 <input matInput type="number" min="1" class="input-right-align" placeholder="" #nCycles (keyup)="printNumCycles()" [(ngModel)]="numCycles" >
                 <!-- <span matSuffix>.00</span> -->
@@ -84,7 +84,7 @@
 
     <!-- start of cycle box -->
     <div id="cycle-box-main" class="card-container">
-        <div id="cycle-box-header">REWARDS</div>
+        <div id="cycle-box-header">Rewards</div>
         <div id="add-remove-toggle">
             <mat-button-toggle-group name="cycleView">
                 <!--TODO: change cycle view to data and claim rewards-->
