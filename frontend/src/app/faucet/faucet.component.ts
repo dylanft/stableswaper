@@ -6,6 +6,7 @@ import {
   ContractPrincipal,
   contractPrincipalCV,
   ContractPrincipalCV,
+  callReadOnlyFunction,
   contractPrincipalCVFromAddress,
   createAddress,
   createAssetInfo,
@@ -18,9 +19,11 @@ import {
   stringAsciiCV,
   stringUtf8CV,
   uintCV,
+  cvToValue
 } from '@stacks/transactions';
 import { principalCV } from '@stacks/transactions/dist/clarity/types/principalCV';
 import { userSession } from 'src/stacksUserSession';
+
 
 @Component({
   selector: 'faucet',
@@ -30,12 +33,16 @@ import { userSession } from 'src/stacksUserSession';
 export class FaucetComponent implements OnInit {
 
   constructor() { }
-
   ngOnInit(): void {
     if (this.userSession.loadUserData().profile.stxAddress.testnet == this.deployerAddress) {
       this.loggedInAsAdmin = true;
       console.log("loggedInAsAdmin: ", this.loggedInAsAdmin)
     }
+    this.getUsersTokenBalance('USDA', 1e6).then((x) => this.usdaBalance = x);
+    this.getUsersTokenBalance('xUSD', 1e6).then((x) => this.xusdBalance = x);
+    this.getUsersTokenBalance('xBTC', 1).then((x) => this.xbtcBalance = x);
+    this.getUsersTokenBalance('usd-lp', 1e6).then((x) => this.usdlpBalance = x);
+    this.stxBalance = this.userSession.loadUserData().profile.stxBalance;
   }
   tokenList: any[] = ['USDA', 'xUSD', 'xBTC'];
   tokenChoice: string = '';
@@ -44,6 +51,11 @@ export class FaucetComponent implements OnInit {
   mintAmount: number = 0;
   deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
   loggedInAsAdmin: boolean = false;
+  usdaBalance: string | null = null;
+  xusdBalance: string | null = null;
+  xbtcBalance: string | null = null;
+  usdlpBalance: string | null = null;
+  stxBalance: number = 0;
 
   network: any = new StacksTestnet();
   usdaContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
@@ -314,5 +326,61 @@ export class FaucetComponent implements OnInit {
         console.log('onCancel:', 'Transaction was canceled');
       },
     });
+  }
+
+  async getUsersTokenBalance(token: string, decimalFactor: number) {
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress)
+    }
+    else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    if (token == 'USDA') {
+      var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'
+      var contractName = 'usda-token'
+    } 
+    else if (token == 'xUSD') {
+      var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'
+      var contractName = 'xusd-token'
+    } 
+    else if (token == 'xBTC') {
+      var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'
+      var contractName = 'xbtc-token'
+    } 
+    else if (token == 'usd-lp') {
+      var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'
+      var contractName = 'usd-lp'
+    } 
+    else {
+      var contractAddress = ''
+      var contractName = ''
+      console.log(token + " balance lookup not included with app code")
+    } 
+    
+    var options = {
+      network: this.network,
+      contractAddress: contractAddress,
+      contractName: contractName,
+      functionName: 'get-balance',
+      functionArgs: [principalCV(txSenderAddress)],
+      senderAddress: txSenderAddress
+
+    }
+    const result = await callReadOnlyFunction(options);
+    var output = cvToValue(result);
+    return this.numberWithCommas(output.value, decimalFactor);
+
+  }
+
+  numberWithCommas(n: number, uintDecimalFactor: number) {
+    var n_str = (n / uintDecimalFactor).toString();
+    var x = Number(parseFloat(n_str)).toFixed(2);
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   }
 }

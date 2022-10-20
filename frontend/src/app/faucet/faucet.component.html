@@ -9,7 +9,15 @@
           <button (click)="addToPool()">Add To xUSD/USDA Pool</button>
       </div>  
     </div>
-
+    <div *ngIf="xusdBalance == '0.00' && usdaBalance == '0.00'">
+      <div class="card" id="add-to-pool">
+        <a href="https://explorer.stacks.co/sandbox/faucet?chain=testnet" target="_blank">
+          <button target>Get STX</button>
+        </a>
+      </div>  
+    </div>
+    <div>
+    </div>
     <div id="mint-box-main" class="card-container">
       <div id="mint-box-header">Mint</div>
       <div id="token-mint-box" class="token-box">
