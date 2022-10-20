@@ -24,6 +24,7 @@
     "@stacks/connect": "^6.9.1",
     "@stacks/network": "^4.3.2",
     "@stacks/transactions": "^4.3.2",
+    "comma-number": "^2.1.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

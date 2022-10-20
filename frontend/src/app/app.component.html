@@ -14,25 +14,37 @@
     <a *ngIf="userSession.isUserSignedIn()" href="javascript:void(0);" (click)="setContent('earn')">Earn</a>
     <a *ngIf="userSession.isUserSignedIn()" href="javascript:void(0);" (click)="setContent('faucet')">Faucet</a>
   </span>
-  <app-connect-wallet></app-connect-wallet>
+  <app-connect-wallet class="connect-wallet-button"></app-connect-wallet>
 </div>
-
+<div *ngIf="userSession.isUserSignedIn()" class="token-balances">
+  <table>
+    <tr *ngIf="usdaBalance=='0.00' && xusdBalance=='0.00' && xbtcBalance=='0.00' && usdlpBalance=='0.00'">
+      <th>Go to the Faucet page and mint some tokens!</th>
+    </tr>
+    <tr *ngIf="usdaBalance!='0.00' || xusdBalance!='0.00' || xbtcBalance!='0.00' || usdlpBalance!='0.00'">
+      <th>{{usdaBalance}} USDA</th>
+      <th>{{xusdBalance}} xUSD</th>
+      <th>{{xbtcBalance}} xBTC</th>
+      <th>{{usdlpBalance}} USD-LP</th>
+    </tr>
+  </table>
+</div>  
 <div class="content" role="main">
 
-  <!-- Stacks -->
+  <!-- <div *ngIf="content!='home'" class="token-balances">
+    {{usdaBalance}} USDA {{xusdBalance}} xUSD {{xbtcBalance}} xBTC
+  </div> -->
+
+  <!-- Bitflow Content and Tools -->
   <div align="center">
-
-    <img *ngIf="content=='home' && userSession.isUserSignedIn()" (click)="setContent('swap')"  src="../assets/brand/phone.png" width="50%"><br>
-    <img *ngIf="content=='home'" src="../assets/brand/bitflow-intro.png" width="100%">
-    <!-- <img *ngIf="content=='home'" src="../assets/brand/graph.jpeg" width="100%"> -->
-
+    <div *ngIf="content=='home'">
+      <img *ngIf="userSession.isUserSignedIn()" (click)="setContent('swap')"  src="../assets/brand/phone.png" width="50%"><br>
+      <img src="../assets/brand/bitflow-intro.png" width="100%">
+    </div>
     <token-swap *ngIf="content=='swap'"></token-swap>
     <pool *ngIf="content=='pool'"></pool>
-    <!-- <app-connect-wallet *ngIf="content=='earn'"></app-connect-wallet> -->
     <earn *ngIf="content=='earn'"></earn>
     <faucet *ngIf="content=='faucet'"></faucet>
-
-
   </div>
 
   <br>
