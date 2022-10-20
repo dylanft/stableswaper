@@ -3,10 +3,16 @@ div {
 }
 
 button {
-  margin: 8px;
-  color: #254841;
-  background-color: cornsilk;
-  border: 2px solid #777;
+  min-width: 120px;
+  margin: 5px;
+  padding-top: 5px;
+  padding-right: 15px;
+  padding-left: 15px;
+  padding-bottom: 5px;
+  color: #fafafa;
+  background-color: rgba(255, 248, 220, 0);
+  border: 2px solid #45A165;
   border-radius: 28px;
   font-size: 14px;
+  font-weight: 600;
 }

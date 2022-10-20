@@ -23,19 +23,19 @@ div {
   }
   
   #swap-box-header {
-    margin: 5px;
+    margin: 6px;
     padding: 5px;
     background-color: #1C534A;
     color: #F5F5F5;
-    font-weight: medium;
+    font-weight: 500;
     font-size: 28px;
   }
   
   #arrow-row {
     font-weight: bold;
     margin: 4px;
-    font-size: 24px;
-    color: #45A165;
+    font-size: 26px;
+    color: #F5F5F5;
   }
   
   .token-box {
