@@ -14,7 +14,7 @@ button {
 
 #swap-box-main, #pool-box-main, #earn-box-main, #cycle-box-main{
   /* min-height: 400px; */
-  min-width: 430px;
+  min-width: 420px;
   border: 10px solid #1C534A;
   border-radius: 25px;
   color: white;
@@ -23,7 +23,7 @@ button {
 }
 
 #swap-box-header, #pool-box-header, #earn-box-header, #cycle-box-header {
-  margin: 6;
+  margin: 6px;
   padding: 5px;
   background-color: #1C534A;
   color: #F5F5F5;
