@@ -8,14 +8,6 @@ boot_contracts = ["pox", "costs-v2", "bns"]
 
 [project.cache_location]
 path = ".requirements"
-[contracts.apple-dex]
-path = "contracts/apple-dex.clar"
-
-[contracts.apples-lp]
-path = "contracts/apples-lp.clar"
-
-[contracts.apples-r]
-path = "contracts/apples-r.clar"
 
 [contracts.fee-escrow]
 path = "contracts/fee-escrow.clar"
@@ -26,23 +18,14 @@ path = "contracts/external/sip-010-trait-ft-standard.clar"
 [contracts.stableswap-v3]
 path = "contracts/stableswap-v3.clar"
 
-[contracts.trait-stableswap]
-path = "contracts/trait-stableswap.clar"
-
 [contracts.usd-lp]
 path = "contracts/usd-lp.clar"
 
 [contracts.usda-token]
 path = "contracts/external/usda-token.clar"
 
-[contracts.usdex]
-path = "contracts/usdex.clar"
-
-[contracts.usdex-lp]
-path = "contracts/usdex-lp.clar"
-
 [contracts.xbtc-token]
-path = "contracts/xbtc-token.clar"
+path = "contracts/external/xbtc-token.clar"
 
 [contracts.xusd-token]
 path = "contracts/external/xusd-token.clar"
