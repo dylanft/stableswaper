@@ -1,69 +1,66 @@
 <div *ngIf="userSession.isUserSignedIn()">
-    <div *ngIf="loggedInAsAdmin">
-        <div class="card" id="add-pool">
-            <button (click)="createPool()">Create xUSD/USDA Pool</button>
-        </div>  
-    </div>
-    <div *ngIf="loggedInAsAdmin">
-      <div class="card" id="add-to-pool">
-          <button (click)="addToPool()">Add To xUSD/USDA Pool</button>
-      </div>  
-    </div>
-    <div *ngIf="xusdBalance == '0.00' && usdaBalance == '0.00'">
-      <div class="card" id="add-to-pool">
-        <a href="https://explorer.stacks.co/sandbox/faucet?chain=testnet" target="_blank">
-          <button target>Get STX</button>
-        </a>
-      </div>  
-    </div>
-    <div>
-    </div>
-    <div id="mint-box-main" class="card-container">
-      <div id="mint-box-header">Mint</div>
-      <div id="token-mint-box" class="token-box">
-        <table style="display:table; width:100%">
-          <tr align="center">
-            <td align="left" style="float:left;">
-              <!-- token dropdown -->
-              <div id="token-dropdown">
-                <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                  <mat-label>Select a Token</mat-label>
-                  <mat-select (selectionChange)="selectToken($event, 'A')">
-                    <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-  
-              </div>
-            </td>
-            <td style="max-width: 40%;">
-              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
-                <mat-label>Amount</mat-label>
-                <!-- <input matInput type="number" min="1" max="10000" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="setMintAmount(tokenAmount_A.value)"> -->
-                <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="setMintAmount(tokenAmount_A.value)">
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr>
-            <td style="float:left; font-size: x-small; color:#F5F5F5">
-              <!-- balance display -->            
-              &nbsp; Max = 10000 Tokens per txn.
-            </td>
-            <!-- dollar equivalent -->
-            <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
-              dollar equivalent
-            </td> -->
-          </tr>
-        </table>
-      </div>
-  
-      
-      <div class="card" id="swap-box-footer">
-        <!-- <button (click)="swap('🍎')">Confirm</button> -->
-        <button *ngIf="tokenChoice!='' && mintAmount > 0" (click)="mintTokens()">Confirm</button>
-      </div>
+  <div *ngIf="loggedInAsAdmin">
+    <div class="buttons-container" id="add-pool">
+      <button class="confirm-button" (click)="createPool()">
+        Create xUSD/USDA Pool
+      </button>
+      <button class="confirm-button" (click)="addToPool()">
+        Add To xUSD/USDA Pool
+      </button>
     </div>
   </div>
-<div *ngIf="!userSession.isUserSignedIn()">
-    <app-connect-wallet></app-connect-wallet>
+</div>
+
+<section *ngIf="userSession.isUserSignedIn()" id="mint-section">
+  <div id="mint-box">
+    <h2 id="mint-title">Mint</h2>
+
+    <div class="token-container">
+      <div class="fields">
+        <mat-form-field appearance="fill" class="select-field">
+          <mat-label>Select Token</mat-label>
+          <mat-select (selectionChange)="selectToken($event, 'A')">
+            <mat-option *ngFor="let token of tokenList" [value]="token">{{
+              token
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="fill"
+          floatLabel="always"
+          class="select-field"
+        >
+          <mat-label>Amount</mat-label>
+          <!-- <input matInput type="number" min="1" max="10000" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="setMintAmount(tokenAmount_A.value)"> -->
+          <input
+            matInput
+            type="number"
+            min="1"
+            class="input-right-align"
+            placeholder="0"
+            #tokenAmount_A
+            (keyup)="setMintAmount(tokenAmount_A.value)"
+            (change)="setMintAmount(tokenAmount_A.value)"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="hint">
+        <span>Max = 10000 Tokens per txn.</span>
+      </div>
+    </div>
+
+    <button
+      class="confirm-button"
+      [disabled]="!(tokenChoice != '' && mintAmount > 0)"
+      (click)="mintTokens()"
+    >
+      Confirm
+    </button>
+  </div>
+</section>
+
+<div class="connect-wallet-container" *ngIf="!userSession.isUserSignedIn()">
+  <app-connect-wallet></app-connect-wallet>
 </div>

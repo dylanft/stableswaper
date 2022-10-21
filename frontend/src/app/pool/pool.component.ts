@@ -274,6 +274,10 @@ export class PoolComponent implements OnInit {
     console.log(this.numCycles)
   }
 
+  handleConfirm() {
+    if (this.poolChoice === 'add') return this.addToPool()
+    else if (this.poolChoice === 'remove') return this.withdrawFromPool()
+  }
   async getUsersTokenBalance(token: string, decimalFactor: number) {
     var txSenderAddress: string;
 

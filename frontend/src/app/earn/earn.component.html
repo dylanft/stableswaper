@@ -1,225 +1,154 @@
-<div *ngIf="userSession.isUserSignedIn()">
-    <!-- <div id="info-box" class="card-container">
-        <div class="info-box-line">Idle Tokens:
-            <table id="idle-info">
-                <tr>
-                    <td># LP Tokens</td>
-                    <td># USDA</td>
-                    <td># xUSD</td>
-                </tr>
-            </table>
-        </div>
-        <div class="info-box-line">Active Tokens:
-            <table id="active-info">
-                <tr style="text-align:center;">
-                    <td># LP Tokens</td>
-                    <td>$ Amount:</td>
-                </tr>
-            </table>
-        </div>
-        <div class="info-box-line">Total Pool Info:
-            <table id="pool-info">
-                <tr style="text-align:center;">
-                    <td>Total TVL: $</td>
-                    <td>7d Trading Volume:</td>
-                    <td>Trading Fees: 0.04%</td>      
-                </tr>
-            </table>            
-        </div>
-    </div> -->
+<div *ngIf="userSession.isUserSignedIn()" id="earn-container">
+  <section class="earn-section">
+    <div class="earn-box">
+      <h2 class="earn-title">Stack</h2>
 
-    <!-- start of earn box-->
-    <div id="earn-box-main" class="card-container">
-        <div id="earn-box-header">Stack</div>
-        <div id="token-A-box" class="token-box">
-            <table style="display:table; width:100%">
-                <tr align="center">
-                    <td align="left" style="float:left;">
-                    <!-- token dropdown -->
-                    <div id="token-dropdown">
-                        <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                        <mat-label>Select a Token</mat-label>
-                        <mat-select (selectionChange)="selectToken($event, 'LP-Earn')">
-                            <mat-option *ngFor="let token of earnOptions" [value]="token">{{token}}</mat-option>
-                        </mat-select>
-                        </mat-form-field>
-        
-                    </div>
-                    </td>
-                    <td style="max-width: 40%;">
-                    <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
-                        <mat-label>Amount of Tokens</mat-label>
-                        <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenLP_Amount (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP-earn')" [(ngModel)]="lpToken_amt_user_earn">
-                        <!-- <span matSuffix>.00</span> -->
-                    </mat-form-field>
-                    </td>
-                </tr>
-                <tr>
-                  <!-- balance display -->  
-                  <td *ngIf="lpToken=='USDA-xUSD-LP'" style="float:left; font-size: x-small; color:#F5F5F5">
-                    &nbsp; Balance: {{usdlpBalance}}
-                  </td>
-                  <td *ngIf="lpToken=='xBTC'" style="float:left; font-size: x-small; color:#F5F5F5">         
-                    &nbsp; Balance: {{xbtcBalance}}
-                  </td>
-                    <!-- dollar equivalent -->
-                    <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
-                    dollar equivalent
-                    </td> -->
-                </tr>
-            </table>
-        </div>
-        <div id="slider-row">
+      <div class="token-container">
+        <div class="fields">
+          <mat-form-field appearance="fill" class="select-field">
+            <mat-label>Select Token</mat-label>
+            <mat-select (selectionChange)="selectToken($event, 'LP-Earn')">
+              <mat-option *ngFor="let token of earnOptions" [value]="token">{{
+                token
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-            <mat-form-field appearance="fill" floatLabel="always" style="max-width:100%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
-                <mat-label>Number of Cycles (1 Cycle ~ 1 Day)</mat-label>
-                <input matInput type="number" min="1" class="input-right-align" placeholder="" #nCycles (keyup)="printNumCycles()" [(ngModel)]="numCycles" >
-                <!-- <span matSuffix>.00</span> -->
-            </mat-form-field>
-            <mat-slider min="1" max="100" step="1" value="50" [(ngModel)]="numCycles" (ngModelChange)="printNumCycles()"></mat-slider>
-
+          <mat-form-field
+            appearance="fill"
+            floatLabel="always"
+            class="select-field"
+          >
+            <mat-label>Amount of Tokens</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              class="input-right-align"
+              placeholder="0"
+              #tokenLP_Amount
+              (keyup)="updateTokenAmount(tokenLP_Amount.value, 'LP-earn')"
+              [(ngModel)]="lpToken_amt_user_earn"
+            />
+            <!-- <span matSuffix>.00</span> -->
+          </mat-form-field>
         </div>
-        <div class="card" id="swap-box-footer">
-            <button (click)="stakeOrEscrow()">Confirm</button>
+        <div class="balance-container" *ngIf="!!lpToken">
+          <span>Balance: {{lpToken == 'USDA-xUSD-LP' ? usdlpBalance : xbtcBalance}}</span>
+          <span style="opacity: 0;">#</span>
         </div>
       </div>
-    <!-- end of earn box-->
 
-    <!-- start of cycle box -->
-    <div id="cycle-box-main" class="card-container">
-        <div id="cycle-box-header">Rewards</div>
-        <div id="add-remove-toggle">
-            <mat-button-toggle-group name="cycleView">
-                <!--TODO: change cycle view to data and claim rewards-->
-                <mat-button-toggle value="search" (click)="cvToggle('search')">Search Cycles</mat-button-toggle>
-                <mat-button-toggle value="claim" (click)="cvToggle('claim')">Claim Rewards</mat-button-toggle>
-            </mat-button-toggle-group>
-          </div>
-          <!--TODO: show/hide previous cycles based on toggle-->
-          <div *ngIf="cycleView=='search'" id="search-cycles">
-            <div id="token-A-box" class="token-box">
-              <table style="display:table; width:100%">
-                <tr align="center">
-                  <td align="left" style="float:left;">
-                    <!-- token dropdown -->
-                    <div id="token-dropdown">
-                      <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                      <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                        <mat-label>Select LP Token</mat-label>
-                        <mat-select (selectionChange)="selectToken($event, 'LP-rewardCycle')">
-                          <mat-option *ngFor="let token of lpTokenList" [value]="token">{{token}}</mat-option>
-                        </mat-select>
-                      </mat-form-field>
-        
-                    </div>
-                  </td>
-                  <td style="max-width: 40%;">
-                    <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
-                      <mat-label>Enter the Cycle Number</mat-label>
-                      <input matInput type="number" min="1" class="input-right-align" placeholder="1" #cycleClaimNum (keyup)="updateTokenAmount(cycleClaimNum.value, 'Cycle')" [(ngModel)]="cycleClaimNumber" >
-                      <!-- <span matSuffix>.00</span> -->
-                    </mat-form-field>
-                  </td>
-                </tr>
-              </table>
-              <div *ngIf="clickedSearch" style="font-size:x-small; color: cornsilk">
-                Current Cycle: {{currentCycle}} <br>
-                &nbsp; Token Rewards at Cycle #{{cycleClaimNumber}} <br>
-                {{token_x_symbol}}: {{token_x_rewards}} <br>
-                {{token_y_symbol}}: {{token_y_rewards}}
-              </div>
-            </div>
-          
-            <div id="cycleDataTable" style="display:none" class="cycle-table">
-              <!-- start of table -->
-              <!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"> -->
-                  <!-- Position Column -->
-                  <!-- <ng-container matColumnDef="position">
-                      <th mat-header-cell *matHeaderCellDef> No. </th>
-                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                  </ng-container> -->
+      <div class="token-container slider-section">
+        <div class="fields">
+          <mat-form-field
+            appearance="fill"
+            floatLabel="always"
+            class="select-field"
+          >
+            <mat-label>Number of Cycles (1 Cycle ~ 1 Day)</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              class="input-right-align"
+              placeholder=""
+              #nCycles
+              (keyup)="printNumCycles()"
+              [(ngModel)]="numCycles"
+            />
+            <!-- <span matSuffix>.00</span> -->
+          </mat-form-field>
+          <mat-slider
+            min="1"
+            max="100"
+            step="1"
+            value="50"
+            [(ngModel)]="numCycles"
+            (ngModelChange)="printNumCycles()"
+          ></mat-slider>
+        </div>
+      </div>
 
-                  <!-- startBlock Column -->
-                  <!-- <ng-container matColumnDef="startBlock">
-                      <th mat-header-cell *matHeaderCellDef> Block </th>
-                      <td mat-cell *matCellDef="let element"> {{element.startBlock}} </td>
-                  </ng-container> -->
-
-                  <!-- Total Tokens Column -->
-                  <!-- <ng-container matColumnDef="totalLPtokens">
-                      <th mat-header-cell *matHeaderCellDef> Total Tokens </th>
-                      <td mat-cell *matCellDef="let element"> {{element.totalLPtokens}} </td>
-                  </ng-container> -->
-
-                  <!-- My Tokens Column -->
-                  <!-- <ng-container matColumnDef="userLPtokens">
-                      <th mat-header-cell *matHeaderCellDef> My Tokens </th>
-                      <td mat-cell *matCellDef="let element"> {{element.userLPtokens}} </td>
-                  </ng-container> -->
-
-                  <!-- Rewards Column -->
-                  <!-- <ng-container matColumnDef="userRewards">
-                      <th mat-header-cell *matHeaderCellDef> Rewards </th>
-                      <td mat-cell *matCellDef="let element"> {{element.userRewards}} </td>
-                  </ng-container> -->
-
-                  <!-- Call to Action Column -->
-                  <!-- TODO: This should be clickable!!!!! -->
-                  <!-- <ng-container matColumnDef="userCTA">
-                      <th mat-header-cell *matHeaderCellDef> Action </th>
-                      <td mat-cell *matCellDef="let element"> {{element.userCTA}} </td>
-                  </ng-container>
-
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>                
-              </table> -->
-              <!-- end of table -->
-
-            </div>
-            <div class="card" id="swap-box-footer">
-              <button (click)="viewUsersRewardsAtCycle()">Search</button>
-            </div>
-          </div>
-
-          <!-- claim toggle -->
-          <div *ngIf="cycleView=='claim'" id ='completed-cycles'>
-            <div id="token-A-box" class="token-box">
-                <table style="display:table; width:100%">
-                  <tr align="center">
-                    <td align="left" style="float:left;">
-                      <!-- token dropdown -->
-                      <div id="token-dropdown">
-                        <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                        <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                          <mat-label>Select LP Token</mat-label>
-                          <mat-select (selectionChange)="selectToken($event, 'LP-rewardCycle')">
-                            <mat-option *ngFor="let token of lpTokenList" [value]="token">{{token}}</mat-option>
-                          </mat-select>
-                        </mat-form-field>
-          
-                      </div>
-                    </td>
-                    <td style="max-width: 40%;">
-                      <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
-                        <mat-label>Enter the Cycle Number</mat-label>
-                        <input matInput type="number" min="1" class="input-right-align" placeholder="1" #cycleClaimNum (keyup)="updateTokenAmount(cycleClaimNum.value, 'Cycle')" [(ngModel)]="cycleClaimNumber" >
-                        <!-- <span matSuffix>.00</span> -->
-                      </mat-form-field>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <div class="card" id="swap-box-footer">
-                <button (click)="claimRewardsAtCycle()">Confirm</button>
-              </div>
-          </div>
-        <!-- <div class="card" id="swap-box-footer">
-            <button (click)="claimRewardsAtCycle()">Confirm</button>
-        </div> -->
+      <button class="confirm-button" (click)="stakeOrEscrow()">Confirm</button>
     </div>
-    <!-- end of cycle box  -->
+  </section>
+
+  <section class="earn-section">
+    <div class="earn-box">
+      <h2 class="earn-title">Rewards</h2>
+
+      <div id="add-remove-toggle">
+        <mat-button-toggle-group class="toggle-group" name="cycleView">
+          <!--TODO: change cycle view to data and claim rewards-->
+          <mat-button-toggle
+            value="search"
+            class="first-toggle btn-toggle"
+            (click)="cvToggle('search')"
+            [ngClass]="{ 'btn-toggle-active': cycleView === 'search' }"
+            [checked]="cycleView === 'search'"
+            >Cycle Data</mat-button-toggle
+          >
+          <mat-button-toggle
+            class="second-toggle btn-toggle"
+            value="claim"
+            (click)="cvToggle('claim')"
+            [ngClass]="{ 'btn-toggle-active': cycleView === 'claim' }"
+            [checked]="cycleView === 'claim'"
+            >Claim Rewards</mat-button-toggle
+          >
+        </mat-button-toggle-group>
+      </div>
+
+      <div class="token-container">
+        <div class="fields">
+          <mat-form-field appearance="fill" class="select-field">
+            <mat-label>Select LP Token</mat-label>
+            <mat-select
+              (selectionChange)="selectToken($event, 'LP-rewardCycle')"
+            >
+              <mat-option *ngFor="let token of lpTokenList" [value]="token">{{
+                token
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="fill"
+            floatLabel="always"
+            class="select-field"
+          >
+            <mat-label>Enter the Cycle Number</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              class="input-right-align"
+              placeholder="1"
+              #cycleClaimNum
+              (keyup)="updateTokenAmount(cycleClaimNum.value, 'Cycle')"
+              [(ngModel)]="cycleClaimNumber"
+            />
+            <!-- <span matSuffix>.00</span> -->
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="clickedSearch && cycleView === 'search'" class="cycle-data">
+          <span>Current Cycle: {{ currentCycle }}</span>
+          <span>Token Rewards at</span>
+          <span>Cycle #{{ cycleClaimNumber }}</span>
+          <span>{{ token_x_symbol }}: {{ token_x_rewards }}</span>
+          <span>{{ token_y_symbol }}: {{ token_y_rewards }}</span>
+        </div>
+      </div>
+
+      <button class="rewards-button" (click)="handlePressRewardsButton()">
+        {{ cycleView === 'search' ? 'Search' : 'Confirm' }}
+      </button>
+    </div>
+  </section>
 </div>
 
-<div *ngIf="!userSession.isUserSignedIn()">
-    <app-connect-wallet></app-connect-wallet>
+<div class="connect-wallet-container" *ngIf="!userSession.isUserSignedIn()">
+  <app-connect-wallet></app-connect-wallet>
 </div>

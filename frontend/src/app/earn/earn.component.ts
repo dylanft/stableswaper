@@ -60,7 +60,6 @@ export class EarnComponent implements OnInit {
     this.getUsersTokenBalance('xUSD', 1e6).then((x) => this.xusdBalance = x);
     this.getUsersTokenBalance('xBTC', 1).then((x) => this.xbtcBalance = x);
     this.getUsersTokenBalance('usd-lp', 1e6).then((x) => this.usdlpBalance = x);
-
   }
   public userSession = userSession;
   deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
@@ -789,6 +788,11 @@ export class EarnComponent implements OnInit {
     var toal_xbtc_escrowed = output['amount'].value
     console.log("toal_xbtc_escrowed: ",toal_xbtc_escrowed)
     return toal_xbtc_escrowed
+  }
+
+  handlePressRewardsButton() {
+    if (this.cycleView === 'search') this.viewUsersRewardsAtCycle()
+    else if (this.cycleView === 'claim') this.claimRewardsAtCycle()
   }
 
   async getUsersTokenBalance(token: string, decimalFactor: number) {

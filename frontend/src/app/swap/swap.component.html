@@ -1,100 +1,98 @@
-
 <div *ngIf="userSession.isUserSignedIn()">
-    <div id="swap-box-main" class="card-container">
-      <div id="swap-box-header">Swap</div>
-      <div id="token-A-box" class="token-box">
-        <table style="display:table; width:100%">
-          <tr align="center">
-            <td align="left" style="float:left;">
-              <!-- token dropdown -->
-              <div id="token-dropdown">
-                <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px;">
-                  <mat-label>Select a Token</mat-label>
-                  <mat-select (selectionChange)="selectToken($event, 'A')">
-                    <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-  
-              </div>
-            </td>
-            <td style="max-width: 40%;">
-              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:#45A165">
-                <mat-label>Amount</mat-label>
-                <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_A (keyup)="updateTokenAmount(tokenAmount_A.value, 'A')" [(ngModel)]="tokenA_amt">
-                <span matPrefix>$&nbsp;</span>
-                <!-- <span matSuffix>.00</span> -->
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr>
-            <!-- balance display -->  
-            <td *ngIf="tokenA=='USDA'" style="float:left; font-size: x-small; color:#F5F5F5">
-              &nbsp; Balance: {{usdaBalance}}
-            </td>
-            <td *ngIf="tokenA=='xUSD'" style="float:left; font-size: x-small; color:#F5F5F5">         
-              &nbsp; Balance: {{xusdBalance}}
-            </td>
-            <!-- dollar equivalent -->
-            <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
-              dollar equivalent
-            </td> -->
-          </tr>
-        </table>
+  <section id="swap-section">
+    <div id="swap-box">
+      <h2 id="swap-title" class="font-prompt">Swap</h2>
+
+      <div class="token-container">
+        <div class="fields">
+          <mat-form-field appearance="fill" class="select-field">
+            <mat-label>Select Token</mat-label>
+            <mat-select (selectionChange)="selectToken($event, 'A')">
+              <mat-option *ngFor="let token of tokenList" [value]="token">{{
+                token
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="fill"
+            floatLabel="always"
+            class="select-field"
+          >
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              class="input-right-align"
+              placeholder="0"
+              #tokenAmount_A
+              (keyup)="updateTokenAmount(tokenAmount_A.value, 'A')"
+              [(ngModel)]="tokenA_amt"
+            />
+            <span matPrefix>$&nbsp;</span>
+            <!-- <span matSuffix>.00</span> -->
+          </mat-form-field>
+        </div>
+        <div *ngIf="!!tokenA" class="balance-container">
+          <span>Balance: {{ tokenA=='USDA' ? usdaBalance : xusdBalance }} </span>
+          <span style="opacity: 0;">#</span>
+        </div>
       </div>
-  
-      <div id="arrow-row">
-        <div id="down-arrow-circle" style="background-color:#1C534A; border-radius:50%; max-width: 35px; border: 1px solid #45A165;">&#x2193;</div>
+
+      <img
+        id="swap-arrow-down"
+        src="../../assets/brand/swap-arrow-down.svg"
+        alt="Arrow down"
+      />
+
+      <div class="token-container">
+        <div class="fields">
+          <mat-form-field appearance="fill" class="select-field">
+            <mat-label>Select Token</mat-label>
+            <mat-select (selectionChange)="selectToken($event, 'B')">
+              <mat-option *ngFor="let token of tokenList" [value]="token">{{
+                token
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field
+            appearance="fill"
+            floatLabel="always"
+            class="select-field"
+          >
+            <mat-label>Amount</mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              class="input-right-align"
+              placeholder="0"
+              #tokenAmount_B
+              (keyup)="updateTokenAmount(tokenAmount_B.value, 'B')"
+              [(ngModel)]="tokenB_amt"
+            />
+            <span matPrefix>$&nbsp;</span>
+            <!-- <span matSuffix>.00</span> -->
+          </mat-form-field>
+        </div>
+        <div *ngIf="!!tokenB" class="balance-container">
+          <span>Balance: {{ tokenB=='USDA' ? usdaBalance : xusdBalance }} </span>
+          <span style="opacity: 0;">#</span>
+        </div>
       </div>
-  
-      <div id="token-B-box" class="token-box">
-        <table style="display:table; width:100%">
-          <tr align="center">
-            <td align="left" style="float:left;">
-              <!-- token dropdown -->
-              <div id="token-dropdown">
-                <!-- <mat-slider min="1" max="100" step="1" value="50"></mat-slider> -->
-                <mat-form-field appearance="fill" style="max-width:85%; background-color: #F5F5F5;
-                ; border-radius: 10px;">
-                  <mat-label>Select a Token</mat-label>
-                  <mat-select (selectionChange)="selectToken($event, 'B')">
-                    <mat-option *ngFor="let token of tokenList" [value]="token">{{token}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-  
-              </div>
-            </td>
-            <td style="max-width: 40%;">
-              <mat-form-field appearance="fill" floatLabel="always" style="max-width:85%; background-color: #F5F5F5; border-radius: 10px; color:cornsilk">
-                <mat-label>Amount</mat-label>
-                <input matInput type="number" min="1" class="input-right-align" placeholder="0" #tokenAmount_B (keyup)="updateTokenAmount(tokenAmount_B.value, 'B')" [(ngModel)]="tokenB_amt">
-                <span matPrefix>$&nbsp;</span>
-                <!-- <span matSuffix>.00</span> -->
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr>
-            <!-- balance display -->  
-            <td *ngIf="tokenB=='USDA'" style="float:left; font-size: x-small; color:#F5F5F5">
-              &nbsp; Balance: {{usdaBalance}}
-            </td>
-            <td *ngIf="tokenB=='xUSD'" style="float:left; font-size: x-small; color:#F5F5F5">         
-              &nbsp; Balance: {{xusdBalance}}
-            </td>
-            <!-- dollar equivalent -->
-            <!-- <td style="text-align:right; font-size: x-small; max-width: 40%;">
-              dollar equivalent
-            </td> -->
-          </tr>
-        </table>      
-      </div>
-      
-      <div class="card" id="swap-box-footer">
-        <!-- <button (click)="swap('🍎')">Confirm</button> -->
-        <button (click)="swapXforY(tokenA, tokenB, tokenA_amt, tokenB_amt)">Confirm</button>
-      </div>
+
+      <button
+        id="swap-button"
+        (click)="swapXforY(tokenA, tokenB, tokenA_amt, tokenB_amt)"
+      >
+        Swap
+      </button>
     </div>
-  </div>
-<div *ngIf="!userSession.isUserSignedIn()">
-    <app-connect-wallet></app-connect-wallet>
+  </section>
+</div>
+
+<div class="connect-wallet-container" *ngIf="!userSession.isUserSignedIn()">
+  <app-connect-wallet></app-connect-wallet>
 </div>
