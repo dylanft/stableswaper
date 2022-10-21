@@ -1,7 +1,7 @@
 <div *ngIf="userSession.isUserSignedIn()" id="earn-container">
   <section class="earn-section">
     <div class="earn-box">
-      <h2 class="earn-title">Stack</h2>
+      <h2 class="earn-title">Escrow</h2>
 
       <div class="token-container">
         <div class="fields">
@@ -87,7 +87,7 @@
             (click)="cvToggle('search')"
             [ngClass]="{ 'btn-toggle-active': cycleView === 'search' }"
             [checked]="cycleView === 'search'"
-            >Cycle Data</mat-button-toggle
+            >Search</mat-button-toggle
           >
           <mat-button-toggle
             class="second-toggle btn-toggle"
