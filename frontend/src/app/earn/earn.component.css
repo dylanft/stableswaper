@@ -41,9 +41,12 @@ input.input-right-align {
 ::ng-deep .mat-accent .mat-slider-thumb {
   height: 20px !important;
   width: 20px !important;
+  align-self: center;
   background-color: white !important;
   box-shadow: 0px 0.320776px 2.56621px rgba(0, 0, 0, 0.12),
     0px 3.84931px 8.34017px rgba(0, 0, 0, 0.12);
+  top: 0;
+  transform: translateY(-50%) !important;
 }
 ::ng-deep .mat-slider-thumb {
   background-color: white !important;
