@@ -2,7 +2,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 3.25rem 3.25rem 0;
+  padding: 2.8rem 3.25rem 0;
 }
 
 header > img#bitflow-logo {
