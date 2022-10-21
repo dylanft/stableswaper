@@ -1,29 +1,12 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { userSession } from 'src/stacksUserSession';
-import { StacksMocknet, StacksTestnet } from '@stacks/network';
+import { StacksTestnet } from '@stacks/network';
 import {
-  AnchorMode,
   callReadOnlyFunction,
-  ContractPrincipal,
-  contractPrincipalCV,
-  ContractPrincipalCV,
-  contractPrincipalCVFromAddress,
-  createAddress,
-  createAssetInfo,
-  createLPString,
   cvToValue,
-  FungibleConditionCode,
-  getTypeString,
-  intCV,
-  makeContractFungiblePostCondition,
-  makeStandardFungiblePostCondition,
-  makeStandardSTXPostCondition,
-  PostConditionMode,
-  stringAsciiCV,
-  stringUtf8CV,
-  uintCV,
 } from '@stacks/transactions';
-import { principalCV, standardPrincipalCV } from '@stacks/transactions/dist/clarity/types/principalCV';
+import { principalCV } from '@stacks/transactions/dist/clarity/types/principalCV';
 
 @Component({
   selector: 'app-root',
@@ -31,13 +14,6 @@ import { principalCV, standardPrincipalCV } from '@stacks/transactions/dist/clar
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  ngOnInit(): void {
-    this.getUsersTokenBalance('USDA', 1e6).then((x) => this.usdaBalance = x);
-    this.getUsersTokenBalance('xUSD', 1e6).then((x) => this.xusdBalance = x);
-    this.getUsersTokenBalance('xBTC', 1).then((x) => this.xbtcBalance = x);
-    this.getUsersTokenBalance('usd-lp', 1e6).then((x) => this.usdlpBalance = x);
-  }
-
   public userSession = userSession;
   network: any = new StacksTestnet();
   title = 'stacks-angular';
@@ -46,11 +22,18 @@ export class AppComponent {
   xusdBalance: string | null = null;
   xbtcBalance: string | null = null;
   usdlpBalance: string | null = null;
-  
-  setContent(c: string) {
-    this.content = c;
+  authenticatedPages = ['Swap', 'Pool', 'Earn', 'Faucet'];
+
+  constructor(private router: Router) {
   }
 
+  ngOnInit(): void {
+    this.getUsersTokenBalance('USDA', 1e6).then((x) => this.usdaBalance = x);
+    this.getUsersTokenBalance('xUSD', 1e6).then((x) => this.xusdBalance = x);
+    this.getUsersTokenBalance('xBTC', 1).then((x) => this.xbtcBalance = x);
+    this.getUsersTokenBalance('usd-lp', 1e6).then((x) => this.usdlpBalance = x);
+  }
+  
   async getUsersTokenBalance(token: string, decimalFactor: number) {
     var txSenderAddress: string;
 
@@ -105,5 +88,13 @@ export class AppComponent {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
+  }
+
+  isUserSignedIn() {
+    return this.userSession.isUserSignedIn();
+  }
+
+  navigateToHome() {
+    this.router.navigate(['home']);
   }
 }

@@ -1,14 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
 
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
 button {
   color: #fff;
   font-size: 18px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 button:hover {
   filter: brightness(1.2);
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: "Prompt", "Helvetica Neue", sans-serif; }
+html,
+body {
+  min-height: 100% !important;
+  height: 100%;
+  background-color: #254841;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.font-prompt {
+  font-family: 'Prompt', sans-serif;
+}
+
+.font-rubik {
+  font-family: 'Rubik', sans-serif;
+}

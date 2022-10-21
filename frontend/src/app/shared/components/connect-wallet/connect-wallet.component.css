@@ -1,0 +1,13 @@
+button {
+  background-color: transparent;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 400;
+  padding: 11px 0;
+  font-size: 1.125rem;
+  border-radius: 20px;
+  color: #E5D9B8;
+  min-width: 174px;
+  border: 2px solid #45A165;
+  transition: all 0.2s linear;
+  text-align: center;
+}

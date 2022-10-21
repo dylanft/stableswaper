@@ -1,0 +1,25 @@
+<header>
+  <img
+    id="bitflow-logo"
+    src="../assets/brand/bitflow-logo-light.png"
+    alt="Bitflow logo"
+    (click)="navigateToHome()"
+  />
+  <nav id="toolbar-nav">
+    <ul id="links-list">
+      <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
+      <ng-container *ngIf="isUserSignedIn()">
+        <li *ngFor="let page of authenticatedPages">
+          <a
+            [routerLink]="'/' + page.toLowerCase()"
+            routerLinkActive="active"
+            >{{ page }}</a
+          >
+        </li>
+      </ng-container>
+    </ul>
+    <div class="button-container">
+      <app-connect-wallet></app-connect-wallet>
+    </div>
+  </nav>
+</header>

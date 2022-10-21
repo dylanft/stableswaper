@@ -1,0 +1,51 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3.25rem 3.25rem 0;
+}
+
+header > img#bitflow-logo {
+  width: 217px;
+  height: 35px;
+  cursor: pointer;
+  transition: all 0.2s linear;
+}
+
+header > img#bitflow-logo:hover {
+  filter: brightness(0.8);
+}
+
+nav#toolbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+ul#links-list {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+}
+
+ul#links-list > li > a {
+  font-size: 1.05rem;
+  color: #e5d9b8;
+  font-weight: 400;
+  line-height: 24px;
+  font-family: 'Prompt', sans-serif;
+  text-decoration: none;
+  transition: all 0.2s linear;
+}
+
+ul#links-list > li > a.active {
+  font-weight: 600;
+}
+
+ul#links-list > li > a:hover {
+  filter: brightness(1.2);
+}
+
+ul#links-list > li + li,
+nav#toolbar-nav > .button-container {
+  margin-left: 2.25rem;
+}

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PoolComponent } from './pool.component';
+import { ConnectWalletComponent } from './connect-wallet.component';
 
-describe('PoolComponent', () => {
-  let component: PoolComponent;
-  let fixture: ComponentFixture<PoolComponent>;
+describe('ConnectWalletComponent', () => {
+  let component: ConnectWalletComponent;
+  let fixture: ComponentFixture<ConnectWalletComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PoolComponent ]
+      declarations: [ ConnectWalletComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PoolComponent);
+    fixture = TestBed.createComponent(ConnectWalletComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
