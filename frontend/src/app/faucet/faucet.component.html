@@ -9,6 +9,13 @@
       </button>
     </div>
   </div>
+  <div *ngIf="usdaBalance == '0.00' && xusdBalance == '0.00'" class="buttons-container" style="grid-template-columns:unset;">
+    <a href="https://explorer.stacks.co/sandbox/faucet?chain=testnet" target="_blank">
+      <button class="confirm-button">
+        Link to STX Faucet
+      </button>
+    </a>
+  </div>
 </div>
 
 <section *ngIf="userSession.isUserSignedIn()" id="mint-section">
