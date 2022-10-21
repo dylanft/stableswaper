@@ -93,6 +93,7 @@
   transition: all 0.2s linear;
   cursor: pointer;
   color: #fbfbfb;
+  text-decoration: none;
 }
 
 #home-footer > div.content > div.links > a:hover {
