@@ -1,7 +1,7 @@
 main {
-  background: url('../assets/brand/bitflow-transparent-bg.png');
+  background: url('../assets/brand/graph.jpeg');
   background-size: cover;
-  background-position: center;
+  background-position: top;
   width: 100%;
   height: fit-content;
   min-height: 100vh;
