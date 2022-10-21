@@ -33,9 +33,9 @@
             <!-- <span matSuffix>.00</span> -->
           </mat-form-field>
         </div>
-        <div class="balance-container">
-          <span>Balance: </span>
-          <span>#</span>
+        <div class="balance-container" *ngIf="!!lpToken">
+          <span>Balance: {{lpToken == 'USDA-xUSD-LP' ? usdlpBalance : xbtcBalance}}</span>
+          <span style="opacity: 0;">#</span>
         </div>
       </div>
 

@@ -55,9 +55,9 @@
             <!-- <span matSuffix>.00</span> -->
           </mat-form-field>
         </div>
-        <div class="balance-container">
-          <span>Balance: </span>
-          <span>#</span>
+        <div *ngIf="!!tokenA" class="balance-container">
+          <span>Balance: {{ tokenA=='USDA' ? usdaBalance : xusdBalance }} </span>
+          <span style="opacity: 0;">#</span>
         </div>
       </div>
 
@@ -98,6 +98,10 @@
             <!-- <span matSuffix>.00</span> -->
           </mat-form-field>
         </div>
+        <div *ngIf="!!tokenB" class="balance-container">
+          <span>Balance: {{ tokenB=='USDA' ? usdaBalance : xusdBalance }} </span>
+          <span style="opacity: 0;">#</span>
+        </div>
       </div>
     </div>
 
@@ -133,10 +137,6 @@
             />
             <!-- <span matSuffix>.00</span> -->
           </mat-form-field>
-        </div>
-        <div class="balance-container">
-          <span>Balance: </span>
-          <span>#</span>
         </div>
       </div>
     </div>
