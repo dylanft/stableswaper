@@ -1,10 +1,5 @@
 
 ;; xusd-token
-;; <add a description here>
-
-
-;; xusd-token
-;; <add a description here>
 
 ;;;;;;;;;;;;;;;;;;;;; SIP 010 ;;;;;;;;;;;;;;;;;;;;;;
 (impl-trait .sip-010-trait-ft-standard.sip-010-trait)
@@ -49,13 +44,6 @@
 )
 
 
-;; (define-public (set-token-uri (value (string-utf8 256)))
-;;   (if (is-eq tx-sender (contract-call? .arkadiko-dao get-dao-owner))
-;;     (ok (var-set token-uri value))
-;;     (err ERR-NOT-AUTHORIZED)
-;;   )
-;; )
-
 (define-read-only (get-token-uri)
   (ok (some (var-get token-uri)))
 )
@@ -74,25 +62,6 @@
   )
 )
 
-;; ---------------------------------------------------------
-;; DAO token trait
-;; ---------------------------------------------------------
-
-;; ;; Mint method for DAO
-;; (define-public (mint-for-dao (amount uint) (recipient principal))
-;;   (begin
-;;     (asserts! (is-eq contract-caller .arkadiko-dao) (err ERR-NOT-AUTHORIZED))
-;;     (ft-mint? xusd amount recipient)
-;;   )
-;; )
-
-;; ;; Burn method for DAO
-;; (define-public (burn-for-dao (amount uint) (sender principal))
-;;   (begin
-;;     (asserts! (is-eq contract-caller .arkadiko-dao) (err ERR-NOT-AUTHORIZED))
-;;     (ft-burn? xusd amount sender)
-;;   )
-;; )
 
 (define-public (mint (amount uint) (recipient principal))
   (begin

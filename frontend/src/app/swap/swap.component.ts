@@ -66,7 +66,7 @@ export class SwapComponent implements OnInit {
 
   xusdContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
     createAddress('ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'),
-    createLPString('xusd-token')
+    createLPString('xusd-v2')
   );
 
   public userSession = userSession;
@@ -94,7 +94,7 @@ export class SwapComponent implements OnInit {
         'stableswap-v3',
         FungibleConditionCode.GreaterEqual,
         y,
-        createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd')
+        createAssetInfo(this.deployerAddress, 'xusd-v2', 'xusd')
       );
     } else {
       //(tokenX == 'xUSD' && tokenY=='USDA')
@@ -105,7 +105,7 @@ export class SwapComponent implements OnInit {
         this.txSenderAddress,
         FungibleConditionCode.Equal,
         x,
-        createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd')
+        createAssetInfo(this.deployerAddress, 'xusd-v2', 'xusd')
       );
       var createPoolPC2 = makeContractFungiblePostCondition(
         this.deployerAddress,
@@ -182,7 +182,7 @@ export class SwapComponent implements OnInit {
       var contractName = 'usda-token';
     } else if (token == 'xUSD') {
       var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
-      var contractName = 'xusd-token';
+      var contractName = 'xusd-v2';
     } else if (token == 'xBTC') {
       var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
       var contractName = 'xbtc-token';

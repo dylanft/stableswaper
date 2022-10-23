@@ -104,7 +104,7 @@ export class EarnComponent implements OnInit {
 
   xusdContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
     createAddress(this.deployerAddress),
-    createLPString('xusd-token')
+    createLPString('xusd-v2')
   );
 
   xbtcContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
@@ -273,7 +273,7 @@ export class EarnComponent implements OnInit {
       txSenderAddress,
       FungibleConditionCode.LessEqual,
       tx_amt,
-      createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd')
+      createAssetInfo(this.deployerAddress, 'xusd-v2', 'xusd')
     )
 
     var tx = this.usdaContract;
@@ -335,7 +335,7 @@ export class EarnComponent implements OnInit {
       'stableswap-v3',
       FungibleConditionCode.GreaterEqual,
       0,
-      createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd') 
+      createAssetInfo(this.deployerAddress, 'xusd-v2', 'xusd') 
     )
 
     var tx = this.usdaContract;
@@ -812,7 +812,7 @@ export class EarnComponent implements OnInit {
     } 
     else if (token == 'xUSD') {
       var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'
-      var contractName = 'xusd-token'
+      var contractName = 'xusd-v2'
     } 
     else if (token == 'xBTC') {
       var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'

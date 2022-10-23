@@ -65,7 +65,7 @@ export class FaucetComponent implements OnInit {
 
   xusdContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
     createAddress(this.deployerAddress),
-    createLPString('xusd-token')
+    createLPString('xusd-v2')
   );
 
   xbtcContract: ContractPrincipalCV = contractPrincipalCVFromAddress(
@@ -132,7 +132,7 @@ export class FaucetComponent implements OnInit {
     }
     else if (this.tokenChoice == 'xUSD') {
       this.tokenChoiceContract = this.xusdContract;
-      this.tokenChoiceContractName = 'xusd-token';
+      this.tokenChoiceContractName = 'xusd-v2';
     }
     else {
       this.tokenChoiceContract = this.xbtcContract;
@@ -215,7 +215,7 @@ export class FaucetComponent implements OnInit {
       txSenderAddress,
       FungibleConditionCode.Equal,
       tx_amt,
-      createAssetInfo(this.deployerAddress, 'xusd-token', 'xusd')
+      createAssetInfo(this.deployerAddress, 'xusd-v2', 'xusd')
     )
 
     var tx = this.usdaContract;
@@ -345,7 +345,7 @@ export class FaucetComponent implements OnInit {
     } 
     else if (token == 'xUSD') {
       var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'
-      var contractName = 'xusd-token'
+      var contractName = 'xusd-v2'
     } 
     else if (token == 'xBTC') {
       var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'

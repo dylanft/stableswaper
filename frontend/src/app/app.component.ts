@@ -51,7 +51,7 @@ export class AppComponent {
     } 
     else if (token == 'xUSD') {
       var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'
-      var contractName = 'xusd-token'
+      var contractName = 'xusd-v2'
     } 
     else if (token == 'xBTC') {
       var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW'
