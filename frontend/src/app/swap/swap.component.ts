@@ -75,6 +75,10 @@ export class SwapComponent implements OnInit {
   xbtcBalance: string | null = null;
   usdlpBalance: string | null = null;
 
+  usdaPoolBalance: number = 1;
+  xusdPoolBalance: number = 1;
+  slippageFactor: number = 5; // 5%
+
   swapXforY(tokenX: string, tokenY: string, x: number, y: number) {
     x = x * 1e6;
     y = y * 1e6;
@@ -142,12 +146,18 @@ export class SwapComponent implements OnInit {
   selectToken(event: any, tokenAorB: string) {
     // console.log("event: ", event)
     // console.log("event.value: ", event.value)
+
     if (tokenAorB == 'A') {
       this.tokenA = event.value;
       console.log('tokenA: ', this.tokenA);
-    } else if (tokenAorB == 'B') {
+    } 
+    else if (tokenAorB == 'B') {
       this.tokenB = event.value;
       console.log('tokenB: ', this.tokenB);
+    }
+
+    if (this.tokenA != '' && this.tokenB != '') {
+      this.updateTokenAmount(this.tokenA_amt.toString(), 'A')
     }
   }
 
@@ -158,15 +168,85 @@ export class SwapComponent implements OnInit {
   }
 
   updateTokenAmount(val: string, tokenType: string) {
-    console.log(val);
+    // var usdaBalance, xusdBalance =  this.getTokensInPool();
+    this.getTokensInPool().then(res => {
+      this.usdaPoolBalance = res[0];
+      this.xusdPoolBalance = res[1];
+    })
+    console.log(this.usdaPoolBalance, this.xusdPoolBalance);
+
     if (tokenType == 'A') {
       this.tokenA_amt = parseInt(val);
       console.log('tokenA: ', this.tokenA_amt);
+      if (this.tokenA == 'USDA' && this.tokenB == 'xUSD') {
+        // set xusd price based on pool ratio
+        this.tokenB_amt = this.tokenA_amt * this.xusdPoolBalance / this.usdaPoolBalance;
+        this.tokenB_amt = this.naiveRound(this.tokenB_amt - (this.tokenB_amt * this.slippageFactor / 100),2);
+      }
+      else if (this.tokenA == 'xUSD' && this.tokenB == 'USDA') {
+        // set usda price based on pool ratio
+        this.tokenB_amt = this.tokenA_amt * this.usdaPoolBalance / this.xusdPoolBalance;
+        this.tokenB_amt = this.naiveRound(this.tokenB_amt - (this.tokenB_amt * this.slippageFactor / 100), 2);
+      }
+
+      //TODO: make token B amount reflect based on current price. should not be an input (unless user wants)
     } else if (tokenType == 'B') {
       this.tokenB_amt = parseInt(val);
       console.log('tokenB: ', this.tokenB_amt);
+      if (this.tokenB == 'USDA' && this.tokenA == 'xUSD') {
+        // set xusd price based on pool ratio
+        this.tokenA_amt = this.tokenB_amt * this.xusdPoolBalance / this.usdaPoolBalance;
+        this.tokenA_amt = this.naiveRound(this.tokenA_amt / (1 - (this.slippageFactor / 100)), 2);
+      }
+      else if (this.tokenB == 'xUSD' && this.tokenA == 'USDA') { 
+        // set usda price based on pool ratio
+        this.tokenA_amt = this.tokenB_amt * this.usdaPoolBalance / this.xusdPoolBalance;
+        this.tokenA_amt = this.naiveRound(this.tokenA_amt / (1 - (this.slippageFactor / 100)), 2);
+      }
+
     }
   }
+
+  async getTokensInPool() {
+    var txSenderAddress: string;
+
+    if (this.network.isMainnet()) {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.mainnet;
+      console.log(txSenderAddress);
+    } else {
+      txSenderAddress = userSession.loadUserData().profile.stxAddress.testnet;
+    }
+
+    var contractAddress = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
+    var contractName = 'stableswap-v3'
+
+    var usdaOptions = {
+      network: this.network,
+      contractAddress: contractAddress,
+      contractName: contractName,
+      functionName: 'get-total-supply-x',
+      functionArgs: [this.usdaContract, this.xusdContract],
+      senderAddress: txSenderAddress,
+    };
+    const usdaResult = await callReadOnlyFunction(usdaOptions);
+    var usdaOutput = cvToValue(usdaResult);
+
+    var xusdOptions = {
+      network: this.network,
+      contractAddress: contractAddress,
+      contractName: contractName,
+      functionName: 'get-total-supply-y',
+      functionArgs: [this.usdaContract, this.xusdContract],
+      senderAddress: txSenderAddress,
+    };
+    const xusdResult = await callReadOnlyFunction(xusdOptions);
+    var xusdOutput = cvToValue(xusdResult);
+    console.log(usdaOutput.value, xusdOutput.value)
+    let output : number[];
+    output = [usdaOutput.value, xusdOutput.value]
+    return output;
+  }
+
   async getUsersTokenBalance(token: string, decimalFactor: number) {
     var txSenderAddress: string;
 
@@ -214,5 +294,10 @@ export class SwapComponent implements OnInit {
     var parts = x.toString().split('.');
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return parts.join('.');
+  }
+
+  naiveRound(n: number, decimalPlaces: number = 0) {
+    var p = Math.pow(10, decimalPlaces);
+    return Math.round(n * p) / p;
   }
 }
