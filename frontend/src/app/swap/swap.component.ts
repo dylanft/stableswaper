@@ -48,6 +48,11 @@ export class SwapComponent implements OnInit {
     this.getUsersTokenBalance('usd-lp', 1e6).then(
       (x) => (this.usdlpBalance = x)
     );
+
+    this.getTokensInPool().then(res => {
+      this.usdaPoolBalance = res[0];
+      this.xusdPoolBalance = res[1];
+    })
   }
   tokenList: any[] = ['USDA', 'xUSD'];
   deployerAddress: string = 'ST38GBVK5HEJ0MBH4CRJ9HQEW86HX0H9AP3EJP4TW';
@@ -77,7 +82,7 @@ export class SwapComponent implements OnInit {
 
   usdaPoolBalance: number = 1;
   xusdPoolBalance: number = 1;
-  slippageFactor: number = 5; // 5%
+  slippageFactor: number = 0;
 
   swapXforY(tokenX: string, tokenY: string, x: number, y: number) {
     x = x * 1e6;
@@ -144,9 +149,6 @@ export class SwapComponent implements OnInit {
   }
 
   selectToken(event: any, tokenAorB: string) {
-    // console.log("event: ", event)
-    // console.log("event.value: ", event.value)
-
     if (tokenAorB == 'A') {
       this.tokenA = event.value;
       console.log('tokenA: ', this.tokenA);
@@ -158,6 +160,12 @@ export class SwapComponent implements OnInit {
 
     if (this.tokenA != '' && this.tokenB != '') {
       this.updateTokenAmount(this.tokenA_amt.toString(), 'A')
+      //reset if tokenTypes are same:
+      if (this.tokenA == this.tokenB) {
+        this.tokenA_amt = 0;
+        this.tokenB_amt = 0;
+      }
+
     }
   }
 
@@ -168,40 +176,43 @@ export class SwapComponent implements OnInit {
   }
 
   updateTokenAmount(val: string, tokenType: string) {
-    // var usdaBalance, xusdBalance =  this.getTokensInPool();
-    this.getTokensInPool().then(res => {
-      this.usdaPoolBalance = res[0];
-      this.xusdPoolBalance = res[1];
-    })
-    console.log(this.usdaPoolBalance, this.xusdPoolBalance);
-
+    //tokenType: A means token selected in upper half of swap box. For B, the lower half.
     if (tokenType == 'A') {
       this.tokenA_amt = parseInt(val);
       console.log('tokenA: ', this.tokenA_amt);
       if (this.tokenA == 'USDA' && this.tokenB == 'xUSD') {
         // set xusd price based on pool ratio
-        this.tokenB_amt = this.tokenA_amt * this.xusdPoolBalance / this.usdaPoolBalance;
-        this.tokenB_amt = this.naiveRound(this.tokenB_amt - (this.tokenB_amt * this.slippageFactor / 100),2);
+        var dA = this.tokenA_amt*1e6;
+        var dB = this.calculateDelta(this.usdaPoolBalance, dA, this.xusdPoolBalance)
+        // var dB_formatted = dB/1e6;
+        // console.log("dB: ", dB_formatted)
+        // console.log("price dB/dA: ", dB/dA) // 1 B token costs (dB/dA) A tokens 
+        this.tokenB_amt = this.tokenA_amt * dB/dA;
+
       }
       else if (this.tokenA == 'xUSD' && this.tokenB == 'USDA') {
         // set usda price based on pool ratio
-        this.tokenB_amt = this.tokenA_amt * this.usdaPoolBalance / this.xusdPoolBalance;
-        this.tokenB_amt = this.naiveRound(this.tokenB_amt - (this.tokenB_amt * this.slippageFactor / 100), 2);
+        var dA = this.tokenA_amt*1e6;
+        var dB = this.calculateDelta(this.xusdPoolBalance, dA, this.usdaPoolBalance)
+        this.tokenB_amt = this.tokenA_amt * dB/dA;
       }
 
-      //TODO: make token B amount reflect based on current price. should not be an input (unless user wants)
     } else if (tokenType == 'B') {
       this.tokenB_amt = parseInt(val);
       console.log('tokenB: ', this.tokenB_amt);
       if (this.tokenB == 'USDA' && this.tokenA == 'xUSD') {
         // set xusd price based on pool ratio
-        this.tokenA_amt = this.tokenB_amt * this.xusdPoolBalance / this.usdaPoolBalance;
-        this.tokenA_amt = this.naiveRound(this.tokenA_amt / (1 - (this.slippageFactor / 100)), 2);
+        var dA = this.tokenA_amt*1e6;
+        var dB = this.calculateDelta(this.usdaPoolBalance, dA, this.xusdPoolBalance)
+        this.tokenA_amt = this.tokenB_amt * dB/dA;
+
       }
       else if (this.tokenB == 'xUSD' && this.tokenA == 'USDA') { 
         // set usda price based on pool ratio
-        this.tokenA_amt = this.tokenB_amt * this.usdaPoolBalance / this.xusdPoolBalance;
-        this.tokenA_amt = this.naiveRound(this.tokenA_amt / (1 - (this.slippageFactor / 100)), 2);
+        var dA = this.tokenA_amt*1e6;
+        var dB = this.calculateDelta(this.xusdPoolBalance, dA, this.usdaPoolBalance)
+        this.tokenA_amt = this.tokenB_amt * dB/dA;
+
       }
 
     }
@@ -299,5 +310,43 @@ export class SwapComponent implements OnInit {
   naiveRound(n: number, decimalPlaces: number = 0) {
     var p = Math.pow(10, decimalPlaces);
     return Math.round(n * p) / p;
+  }
+
+  calculateDelta(x: number, dx: number, y: number) {
+    // swapping dx of x (in pool) for dy of Y. returns dy.
+    // adding dx to pool, which currently contains X.
+    // withdrawing dy from pool, which currently contains Y.
+    // uses x*y=k pricing function
+    x = Number(x);
+    dx = Number(dx);
+    y = Number(y);
+    var k = Number(x*y);
+    var dy = y - (k / (x + dx));
+
+    // console.log("x : ", x)
+    // console.log("dx: ", dx)
+    // console.log("y : ", y)
+    // console.log("x + dx: ", (x+dx))
+    // console.log("k:         ", k)
+    // console.log("k / (x+dx):", (k / (x + dx)))
+    // console.log("x/k: ", x/k)
+    // console.log("y/k: ", y/k)
+    // console.log("x-y:", x-y)
+    // console.log("slope (dy/dx): ", (dy/dx))
+
+    //suppose user wants to sell dx tokens, how many y tokens should user receive? y - 
+    // x*y = k
+    // var k = x*y;
+    var new_x = x+dx;
+
+    // how many y tokens required to make k same?
+    var new_y = k/new_x
+    // user should receive y - new_y
+    // console.log("new_x: ", new_x) 
+    // console.log("new_y: ", new_y) 
+    // console.log("y - new_y: ", y - new_y)
+    // console.log("-------------------------------")
+
+    return dy
   }
 }
