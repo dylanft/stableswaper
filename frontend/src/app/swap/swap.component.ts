@@ -83,6 +83,7 @@ export class SwapComponent implements OnInit {
   usdaPoolBalance: number = 1;
   xusdPoolBalance: number = 1;
   slippageFactor: number = 0;
+  swapFee: number = 6*1e-4;
 
   swapXforY(tokenX: string, tokenY: string, x: number, y: number) {
     x = x * 1e6;
@@ -317,10 +318,16 @@ export class SwapComponent implements OnInit {
     // adding dx to pool, which currently contains X.
     // withdrawing dy from pool, which currently contains Y.
     // uses x*y=k pricing function
+
+
     x = Number(x);
     dx = Number(dx);
     y = Number(y);
     var k = Number(x*y);
+    
+    var x_sent = dx;
+    var fees = x_sent * this.swapFee; //amount sent * n basis points
+    dx = x_sent - fees;
     var dy = y - (k / (x + dx));
 
     // console.log("x : ", x)
